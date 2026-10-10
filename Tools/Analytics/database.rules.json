@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "events": {
+      "$uid": {
+        "$session": {
+          "$event": {
+            ".write": "auth != null && auth.uid === $uid && newData.exists()",
+            ".validate": "$session.matches(/^[a-f0-9]{32}$/) && $event.matches(/^[a-f0-9]{32}_[0-9]{1,2}$/) && newData.hasChildren(['eventId','sessionId','eventName','level','zone','clientUtc','buildId','outcome','sequence','remainingCoffee','coffeeNumber','elapsedSeconds','receivedAt'])",
+            "eventId": { ".validate": "newData.isString() && newData.val() === $event" },
+            "sessionId": { ".validate": "newData.isString() && newData.val() === $session" },
+            "eventName": { ".validate": "newData.val() === 'session_start' || newData.val() === 'coffee_drunk' || newData.val() === 'zone_enter' || newData.val() === 'session_end'" },
+            "level": { ".validate": "newData.val() === 'back_alley_market'" },
+            "zone": { ".validate": "newData.val() === 'Unknown' || newData.val() === 'Courtyard' || newData.val() === 'Corridor' || newData.val() === 'Fork' || newData.val() === 'Hideout'" },
+            "clientUtc": { ".validate": "newData.isString() && newData.val().length <= 40" },
+            "buildId": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80" },
+            "outcome": { ".validate": "newData.val() === '' || newData.val() === 'Won' || newData.val() === 'Lost'" },
+            "sequence": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99" },
+            "remainingCoffee": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3" },
+            "coffeeNumber": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3" },
+            "elapsedSeconds": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+            "receivedAt": { ".validate": "newData.isNumber() && newData.val() <= now + 60000" },
+            "$other": { ".validate": false }
+          }
+        }
+      }
+    }
+  }
+}

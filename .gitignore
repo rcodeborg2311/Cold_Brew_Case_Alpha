@@ -1,0 +1,31 @@
+# Unity project is at the repository root. Keep docs/ milestone Web builds.
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Bb]uilds/
+/[Bb]uild/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+.vs/
+.idea/
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+.DS_Store
+Thumbs.db
+/.venv/
+__pycache__/
+*.py[cod]
+.unity-pipeline-port
+
+# Never ignore Assets/, Packages/, ProjectSettings/, *.meta, or docs/.
