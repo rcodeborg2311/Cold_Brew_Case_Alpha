@@ -17,6 +17,9 @@ namespace ColdBrewCase
         [Min(0f)] public float resistDistance = 2.5f;
         [Min(0f)] public float coverSearchRadius = 6f;
 
+           [Min(0f)] public float startDelay = 0.5f;
+            private float waited;
+
         private readonly List<RaycastHit2D> hits = new List<RaycastHit2D>(8);
         private readonly Vector2[] corners = new Vector2[4];
         private Collider2D cover;
@@ -54,6 +57,7 @@ namespace ColdBrewCase
                 return;
             }
             if (game.IsActionPaused || game.State != RoundState.Opening) return;
+               if (waited < startDelay) { waited += Time.fixedDeltaTime; return; }
             Vector2 direction = (Vector2)openingRoute[point].position - body.position;
             if (direction.magnitude < .08f)
             {
