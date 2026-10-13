@@ -20,7 +20,7 @@ namespace ColdBrewCase
         private double messageUntil, flashUntil;
         private float previousAlert;
         private Vector2 startingPosition;
-        private bool moved, scanned, threw;
+        private bool moved, scanned;
         private GUIStyle title, label, small, button;
         private static readonly Color panel = new Color(.04f, .06f, .08f, .96f);
         private static readonly Color gray = new Color(.26f, .3f, .34f);
@@ -31,7 +31,6 @@ namespace ColdBrewCase
         {
             moved |= Vector2.Distance(game.player.transform.position, startingPosition) > .4f;
             scanned |= heat.Active;
-            threw |= net.Nets < net.tuning.startingNets;
             if (alert.Value - previousAlert > .03f) flashUntil = Clock.Now + .7d;
             previousAlert = alert.Value;
         }
@@ -97,7 +96,8 @@ namespace ColdBrewCase
                     push.tuning.pushRange + .5f && push.Cooldown <= 0)
                     return "Space  Push  (-" + alert.PenaltySeconds(AlertAction.Push).ToString("0.#") + "s)";
             if (shake.IsShaking) return "Wait for steady aim";
-            if (memory.Known && !threw) return "Mouse  Aim     Click  Throw";
+            if (memory.Known && net.Nets > 0)
+                return "Mouse  Aim     Click  Throw";
             if (coffee.Count > 0 && !memory.Known) return "F  Scan";
             return "";
         }
