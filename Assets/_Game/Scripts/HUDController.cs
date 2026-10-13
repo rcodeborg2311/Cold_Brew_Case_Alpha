@@ -87,18 +87,18 @@ namespace ColdBrewCase
 
         private string Hint()
         {
-            if (!moved) return "WASD  Move";
-            if (game.State == RoundState.Opening) return "Follow the thief";
-            if (heat.Active) return "F  End scan";
-            if (!scanned && coffee.Count == 0) return "Collect coffee";
-            if (!scanned && coffee.Count > 0) return "F  Scan";
+            if (!moved) return "WASD / Arrow keys  Move";
+            if (game.State == RoundState.Opening) return "Follow the thief to see where it goes";
+            if (heat.Active) return "Look for the heat trail   F  Stop scan";
+            if (!scanned && coffee.Count == 0) return "Walk over coffee to pick it up";
+            if (!scanned && coffee.Count > 0) return "F  Drink coffee to scan for heat";
             foreach (PushableBody target in push.targets)
                 if (Vector2.Distance(target.transform.position, game.player.transform.position) <
                     push.tuning.pushRange + .5f && push.Cooldown <= 0)
                     return "Space  Push  (-" + alert.PenaltySeconds(AlertAction.Push).ToString("0.#") + "s)";
-            if (shake.IsShaking) return "Wait for steady aim";
-            if (memory.Known && !threw) return "Mouse  Aim     Click  Throw";
-            if (coffee.Count > 0 && !memory.Known) return "F  Scan";
+            if (shake.IsShaking) return "Hands shaking - wait until Steady to throw";
+            if (memory.Known && !threw) return "Mouse  Aim     Click  Throw net at the thief";
+            if (coffee.Count > 0 && !memory.Known) return "F  Drink coffee to scan for heat";
             return "";
         }
 
@@ -112,6 +112,34 @@ namespace ColdBrewCase
             Ring(new Vector2(1055, 70), 19, fraction, color);
             GameSymbols.Draw(new Rect(1044, 59, 22, 22), kind, color);
             GUI.Label(new Rect(1082, 53, 135, 34), active ? "Scanning" : shake.IsShaking ? "Shaking" : "Steady", small);
+        }
+
+        private void DrawHowToPlay()
+        {
+            Fill(new Rect(0, 0, 1280, 720), new Color(0, 0, 0, .6f));
+            Fill(new Rect(290, 90, 700, 540), panel);
+            GUI.Label(new Rect(330, 110, 620, 50), "How to Play", title);
+            GUI.Label(new Rect(330, 160, 620, 30), "A thief is loose. Track them down and catch them before time runs out.", small);
+            string[,] rows =
+            {
+                { "WASD / Arrows", "Move" },
+                { "Coffee", "Walk over coffee cups to collect them" },
+                { "F", "Drink coffee to scan - reveals the thief's heat trail" },
+                { "Mouse + Click", "Aim and throw a net (you only have a few)" },
+                { "Space", "Push a guard out of your way (costs time)" },
+                { "P / II", "Pause" },
+            };
+            for (int i = 0; i < rows.GetLength(0); i++)
+            {
+                GUI.Label(new Rect(330, 210 + i * 42, 200, 36), rows[i, 0], label);
+                GUI.Label(new Rect(540, 210 + i * 42, 430, 36), rows[i, 1], small);
+            }
+            GUI.Label(new Rect(330, 465, 620, 60),
+                "Tips: after scanning your hands shake - wait for \"Steady\" before throwing.\n" +
+                "Avoid guards' view cones. Getting spotted costs time.", small);
+            if (GUI.Button(new Rect(480, 545, 320, 60),
+                game.State == RoundState.Playing ? "Resume" : "Play", button))
+                game.CloseHowToPlay();
         }
 
         private void OnGUI()
@@ -136,6 +164,7 @@ namespace ColdBrewCase
             Fill(new Rect(825, 37, 365, 9), gray);
             Fill(new Rect(825, 37, 365 * (1f - alert.Value), 9), alertColor);
             if (GUI.Button(new Rect(1222, 10, 42, 36), "II", button)) game.TogglePause();
+            if (GUI.Button(new Rect(1222, 52, 42, 36), "?", button)) game.OpenHowToPlay();
             DrawStatus();
             GUI.Label(new Rect(16, 53, 990, 34), notes.HasDirection ? "Footsteps: " + notes.Direction : "", label);
             bool terminal = game.State == RoundState.Won || game.State == RoundState.Lost;
@@ -152,6 +181,12 @@ namespace ColdBrewCase
                     Fill(new Rect(0, 650, 1280, 70), panel);
                     GUI.Label(new Rect(30, 660, 1160, 50), message, label);
                 }
+            }
+            if (game.ShowingHowToPlay)
+            {
+                DrawHowToPlay();
+                GUI.matrix = old;
+                return;
             }
             if (terminal || game.IsActionPaused)
             {
