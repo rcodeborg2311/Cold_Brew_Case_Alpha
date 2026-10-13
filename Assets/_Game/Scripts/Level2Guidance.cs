@@ -17,6 +17,7 @@ namespace ColdBrewCase
         private float idle, toastUntil;
         private string toast = "";
         private int lastCoffee, lastNets, caughtCount;
+        private bool lowTimeShown;
         private RoomId lastRoom = RoomId.Unknown;
         private GUIStyle text, tag;
 
@@ -75,6 +76,11 @@ namespace ColdBrewCase
             int coffee = hud.coffee.Count, nets = hud.net.Nets;
             RoomId room = game.rooms.Current;
             if (nets < lastNets) Toast("Missed? Walls and guards stop the net. Find a clear line to the thief.");
+            if (!lowTimeShown && hud.alert.Value >= .75f)
+            {
+                lowTimeShown = true;
+                Toast("Under a quarter of the time left! Scan a neighboring room or follow the footsteps.");
+            }
             if (room != lastRoom || coffee != lastCoffee || nets != lastNets || hud.heat.Active) idle = 0f;
             lastRoom = room; lastCoffee = coffee; lastNets = nets;
         }
