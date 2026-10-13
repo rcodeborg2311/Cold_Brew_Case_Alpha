@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88e4b4dce50bd2849b732984c92a3b16, type: 3}
+  m_Name: Level02Tuning
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GameTuning
+  playerSpeed: 5
+  thiefSpeed: 7.5
+  guardSpeed: 1.4
+  guardTurnWait: 0.75
+  heatSeconds: 10
+  shakeSeconds: 18
+  escapeSeconds: 96
+  warningAt: 0.8
+  pushAlert: 0.15
+  spottedAlert: 0.2
+  missedNetAlert: 0.1
+  startingNets: 2
+  maxNotes: 5
+  netRange: 4
+  netRadius: 0.25
+  maxWobbleDegrees: 12
+  pushCooldown: 3
+  pushRange: 1.2
+  shoveDistance: 0.8
+  pushStunSeconds: 1
+  noiseRadius: 4
+  noisePause: 1.5
+  guardViewRange: 5
+  guardViewAngle: 80

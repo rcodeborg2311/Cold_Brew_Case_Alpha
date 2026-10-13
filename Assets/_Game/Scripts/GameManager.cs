@@ -18,7 +18,9 @@ namespace ColdBrewCase
         private bool manualPause, focusPause;
         private double immuneUntil;
         private Vector2 checkpoint;
-        public bool IsActionPaused => manualPause || focusPause;
+        private static bool seenHowToPlay;
+        public bool ShowingHowToPlay { get; private set; } = !seenHowToPlay;
+        public bool IsActionPaused => manualPause || focusPause || ShowingHowToPlay;
         public bool CanMove => !IsActionPaused && (State == RoundState.Opening || State == RoundState.Playing);
         public bool CanRunAI => State == RoundState.Playing && !IsActionPaused;
         private void OnEnable()
@@ -103,6 +105,20 @@ namespace ColdBrewCase
             if (State == RoundState.Won || State == RoundState.Lost) return;
             manualPause = !manualPause;
             player.Stop();
+        }
+        public void OpenHowToPlay()
+        {
+            if (State == RoundState.Won || State == RoundState.Lost) return;
+            ShowingHowToPlay = true;
+            player.Stop();
+        }
+        public void CloseHowToPlay()
+        {
+            ShowingHowToPlay = false;
+            seenHowToPlay = true;
+            player.Stop();
+            alert.RefreshNow();
+            if (State == RoundState.Opening) hud.Show("Follow the thief", 6f);
         }
         public void ResumeActions() { manualPause = false; player.Stop(); alert.RefreshNow(); }
         private void OnApplicationFocus(bool focused)

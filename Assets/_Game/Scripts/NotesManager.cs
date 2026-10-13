@@ -10,6 +10,8 @@ namespace ColdBrewCase
         public bool HasDirection => Direction.Length > 0;
         public event Action Changed;
         private RoomManager rooms;
+        private double directionExpiresAt;
+        private const float DirectionDuration = 5f;
 
         private void OnEnable()
         {
@@ -25,6 +27,7 @@ namespace ColdBrewCase
         public void Hear(Vector2 from, Vector2 target)
         {
             Direction = DirectionTo(from, target);
+            directionExpiresAt = Clock.Now + DirectionDuration;
             Changed?.Invoke();
         }
 
@@ -39,6 +42,14 @@ namespace ColdBrewCase
 
         private void ClearDirection(RoomId room)
         {
+            Direction = "";
+            Changed?.Invoke();
+        }
+
+        private void Update()
+        {
+            if (!HasDirection || Clock.Now < directionExpiresAt) return;
+
             Direction = "";
             Changed?.Invoke();
         }
