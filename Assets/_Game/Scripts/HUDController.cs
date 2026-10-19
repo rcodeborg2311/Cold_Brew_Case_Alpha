@@ -137,9 +137,10 @@ namespace ColdBrewCase
             GUI.Label(new Rect(330, 465, 620, 60),
                 "Tips: after scanning your hands shake - wait for \"Steady\" before throwing.\n" +
                 "Avoid guards' view cones. Getting spotted costs time.", small);
-            if (GUI.Button(new Rect(480, 545, 320, 60),
+            if (GUI.Button(new Rect(380, 545, 240, 60),
                 game.State == RoundState.Playing ? "Resume" : "Play", button))
                 game.CloseHowToPlay();
+            if (GUI.Button(new Rect(660, 545, 240, 60), "Home", button)) game.ReturnHome();
         }
 
         private void OnGUI()
@@ -190,16 +191,17 @@ namespace ColdBrewCase
             }
             if (terminal || game.IsActionPaused)
             {
-                Fill(new Rect(420, 250, 440, 230), panel);
+                Fill(new Rect(420, 220, 440, 310), panel);
                 string result = game.State == RoundState.Won ? "Caught!" :
                     game.State == RoundState.Lost ? game.Outcome == "NoNets" ? "Out of nets" : "Escaped!" : "Paused";
-                GUI.Label(new Rect(450, 265, 380, 55), result, title);
-                if (!terminal) GUI.Label(new Rect(450, 325, 380, 35), "Timers keep running", small);
-                if (GUI.Button(new Rect(480, 395, 320, 55), terminal ? "Restart" : "Resume", button))
+                GUI.Label(new Rect(450, 235, 380, 55), result, title);
+                if (!terminal) GUI.Label(new Rect(450, 295, 380, 35), "Timers keep running", small);
+                if (GUI.Button(new Rect(480, 350, 320, 55), terminal ? "Restart" : "Resume", button))
                 {
                     if (terminal) game.Restart();
                     else game.ResumeActions();
                 }
+                if (GUI.Button(new Rect(480, 420, 320, 55), "Home", button)) game.ReturnHome();
             }
             GUI.matrix = old;
         }

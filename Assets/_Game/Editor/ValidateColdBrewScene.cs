@@ -13,6 +13,11 @@ namespace ColdBrewCase.EditorTools
         [MenuItem("Tools/Cold Brew Case/Validate Open Scene")]
         public static void Validate()
         {
+            if (UnityEngine.Object.FindFirstObjectByType<HomeScreen>() != null)
+            {
+                ValidateHome();
+                return;
+            }
             int failures = 0;
             details = "";
             MonoBehaviour[] components = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
@@ -66,6 +71,30 @@ namespace ColdBrewCase.EditorTools
             Debug.Log(failures == 0 ? "Reference checks passed. Unity compile and playtest gates are still required." :
                 failures + " scene check(s) failed:\n" + details);
 
+        }
+
+        private static void ValidateHome()
+        {
+            int failures = 0;
+            details = "";
+            EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
+            foreach (string path in new[] { HomeScreen.ScenePath, HomeScreen.LevelOnePath, HomeScreen.LevelTwoPath })
+            {
+                bool included = false;
+                foreach (EditorBuildSettingsScene scene in scenes)
+                    if (scene.enabled && scene.path == path) included = true;
+                if (included && AssetDatabase.LoadAssetAtPath<SceneAsset>(path) != null) continue;
+                Report("Add and enable this scene in the build scene list: " + path);
+                failures++;
+            }
+            EditorBuildSettingsScene first = Array.Find(scenes, scene => scene.enabled);
+            if (first == null || first.path != HomeScreen.ScenePath)
+            {
+                Report("Home.unity must be the first enabled build scene.");
+                failures++;
+            }
+            Debug.Log(failures == 0 ? "Home scene checks passed. Playtest both level buttons and rebuild Web." :
+                failures + " home scene check(s) failed:\n" + details);
         }
 
         private static void Report(string message, UnityEngine.Object context = null)

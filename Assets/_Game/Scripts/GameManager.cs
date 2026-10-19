@@ -18,8 +18,7 @@ namespace ColdBrewCase
         private bool manualPause, focusPause;
         private double immuneUntil;
         private Vector2 checkpoint;
-        private static bool seenHowToPlay;
-        public bool ShowingHowToPlay { get; private set; } = !seenHowToPlay;
+        public bool ShowingHowToPlay { get; private set; }
         public bool IsActionPaused => manualPause || focusPause || ShowingHowToPlay;
         public bool CanMove => !IsActionPaused && (State == RoundState.Opening || State == RoundState.Playing);
         public bool CanRunAI => State == RoundState.Playing && !IsActionPaused;
@@ -115,7 +114,6 @@ namespace ColdBrewCase
         public void CloseHowToPlay()
         {
             ShowingHowToPlay = false;
-            seenHowToPlay = true;
             player.Stop();
             alert.RefreshNow();
             if (State == RoundState.Opening) hud.Show("Follow the thief", 6f);
@@ -129,6 +127,16 @@ namespace ColdBrewCase
         }
         private void OnAlertFull() => Lose(LossReason.Escaped);
         private void OnWarning() => hud.Show("Time running out!", 3f);
+        public void ReturnHome()
+        {
+            if (!HomeScreen.TryLoad(HomeScreen.ScenePath))
+            {
+                Debug.LogError("Add Home.unity as the first enabled scene in the build scene list.");
+                return;
+            }
+            player.Stop();
+            alert.Stop();
+        }
         public void Restart() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
