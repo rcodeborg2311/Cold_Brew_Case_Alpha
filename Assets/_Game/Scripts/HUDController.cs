@@ -44,6 +44,7 @@ namespace ColdBrewCase
         {
             moved |= Vector2.Distance(game.player.transform.position, startingPosition) > .4f;
             scanned |= heat.Active;
+            threw |= net.Nets < net.tuning.startingNets;
             if (alert.Value - previousAlert > .03f) flashUntil = Clock.Now + .7d;
             previousAlert = alert.Value;
         }
