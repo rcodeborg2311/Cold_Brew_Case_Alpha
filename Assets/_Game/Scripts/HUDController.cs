@@ -5,6 +5,7 @@ namespace ColdBrewCase
     public sealed class HUDController : MonoBehaviour
     {
         public GameManager game;
+        public bool ThiefInNetRange { get; set; }
         public AlertMeter alert;
         public HeatSightController heat;
         public ShakeController shake;
@@ -195,14 +196,22 @@ namespace ColdBrewCase
         {
             if (visualHintsOnly) return "";
             if (!moved) return "WASD / Arrow keys  Move";
-            if (game.State == RoundState.Opening) return "Follow the thief to see where it goes";
-            if (heat.Active) return "Look for the heat trail   F  Stop scan";
+            if (game.State == RoundState.Opening) 
+                return "Follow the thief to see where it goes";
+            if (heat.Active) 
+                return "Look for the heat trail   F  Stop scan";
+            if (ThiefInNetRange)
+                return "THIEF IN RANGE  -  CLICK TO THROW NET";
             if (!scanned && coffee.Count == 0) return "Walk over coffee to pick it up";
             if (!scanned && coffee.Count > 0) return "F  Drink coffee to scan for heat";
             foreach (PushableBody target in push.targets)
                 if (Vector2.Distance(target.transform.position, game.player.transform.position) <
                     push.tuning.pushRange + .5f && push.Cooldown <= 0)
                     return "Space  Push  (-" + alert.PenaltySeconds(AlertAction.Push).ToString("0.#") + "s)";
+            if (shake.IsShaking) return "Wait for steady aim";
+            if (memory.Known && net.Nets > 0)
+                return "Mouse  Aim     Click  Throw";
+            if (coffee.Count > 0 && !memory.Known) return "F  Scan";
             if (shake.IsShaking) return "Hands shaking - wait until Steady to throw";
             if (memory.Known && !threw) return "Mouse  Aim     Click  Throw net at the thief";
             if (coffee.Count > 0 && !memory.Known) return "F  Drink coffee to scan for heat";
