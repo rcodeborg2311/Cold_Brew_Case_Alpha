@@ -10,6 +10,7 @@ namespace ColdBrewCase
         public Rigidbody2D body;
         public Transform player;
         public Transform[] waypoints;
+        public bool fixedPatrol;
         public LayerMask blockers;
         public HeatTag tag;
         [Min(1f)] public float turnSpeed = 90f;
@@ -29,6 +30,7 @@ namespace ColdBrewCase
         public void Stun() { stunnedUntil = Clock.Now + tuning.pushStunSeconds; }
         public void HearNoise(Vector2 position)
         {
+            if (fixedPatrol) return;
             Vector2 direction = position - body.position;
             investigateDirection = direction.sqrMagnitude > .001f ? direction.normalized : Facing;
             investigateRemaining = tuning.noisePause;

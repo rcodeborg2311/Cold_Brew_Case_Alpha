@@ -251,7 +251,8 @@ namespace ColdBrewCase.EditorTools
             GameObject root = Actor(name, position, "Guards", new Color(.9f,.85f,.3f), out Rigidbody2D body);
             var guard = root.AddComponent<GuardController>();
             guard.game = game; guard.tuning = tuning; guard.body = body; guard.player = player;
-            guard.waypoints = MakePoints(name+"Patrol", route); guard.blockers = LayerMask.GetMask("Walls","Crates");
+            guard.waypoints = MakePoints(name+"Patrol", route); guard.fixedPatrol = true;
+            guard.blockers = LayerMask.GetMask("Walls","Crates");
             guard.tag = MakeTag(root.transform, RoomId.Corridor, HeatLevel.Warm, Traits.GuardTiming,
                 PrimitiveKind.Circle, new Vector2(.65f,.65f), false);
             var cone = Node("ViewCone", root.transform, Vector2.zero).gameObject.AddComponent<ViewConeRenderer>();

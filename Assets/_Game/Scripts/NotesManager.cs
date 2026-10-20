@@ -7,6 +7,9 @@ namespace ColdBrewCase
     public sealed class NotesManager : MonoBehaviour
     {
         public GameTuning tuning;
+
+        public string Direction { get; private set; } = "";
+public bool HasDirection => !string.IsNullOrEmpty(Direction);
         [Min(0f)] public float hearingRange = 22f;
         [Min(1)] public int hearingRooms = 2;
         [Min(.1f)] public float soundSeconds = 6f;
@@ -96,5 +99,18 @@ namespace ColdBrewCase
             Direction = "";
             Changed?.Invoke();
         }
+
+        private static string DirectionTo(Vector2 from, Vector2 target)
+{
+    Vector2 delta = target - from;
+
+    if (delta.sqrMagnitude < 0.25f)
+        return "Nearby";
+
+    if (Mathf.Abs(delta.y) > Mathf.Abs(delta.x))
+        return delta.y > 0 ? "Upstairs" : "Downstairs";
+
+    return delta.x > 0 ? "Right" : "Left";
+}
     }
 }
