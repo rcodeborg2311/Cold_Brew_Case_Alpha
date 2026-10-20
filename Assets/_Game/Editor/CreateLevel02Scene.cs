@@ -13,7 +13,7 @@ namespace ColdBrewCase.EditorTools
     {
         private const float Level2Wall = .4f;
         private const float Level2Door = 3f;
-        private const float Level2ThiefSpeed = 10.5f;
+        private const float Level2ThiefSpeed = 7.5f;
 
         [MenuItem("Tools/Cold Brew Case/Create Level 2 Scene")]
         public static void CreateLevel02()
@@ -124,7 +124,21 @@ namespace ColdBrewCase.EditorTools
             GuardController kitchenGuard = MakeGuard("Kitchen Guard", new Vector2(33, 3), player.transform,
                 new[] { new Vector2(33, 3), new Vector2(37, 3), new Vector2(37, 7), new Vector2(33, 7) });
             kitchenGuard.tag.fixedRoom = RoomId.Kitchen;
-            GuardController[] guards = { storageGuard, kitchenGuard };
+
+            GuardController alleyGuard = MakeGuard(
+                "Alley Guard",
+                new Vector2(45, 3),
+                player.transform,
+                new[] {
+                    new Vector2(43, 3),
+                    new Vector2(47, 3),
+                    new Vector2(47, 5.5f),
+                    new Vector2(43, 5.5f)
+                });
+
+            alleyGuard.tag.fixedRoom = RoomId.BackAlley;
+
+            GuardController[] guards = { storageGuard, kitchenGuard, alleyGuard };
 
             // Cover uses the same Walls/Crates layers consumed by the existing net and thief scripts.
             Solid("Loading Bay Pallet", walls, new Vector2(3, 7.3f), new Vector2(2.1f, 1.1f), "Crates");

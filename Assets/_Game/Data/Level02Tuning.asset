@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level02Tuning
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GameTuning
   playerSpeed: 5
-  thiefSpeed: 10.5
+  thiefSpeed: 7.5
   guardSpeed: 1.4
   guardTurnWait: 0.75
   heatSeconds: 10
