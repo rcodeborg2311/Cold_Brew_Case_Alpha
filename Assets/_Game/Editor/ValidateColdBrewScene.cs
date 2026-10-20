@@ -57,8 +57,14 @@ namespace ColdBrewCase.EditorTools
                 if (net.hitMask != LayerMask.GetMask("Walls","Crates","Guards","Thief"))
                 { Report("Net mask must be Walls + Crates + Guards + Thief.", net); failures++; }
                 foreach (GuardController guard in UnityEngine.Object.FindObjectsByType<GuardController>(FindObjectsSortMode.None))
+                {
                     if (guard.blockers != LayerMask.GetMask("Walls","Crates"))
                     { Report("Guard blockers must be Walls + Crates.", guard); failures++; }
+                    if (guard.turnSpeed <= 0f)
+                    { Report("Cop Turn Speed must be greater than zero.", guard); failures++; }
+                }
+                if (game.thief.GetComponent<HelicopterEscape>() == null)
+                { Report("Add HelicopterEscape to the thief.", game.thief); failures++; }
                 var input = game.GetComponent<PlayerInputRouter>();
                 if (input.actions != null)
                     foreach (string name in new[] {"Move","Aim","Coffee","Net","Push","Pause"})
@@ -67,6 +73,16 @@ namespace ColdBrewCase.EditorTools
                 HeatTag thiefTag = game.thief.GetComponent<HeatTag>();
                 if (thiefTag == null || thiefTag.onlyFromRoom != RoomId.Unknown)
                 { Report("Thief: set HeatTag Only From Room to Unknown so its own room can be scanned.", thiefTag); failures++; }
+                if (game.TryGetComponent(out LevelOneLessons lessons))
+                {
+                    GuardController[] guards = UnityEngine.Object.FindObjectsByType<GuardController>(FindObjectsSortMode.None);
+                    if (guards.Length != 1)
+                    { Report("Level01 visual lessons need exactly one active cop.", game); failures++; }
+                    if (!game.hud.visualHintsOnly)
+                    { Report("Level01: enable HUD Visual Hints Only.", game.hud); failures++; }
+                    if (lessons.coffeeGate == lessons.footstepGate)
+                    { Report("Level01 lessons need two different gates.", lessons); failures++; }
+                }
             }
             Debug.Log(failures == 0 ? "Reference checks passed. Unity compile and playtest gates are still required." :
                 failures + " scene check(s) failed:\n" + details);

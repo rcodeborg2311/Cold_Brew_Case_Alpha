@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ColdBrewCase
 {
-    public enum SymbolKind { Coffee, Net, Push, Footprints, Clock, Hat, Ramp, Crates, Scan, Shake }
+    public enum SymbolKind { Coffee, Net, Push, Footprints, Clock, Hat, Ramp, Crates, Scan, Shake, Sound, Helicopter }
 
     public static class GameSymbols
     {
@@ -58,6 +58,17 @@ namespace ColdBrewCase
             new Part(.15f,.3f,.28f,.1f,PrimitiveKind.Box,35),
             new Part(.34f,.47f,.3f,.1f,PrimitiveKind.Box,-35),
             new Part(.57f,.3f,.28f,.1f,PrimitiveKind.Box,35) };
+        private static readonly Part[] sound = {
+            new Part(.08f,.4f,.17f,.2f),
+            new Part(.18f,.25f,.32f,.5f,PrimitiveKind.Triangle,-90),
+            new Part(.53f,.34f,.08f,.32f,PrimitiveKind.Circle),
+            new Part(.67f,.24f,.08f,.52f,PrimitiveKind.Circle),
+            new Part(.81f,.14f,.08f,.72f,PrimitiveKind.Circle) };
+        private static readonly Part[] helicopter = {
+            new Part(.3f,.35f,.6f,.4f,PrimitiveKind.Circle),
+            new Part(.08f,.45f,.35f,.08f), new Part(.07f,.27f,.08f,.3f),
+            new Part(.48f,.23f,.08f,.17f), new Part(.14f,.2f,.8f,.06f),
+            new Part(.35f,.78f,.55f,.06f) };
 
         public static Part[] Parts(SymbolKind kind)
         {
@@ -72,6 +83,8 @@ namespace ColdBrewCase
                 case SymbolKind.Ramp: return ramp;
                 case SymbolKind.Crates: return crates;
                 case SymbolKind.Scan: return scan;
+                case SymbolKind.Sound: return sound;
+                case SymbolKind.Helicopter: return helicopter;
                 default: return shake;
             }
         }

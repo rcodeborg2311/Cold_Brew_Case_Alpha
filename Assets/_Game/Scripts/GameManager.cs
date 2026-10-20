@@ -69,8 +69,20 @@ namespace ColdBrewCase
         public void Lose(LossReason reason)
         {
             if (State != RoundState.Playing) return;
-            if (reason == LossReason.Escaped) thief.Escape();
+            if (reason == LossReason.Escaped)
+            {
+                State = RoundState.Extracting;
+                manualPause = focusPause = ShowingHowToPlay = false;
+                alert.Stop();
+                player.Stop();
+                thief.Escape();
+                return;
+            }
             Finish(RoundState.Lost, reason.ToString());
+        }
+        public void CompleteEscape()
+        {
+            if (State == RoundState.Extracting) Finish(RoundState.Lost, "Escaped");
         }
         private void Finish(RoundState state, string outcome)
         {
@@ -101,13 +113,13 @@ namespace ColdBrewCase
         public void TogglePause()
         {
             alert.RefreshNow();
-            if (State == RoundState.Won || State == RoundState.Lost) return;
+            if (State == RoundState.Won || State == RoundState.Lost || State == RoundState.Extracting) return;
             manualPause = !manualPause;
             player.Stop();
         }
         public void OpenHowToPlay()
         {
-            if (State == RoundState.Won || State == RoundState.Lost) return;
+            if (State == RoundState.Won || State == RoundState.Lost || State == RoundState.Extracting) return;
             ShowingHowToPlay = true;
             player.Stop();
         }

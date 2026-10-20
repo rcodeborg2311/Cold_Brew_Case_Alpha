@@ -9,6 +9,9 @@ namespace ColdBrewCase
         public Camera worldCamera;
         private RoomManager rooms;
         private float minimumSize;
+        private Vector2 escapePosition;
+        private bool watchingEscape;
+        public void FocusOnEscape(Vector2 position) { escapePosition = position; watchingEscape = true; }
 
         private void Awake()
         {
@@ -18,6 +21,14 @@ namespace ColdBrewCase
 
         private void LateUpdate()
         {
+            if (watchingEscape)
+            {
+                float blend = 1f - Mathf.Exp(-5f * Time.unscaledDeltaTime);
+                Vector3 position = new Vector3(escapePosition.x, escapePosition.y, -10f);
+                transform.position = Vector3.Lerp(transform.position, position, blend);
+                worldCamera.orthographicSize = Mathf.Lerp(worldCamera.orthographicSize, minimumSize, blend);
+                return;
+            }
             RoomZone current = rooms != null ? rooms.Get(rooms.Current) : null;
             if (current == null)
             {

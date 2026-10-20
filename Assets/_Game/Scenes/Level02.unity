@@ -4610,6 +4610,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1536
   tag: {fileID: 497736179}
+  turnSpeed: 90
 --- !u!114 &497736179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7718,6 +7719,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1536
   tag: {fileID: 801471854}
+  turnSpeed: 90
 --- !u!114 &801471854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16430,6 +16432,7 @@ GameObject:
   - component: {fileID: 1614048658}
   - component: {fileID: 1614048657}
   - component: {fileID: 1614048656}
+  - component: {fileID: 3100000000}
   m_Layer: 12
   m_Name: Thief
   m_TagString: Untagged
@@ -16486,7 +16489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HeatTag
   rooms: {fileID: 1828801776}
   fixedRoom: 12
-  onlyFromRoom: 10
+  onlyFromRoom: 0
   heat: 1
   traits: 9
   normal: {fileID: 1863263337}
@@ -16522,10 +16525,10 @@ MonoBehaviour:
   blockers:
     serializedVersion: 2
     m_Bits: 1536
-  resistSpeed: 3
-  resistDistance: 2.5
+  resistSpeed: 0.8
+  resistDistance: 0.55
   coverSearchRadius: 6
-  startDelay: 0.5
+  startDelay: 1.5
 --- !u!58 &1614048659
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -23993,6 +23996,21 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &3100000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614048654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c22fb61898a64910bb9ca985aa035e85, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HelicopterEscape
+  approachSeconds: 12
+  hoistSeconds: 1
+  departureSeconds: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

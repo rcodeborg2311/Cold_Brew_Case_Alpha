@@ -16,6 +16,7 @@ namespace ColdBrewCase
         public DiscoveryMemory memory;
         public GuardController[] guards;
         public Camera worldCamera;
+        public bool visualHintsOnly;
         private string message = "";
         private double messageUntil, flashUntil;
         private float previousAlert;
@@ -38,6 +39,7 @@ namespace ColdBrewCase
 
         public void Show(string text, float seconds = 2f)
         {
+            if (visualHintsOnly) return;
             message = text;
             messageUntil = Clock.Now + seconds;
         }
@@ -87,6 +89,7 @@ namespace ColdBrewCase
 
         private string Hint()
         {
+            if (visualHintsOnly) return "";
             if (!moved) return "WASD / Arrow keys  Move";
             if (game.State == RoundState.Opening) return "Follow the thief to see where it goes";
             if (heat.Active) return "Look for the heat trail   F  Stop scan";
@@ -151,7 +154,7 @@ namespace ColdBrewCase
                 new Vector3(Screen.width / 1280f, Screen.height / 720f, 1));
             Fill(new Rect(0, 0, 1280, 96), panel);
             GUI.Label(new Rect(16, 8, 320, 40), game.State == RoundState.Opening ?
-                "Follow the thief" : "Find and catch the thief", label);
+                "Follow the thief" : game.State == RoundState.Extracting ? "Escaping..." : "Find and catch the thief", label);
             GameSymbols.Draw(new Rect(350, 10, 36, 36), SymbolKind.Coffee, new Color(1, .7f, .3f));
             Pips(395, 22, coffee.Count, coffee.capacity, new Color(1, .7f, .3f));
             GUI.Label(new Rect(474, 10, 40, 36), "F", small);
@@ -167,9 +170,26 @@ namespace ColdBrewCase
             if (GUI.Button(new Rect(1222, 10, 42, 36), "II", button)) game.TogglePause();
             if (GUI.Button(new Rect(1222, 52, 42, 36), "?", button)) game.OpenHowToPlay();
             DrawStatus();
-            GUI.Label(new Rect(16, 53, 990, 34), notes.HasDirection ? "Footsteps: " + notes.Direction : "", label);
+            HelicopterEscape helicopter = game.thief.GetComponent<HelicopterEscape>();
+            if (helicopter != null && game.State == RoundState.Playing && alert.RemainingSeconds <= helicopter.approachSeconds)
+            {
+                GameSymbols.Draw(new Rect(16, 55, 54, 32), SymbolKind.Helicopter, new Color(1f, .7f, .2f));
+                Ring(new Vector2(91, 70), 15, alert.RemainingSeconds / Mathf.Max(1f, helicopter.approachSeconds), Color.yellow);
+            }
+            if (notes.HasSound && game.CanMove)
+            {
+                Vector3 screen = worldCamera.WorldToScreenPoint(notes.SoundPosition);
+                if (screen.z > 0)
+                {
+                    float size = 48f + Mathf.Sin((float)Clock.Now * 9f) * 5f;
+                    float x = Mathf.Clamp(screen.x * 1280f / Screen.width, size / 2f, 1280f - size / 2f);
+                    float y = Mathf.Clamp((Screen.height - screen.y) * 720f / Screen.height, 130f, 610f);
+                    Fill(new Rect(x - size / 2f, y - size / 2f, size, size), panel);
+                    GameSymbols.Draw(new Rect(x - size / 2f, y - size / 2f, size, size), SymbolKind.Sound, Color.cyan);
+                }
+            }
             bool terminal = game.State == RoundState.Won || game.State == RoundState.Lost;
-            if (!terminal && !game.IsActionPaused)
+            if (game.CanMove)
             {
                 string hint = Hint();
                 if (hint.Length > 0)
