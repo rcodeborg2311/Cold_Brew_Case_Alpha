@@ -2,8 +2,13 @@ using UnityEngine;
 
 namespace ColdBrewCase
 {
-    public enum RoomId { Unknown, Courtyard, Corridor, Fork, Hideout }
-    public enum RoundState { Opening, Playing, Won, Lost }
+    // Keep Level 1 values and their serialized order unchanged. Level 2 values are appended.
+    public enum RoomId
+    {
+        Unknown, Courtyard, Corridor, Fork, Hideout,
+        CafeLobby, StorageRoom, LoadingBay, Kitchen, BackAlley, UpperLanding, StorageLoft, Office
+    }
+    public enum RoundState { Opening, Playing, Won, Lost, Extracting }
     public enum AlertAction { Push, Spotted, MissedNet }
     public enum LossReason { Escaped, NoNets }
     public enum HeatLevel { Cold, Warm, Hot }

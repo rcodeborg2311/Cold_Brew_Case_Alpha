@@ -15,7 +15,12 @@ namespace ColdBrewCase
             hits.Clear();
             body.Cast(delta / length, filter, hits, length + .02f);
             float allowed = length;
-            foreach (RaycastHit2D hit in hits) allowed = Mathf.Min(allowed, Mathf.Max(0f, hit.distance - .02f));
+            Collider2D own = body.GetComponent<Collider2D>();
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (own != null && Physics2D.GetIgnoreCollision(own, hit.collider)) continue;
+                allowed = Mathf.Min(allowed, Mathf.Max(0f, hit.distance - .02f));
+            }
             return delta / length * allowed;
         }
     }

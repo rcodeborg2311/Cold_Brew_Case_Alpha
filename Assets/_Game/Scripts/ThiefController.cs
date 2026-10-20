@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace ColdBrewCase
 {
+    [RequireComponent(typeof(HelicopterEscape))]
     public sealed class ThiefController : MonoBehaviour
     {
         public GameManager game;
@@ -13,9 +14,12 @@ namespace ColdBrewCase
         public Transform escapePoint;
         public GameObject escapeGate;
         public LayerMask blockers;
-        [Min(0f)] public float resistSpeed = 3f;
-        [Min(0f)] public float resistDistance = 2.5f;
+        [Min(0f)] public float resistSpeed = .8f;
+        [Min(0f)] public float resistDistance = .55f;
         [Min(0f)] public float coverSearchRadius = 6f;
+
+        [Min(0f)] public float startDelay = 1.5f;
+        private float waited;
 
         private readonly List<RaycastHit2D> hits = new List<RaycastHit2D>(8);
         private readonly Vector2[] corners = new Vector2[4];
@@ -27,6 +31,7 @@ namespace ColdBrewCase
 
         public bool CanBeCaptured => hidden && !captured && !escaping;
         public bool NormalVisible => !gone && (captured || escaping || !hidden || SameRoom);
+        public bool BeingExtracted => escaping;
 
         private bool SameRoom
         {
@@ -39,14 +44,7 @@ namespace ColdBrewCase
 
         private void FixedUpdate()
         {
-            if (captured || gone) return;
-            if (escaping)
-            {
-                Vector2 delta = (Vector2)escapePoint.position - body.position;
-                if (delta.magnitude < .1f) { gone = true; return; }
-                body.MovePosition(body.position + Vector2.ClampMagnitude(delta, tuning.thiefSpeed * Time.fixedDeltaTime));
-                return;
-            }
+            if (captured || gone || escaping) return;
             if (hidden)
             {
                 if (!SameRoom) { cover = null; nextDecision = 0; return; }
@@ -54,6 +52,7 @@ namespace ColdBrewCase
                 return;
             }
             if (game.IsActionPaused || game.State != RoundState.Opening) return;
+            if (waited < startDelay) { waited += Time.fixedDeltaTime; return; }
             Vector2 direction = (Vector2)openingRoute[point].position - body.position;
             if (direction.magnitude < .08f)
             {
@@ -212,6 +211,9 @@ namespace ColdBrewCase
             hidden = false;
             escaping = true;
             escapeGate.SetActive(false);
+            body.simulated = false;
+            GetComponent<HelicopterEscape>().BeginPickup();
         }
+        public void BoardHelicopter() => gone = true;
     }
 }

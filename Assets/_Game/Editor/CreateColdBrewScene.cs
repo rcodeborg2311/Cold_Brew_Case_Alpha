@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 
 namespace ColdBrewCase.EditorTools
 {
-    public static class CreateColdBrewScene
+    public static partial class CreateColdBrewScene
     {
         private const string Root = "Assets/_Game";
         private static Material flat;

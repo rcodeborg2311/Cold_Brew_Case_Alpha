@@ -70,8 +70,14 @@ namespace ColdBrewCase
                 nearest.collider.GetComponentInParent<ThiefController>();
             // Resolve the collision/capture BEFORE the zero-nets loss check.
             if (target != null && game.TryCapture(target)) return;
-            hud.Show("Miss! -" + alert.PenaltySeconds(AlertAction.MissedNet).ToString("0.#") + "s");
+            string penalty = "-" + alert.PenaltySeconds(AlertAction.MissedNet).ToString("0.#") + "s";
             alert.Add(AlertAction.MissedNet);
+            if (Nets > 0)
+            {
+                string left = Nets == 1 ? "Last net left!" : Nets + " nets left";
+                Color color = Nets == 1 ? new Color(1f, .3f, .25f) : new Color(1f, .7f, .3f);
+                hud.Popup("Missed!", left + "   " + penalty, color);
+            }
             if (Nets == 0) game.Lose(LossReason.NoNets);
         }
     }

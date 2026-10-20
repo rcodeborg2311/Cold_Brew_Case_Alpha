@@ -18,7 +18,8 @@ namespace ColdBrewCase
         private bool manualPause, focusPause;
         private double immuneUntil;
         private Vector2 checkpoint;
-        public bool IsActionPaused => manualPause || focusPause;
+        public bool ShowingHowToPlay { get; private set; }
+        public bool IsActionPaused => manualPause || focusPause || ShowingHowToPlay;
         public bool CanMove => !IsActionPaused && (State == RoundState.Opening || State == RoundState.Playing);
         public bool CanRunAI => State == RoundState.Playing && !IsActionPaused;
         private void OnEnable()
@@ -68,13 +69,27 @@ namespace ColdBrewCase
         public void Lose(LossReason reason)
         {
             if (State != RoundState.Playing) return;
-            if (reason == LossReason.Escaped) thief.Escape();
+            if (reason == LossReason.Escaped)
+            {
+                State = RoundState.Extracting;
+                manualPause = focusPause = ShowingHowToPlay = false;
+                alert.Stop();
+                player.Stop();
+                thief.Escape();
+                return;
+            }
             Finish(RoundState.Lost, reason.ToString());
+        }
+        public void CompleteEscape()
+        {
+            if (State == RoundState.Extracting) Finish(RoundState.Lost, "Escaped");
         }
         private void Finish(RoundState state, string outcome)
         {
             State = state;
             Outcome = outcome;
+            if (state == RoundState.Won)
+                HomeScreen.RecordWin(SceneManager.GetActiveScene().path, alert.RemainingSeconds);
             alert.Stop();
             player.Stop();
             RoundEnded?.Invoke();
@@ -100,9 +115,22 @@ namespace ColdBrewCase
         public void TogglePause()
         {
             alert.RefreshNow();
-            if (State == RoundState.Won || State == RoundState.Lost) return;
+            if (State == RoundState.Won || State == RoundState.Lost || State == RoundState.Extracting) return;
             manualPause = !manualPause;
             player.Stop();
+        }
+        public void OpenHowToPlay()
+        {
+            if (State == RoundState.Won || State == RoundState.Lost || State == RoundState.Extracting) return;
+            ShowingHowToPlay = true;
+            player.Stop();
+        }
+        public void CloseHowToPlay()
+        {
+            ShowingHowToPlay = false;
+            player.Stop();
+            alert.RefreshNow();
+            if (State == RoundState.Opening) hud.Show("Follow the thief", 6f);
         }
         public void ResumeActions() { manualPause = false; player.Stop(); alert.RefreshNow(); }
         private void OnApplicationFocus(bool focused)
@@ -113,6 +141,16 @@ namespace ColdBrewCase
         }
         private void OnAlertFull() => Lose(LossReason.Escaped);
         private void OnWarning() => hud.Show("Time running out!", 3f);
+        public void ReturnHome()
+        {
+            if (!HomeScreen.TryLoad(HomeScreen.ScenePath))
+            {
+                Debug.LogError("Add Home.unity as the first enabled scene in the build scene list.");
+                return;
+            }
+            player.Stop();
+            alert.Stop();
+        }
         public void Restart() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

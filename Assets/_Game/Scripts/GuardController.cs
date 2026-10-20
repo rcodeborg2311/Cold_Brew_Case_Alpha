@@ -12,10 +12,15 @@ namespace ColdBrewCase
         public Transform[] waypoints;
         public LayerMask blockers;
         public HeatTag tag;
+        [Min(1f)] public float turnSpeed = 90f;
         public Vector2 Facing { get; private set; } = Vector2.right;
+        public Vector2 NextFacing { get; private set; } = Vector2.right;
+        public bool PreparingTurn => waitRemaining > 0f || Turning;
+        public bool Turning { get; private set; }
         private int waypoint;
         private float waitRemaining, investigateRemaining;
         private double stunnedUntil, nextSense;
+        private Vector2 investigateDirection;
         private readonly List<RaycastHit2D> hits = new List<RaycastHit2D>(8);
         public bool Stunned => Clock.Now < stunnedUntil;
         public float TimeUntilTurn => investigateRemaining > 0f ? investigateRemaining :
@@ -25,24 +30,41 @@ namespace ColdBrewCase
         public void HearNoise(Vector2 position)
         {
             Vector2 direction = position - body.position;
-            if (direction.sqrMagnitude > .001f) Facing = direction.normalized;
+            investigateDirection = direction.sqrMagnitude > .001f ? direction.normalized : Facing;
             investigateRemaining = tuning.noisePause;
         }
         private void FixedUpdate()
         {
             if (!game.CanRunAI || Stunned) return;
-            if (investigateRemaining > 0f) { investigateRemaining -= Time.fixedDeltaTime; return; }
-            if (waitRemaining > 0f) { waitRemaining -= Time.fixedDeltaTime; return; }
+            if (investigateRemaining > 0f)
+            {
+                NextFacing = investigateDirection;
+                if (TurnTowards(NextFacing)) investigateRemaining -= Time.fixedDeltaTime;
+                return;
+            }
             Vector2 delta = (Vector2)waypoints[waypoint].position - body.position;
+            if (delta.sqrMagnitude > .001f) NextFacing = delta.normalized;
+            if (waitRemaining > 0f) { waitRemaining -= Time.fixedDeltaTime; return; }
             if (delta.magnitude < .08f)
             {
                 waypoint = (waypoint + 1) % waypoints.Length;
                 waitRemaining = tuning.guardTurnWait;
+                Vector2 next = (Vector2)waypoints[waypoint].position - body.position;
+                if (next.sqrMagnitude > .001f) NextFacing = next.normalized;
                 return;
             }
-            Facing = delta.normalized;
+            if (!TurnTowards(NextFacing)) return;
             Vector2 step = Vector2.ClampMagnitude(delta, tuning.guardSpeed * Time.fixedDeltaTime);
             body.MovePosition(body.position + BodyMover.SafeDelta(body, step, blockers, hits));
+        }
+        private bool TurnTowards(Vector2 direction)
+        {
+            float current = Mathf.Atan2(Facing.y, Facing.x) * Mathf.Rad2Deg;
+            float target = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            float angle = Mathf.MoveTowardsAngle(current, target, Mathf.Max(1f, turnSpeed) * Time.fixedDeltaTime);
+            Facing = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+            Turning = Mathf.Abs(Mathf.DeltaAngle(angle, target)) > 1f;
+            return !Turning;
         }
         private void Update()
         {
