@@ -13,6 +13,8 @@ namespace ColdBrewCase
         private bool heard;
         private MeshRenderer[] markers;
 
+        public bool Heard => heard;
+
         private void Awake()
         {
             game = Object.FindFirstObjectByType<GameManager>();
