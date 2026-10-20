@@ -77,6 +77,8 @@ namespace ColdBrewCase
             bool visible = !normallyHidden && rooms.IsVisible(Room);
             if (thief != null) visible = thief.NormalVisible;
             normal.SetVisible(visible);
+            if (thief != null)
+                normal.GetComponent<MeshRenderer>().sortingOrder = thief.BeingExtracted ? 205 : normal.sortingOrder;
         }
     }
 }

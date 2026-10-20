@@ -62,6 +62,7 @@ namespace ColdBrewCase
         }
         private void Update()
         {
+            if (game.State == RoundState.Extracting) { Cancel(); return; }
             ResolveExpired();
             foreach (HeatTag tag in tags)
                 tag.SetThermalVisible(Active && rooms.CanScan(tag.Room) &&

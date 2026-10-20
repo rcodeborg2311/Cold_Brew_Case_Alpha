@@ -13,6 +13,11 @@ namespace ColdBrewCase.EditorTools
         [MenuItem("Tools/Cold Brew Case/Validate Open Scene")]
         public static void Validate()
         {
+            if (UnityEngine.Object.FindFirstObjectByType<HomeScreen>() != null)
+            {
+                ValidateHome();
+                return;
+            }
             int failures = 0;
             details = "";
             MonoBehaviour[] components = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
@@ -52,8 +57,14 @@ namespace ColdBrewCase.EditorTools
                 if (net.hitMask != LayerMask.GetMask("Walls","Crates","Guards","Thief"))
                 { Report("Net mask must be Walls + Crates + Guards + Thief.", net); failures++; }
                 foreach (GuardController guard in UnityEngine.Object.FindObjectsByType<GuardController>(FindObjectsSortMode.None))
+                {
                     if (guard.blockers != LayerMask.GetMask("Walls","Crates"))
                     { Report("Guard blockers must be Walls + Crates.", guard); failures++; }
+                    if (guard.turnSpeed <= 0f)
+                    { Report("Cop Turn Speed must be greater than zero.", guard); failures++; }
+                }
+                if (game.thief.GetComponent<HelicopterEscape>() == null)
+                { Report("Add HelicopterEscape to the thief.", game.thief); failures++; }
                 var input = game.GetComponent<PlayerInputRouter>();
                 if (input.actions != null)
                     foreach (string name in new[] {"Move","Aim","Coffee","Net","Push","Pause"})
@@ -62,10 +73,44 @@ namespace ColdBrewCase.EditorTools
                 HeatTag thiefTag = game.thief.GetComponent<HeatTag>();
                 if (thiefTag == null || thiefTag.onlyFromRoom != RoomId.Unknown)
                 { Report("Thief: set HeatTag Only From Room to Unknown so its own room can be scanned.", thiefTag); failures++; }
+                if (game.TryGetComponent(out LevelOneLessons lessons))
+                {
+                    GuardController[] guards = UnityEngine.Object.FindObjectsByType<GuardController>(FindObjectsSortMode.None);
+                    if (guards.Length != 1)
+                    { Report("Level01 visual lessons need exactly one active cop.", game); failures++; }
+                    if (!game.hud.visualHintsOnly)
+                    { Report("Level01: enable HUD Visual Hints Only.", game.hud); failures++; }
+                    if (lessons.coffeeGate == lessons.footstepGate)
+                    { Report("Level01 lessons need two different gates.", lessons); failures++; }
+                }
             }
             Debug.Log(failures == 0 ? "Reference checks passed. Unity compile and playtest gates are still required." :
                 failures + " scene check(s) failed:\n" + details);
 
+        }
+
+        private static void ValidateHome()
+        {
+            int failures = 0;
+            details = "";
+            EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
+            foreach (string path in new[] { HomeScreen.ScenePath, HomeScreen.LevelOnePath, HomeScreen.LevelTwoPath })
+            {
+                bool included = false;
+                foreach (EditorBuildSettingsScene scene in scenes)
+                    if (scene.enabled && scene.path == path) included = true;
+                if (included && AssetDatabase.LoadAssetAtPath<SceneAsset>(path) != null) continue;
+                Report("Add and enable this scene in the build scene list: " + path);
+                failures++;
+            }
+            EditorBuildSettingsScene first = Array.Find(scenes, scene => scene.enabled);
+            if (first == null || first.path != HomeScreen.ScenePath)
+            {
+                Report("Home.unity must be the first enabled build scene.");
+                failures++;
+            }
+            Debug.Log(failures == 0 ? "Home scene checks passed. Playtest both level buttons and rebuild Web." :
+                failures + " home scene check(s) failed:\n" + details);
         }
 
         private static void Report(string message, UnityEngine.Object context = null)

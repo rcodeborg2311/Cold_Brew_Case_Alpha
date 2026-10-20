@@ -16,6 +16,11 @@ namespace ColdBrewCase.EditorTools
                 return;
             }
             GameManager game = Object.FindFirstObjectByType<GameManager>();
+            if (game != null && game.GetComponent<LevelOneLessons>() != null)
+            {
+                Debug.Log("Level01 already uses visual lessons. Keep its updated scene layout.");
+                return;
+            }
             if (game == null || game.rooms == null)
             {
                 Debug.LogError("Open your existing Level01 scene and assign its RoomManager.");
@@ -90,9 +95,9 @@ namespace ColdBrewCase.EditorTools
                 Undo.RegisterCreatedObjectUndo(root, "Add footstep cues");
                 cueRoot = root.transform;
             }
-            MakeCue(cueRoot, "Footsteps_Courtyard", new Vector2(4.8f, 5), corridor.transform, material);
-            MakeCue(cueRoot, "Footsteps_Corridor", new Vector2(18.5f, 5), fork.transform, material);
-            MakeCue(cueRoot, "Footsteps_Fork", new Vector2(26, 1.6f), hideout.transform, material);
+            MakeCue(cueRoot, "Footsteps_Courtyard", new Vector2(4.8f, 5), material);
+            MakeCue(cueRoot, "Footsteps_Corridor", new Vector2(18.5f, 5), material);
+            MakeCue(cueRoot, "Footsteps_Fork", new Vector2(26, 1.6f), material);
 
             foreach (CoffeePickup coffee in Object.FindObjectsByType<CoffeePickup>(
                 FindObjectsInactive.Include, FindObjectsSortMode.None))
@@ -121,18 +126,11 @@ namespace ColdBrewCase.EditorTools
             Debug.Log("Footstep cues added. Round time is 96 seconds. Save, validate and Play.");
         }
 
-        private static void MakeCue(Transform parent, string name, Vector2 position, Transform next, Material material)
+        private static void MakeCue(Transform parent, string name, Vector2 position, Material material)
         {
             Transform existing = parent.Find(name);
             if (existing != null)
             {
-                FootstepCue old = existing.GetComponent<FootstepCue>();
-                if (old != null)
-                {
-                    Undo.RecordObject(old, "Set next room");
-                    old.SetNextRoom(next);
-                    EditorUtility.SetDirty(old);
-                }
                 return;
             }
             GameObject root = new GameObject(name);
@@ -144,7 +142,6 @@ namespace ColdBrewCase.EditorTools
             trigger.radius = .8f;
             trigger.isTrigger = true;
             FootstepCue cue = Undo.AddComponent<FootstepCue>(root);
-            cue.SetNextRoom(next);
             EditorUtility.SetDirty(cue);
             AudioSource sound = root.GetComponent<AudioSource>();
             sound.playOnAwake = false;

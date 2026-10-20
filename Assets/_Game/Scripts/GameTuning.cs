@@ -8,7 +8,7 @@ namespace ColdBrewCase
         Unknown, Courtyard, Corridor, Fork, Hideout,
         CafeLobby, StorageRoom, LoadingBay, Kitchen, BackAlley, UpperLanding, StorageLoft, Office
     }
-    public enum RoundState { Opening, Playing, Won, Lost }
+    public enum RoundState { Opening, Playing, Won, Lost, Extracting }
     public enum AlertAction { Push, Spotted, MissedNet }
     public enum LossReason { Escaped, NoNets }
     public enum HeatLevel { Cold, Warm, Hot }

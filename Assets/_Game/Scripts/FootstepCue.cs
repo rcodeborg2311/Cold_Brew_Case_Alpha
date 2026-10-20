@@ -5,7 +5,6 @@ namespace ColdBrewCase
     [RequireComponent(typeof(CircleCollider2D), typeof(AudioSource))]
     public sealed class FootstepCue : MonoBehaviour
     {
-        [SerializeField] private Transform nextRoom;
         [SerializeField] private bool playSound = true;
         private GameManager game;
         private NotesManager notes;
@@ -13,8 +12,6 @@ namespace ColdBrewCase
         private AudioClip clip;
         private bool heard;
         private MeshRenderer[] markers;
-
-        public void SetNextRoom(Transform room) => nextRoom = room;
 
         private void Awake()
         {
@@ -41,25 +38,18 @@ namespace ColdBrewCase
             sound.clip = clip;
         }
 
-        private Vector2 Target()
-        {
-            if (nextRoom != null) return nextRoom.position;
-            Transform[] route = game.thief.openingRoute;
-            if (route != null && route.Length > 0 && route[route.Length - 1] != null)
-                return route[route.Length - 1].position;
-            return game.thief.transform.position;
-        }
+        private void OnTriggerEnter2D(Collider2D other) => Listen(other);
+        private void OnTriggerStay2D(Collider2D other) => Listen(other);
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void Listen(Collider2D other)
         {
             if (heard || game == null || notes == null || game.thief == null ||
                 !game.CanMove || other.GetComponent<PlayerController>() == null) return;
-            heard = true;
-            Vector2 target = Target();
+            Vector2 target = game.thief.transform.position;
             Vector2 from = other.transform.position;
-            notes.Hear(from, target);
-            game.hud.Show("Footsteps: " + notes.Direction, 3f);
-            sound.panStereo = notes.Direction == "Right" ? .85f : notes.Direction == "Left" ? -.85f : 0;
+            if (!notes.Hear(from, target)) return;
+            heard = true;
+            sound.panStereo = Mathf.Clamp((notes.SoundPosition.x - from.x) / 5f, -.85f, .85f);
             if (playSound) sound.Play();
             foreach (MeshRenderer marker in markers) marker.enabled = false;
         }

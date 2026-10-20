@@ -7,8 +7,7 @@ using UnityEngine;
 
 namespace ColdBrewCase.EditorTools
 {
-    // Level 2 uses the existing game scripts and a copy of Level 1 tuning so
-    // its thief speed can be adjusted without changing Level 1.
+    // Both levels start with matching movement settings.
     public static partial class CreateColdBrewScene
     {
         private const float Level2Wall = .4f;
@@ -37,11 +36,9 @@ namespace ColdBrewCase.EditorTools
                 level2Tuning = ScriptableObject.CreateInstance<GameTuning>();
                 AssetDatabase.CreateAsset(level2Tuning, Root + "/Data/Level02Tuning.asset");
             }
-            // Keep Level 2's settings copied from Level 1, with only the requested
-            // small reduction to the thief's run speed.
+            // Keep Level 2 movement matched to Level 1.
             EditorUtility.CopySerialized(tuning, level2Tuning);
             level2Tuning.name = "Level02Tuning";
-            level2Tuning.thiefSpeed = Level2ThiefSpeed;
             EditorUtility.SetDirty(level2Tuning);
             var inputAsset = MakeInput();
 
@@ -170,7 +167,7 @@ namespace ColdBrewCase.EditorTools
             thief.escapePoint = Node("Office Escape Point", paths, new Vector2(43, 15));
             HeatTag thiefTag = MakeTag(thief.transform, RoomId.Office, HeatLevel.Warm,
                 Traits.Limp | Traits.BesideCrates, PrimitiveKind.Circle, new Vector2(.65f, .65f), true);
-            thiefTag.thief = thief; thiefTag.memory = memory; thiefTag.onlyFromRoom = RoomId.UpperLanding;
+            thiefTag.thief = thief; thiefTag.memory = memory; thiefTag.onlyFromRoom = RoomId.Unknown;
             AddPushable(thiefObject, thiefBody, null);
 
             MakeThermalProp("Kitchen Oven", new Vector2(38, 3), RoomId.Kitchen, HeatLevel.Hot);
@@ -181,13 +178,13 @@ namespace ColdBrewCase.EditorTools
             MakeCoffee("Coffee - Kitchen", new Vector2(32, 7.5f), RoomId.Kitchen, coffee);
             MakeCoffee("Coffee - Loft", new Vector2(12.5f, 17.5f), RoomId.StorageLoft, coffee);
 
-            MakeLevel2FootstepCue("Lobby Stairs Footsteps", new Vector2(25, 8), landing.transform);
-            MakeLevel2FootstepCue("Lobby Storage Footsteps", new Vector2(20.8f, 5), storage.transform);
-            MakeLevel2FootstepCue("Lobby Kitchen Footsteps", new Vector2(29.2f, 5), kitchen.transform);
-            MakeLevel2FootstepCue("Storage Loading Bay Footsteps", new Vector2(10.8f, 5), loadingBay.transform);
-            MakeLevel2FootstepCue("Kitchen Back Alley Footsteps", new Vector2(39.2f, 5), alley.transform);
-            MakeLevel2FootstepCue("Landing Office Footsteps", new Vector2(28.2f, 15), office.transform);
-            MakeLevel2FootstepCue("Landing Loft Footsteps", new Vector2(21.8f, 15), loft.transform);
+            MakeLevel2FootstepCue("Lobby Stairs Footsteps", new Vector2(25, 8));
+            MakeLevel2FootstepCue("Lobby Storage Footsteps", new Vector2(20.8f, 5));
+            MakeLevel2FootstepCue("Lobby Kitchen Footsteps", new Vector2(29.2f, 5));
+            MakeLevel2FootstepCue("Storage Loading Bay Footsteps", new Vector2(10.8f, 5));
+            MakeLevel2FootstepCue("Kitchen Back Alley Footsteps", new Vector2(39.2f, 5));
+            MakeLevel2FootstepCue("Landing Office Footsteps", new Vector2(28.2f, 15));
+            MakeLevel2FootstepCue("Landing Loft Footsteps", new Vector2(21.8f, 15));
 
             int trailIndex = 0;
             foreach (Vector2 position in new[] {
@@ -331,14 +328,13 @@ namespace ColdBrewCase.EditorTools
             Level2Label("STAIRS TO UPPER LANDING", new Vector2(25, 10.35f));
         }
 
-        private static void MakeLevel2FootstepCue(string name, Vector2 position, Transform targetRoom)
+        private static void MakeLevel2FootstepCue(string name, Vector2 position)
         {
             Transform root = Node(name, pickups, position);
             var trigger = root.gameObject.AddComponent<CircleCollider2D>();
             trigger.radius = 1f;
             trigger.isTrigger = true;
-            var cue = root.gameObject.AddComponent<FootstepCue>();
-            cue.SetNextRoom(targetRoom);
+            root.gameObject.AddComponent<FootstepCue>();
             Shape("Footprint Left", root, new Vector2(-.18f, -.12f), new Vector2(.16f, .34f),
                 PrimitiveKind.Circle, new Color(.65f, .75f, .82f, .8f), 25);
             Shape("Footprint Right", root, new Vector2(.18f, .15f), new Vector2(.16f, .34f),
