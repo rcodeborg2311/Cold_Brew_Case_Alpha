@@ -14,6 +14,8 @@ A thief is on the loose. Watch where they run, track them down, and catch them w
 
 Start from the **home screen**, pick a level, or open **How to Play** to see the controls first.
 
+![Home screen with level select](Screenshots/home.png)
+
 | Level | Description |
 |---|---|
 | **Level 1 – Courtyard to Hideout** | Beginner level that teaches the basics |
