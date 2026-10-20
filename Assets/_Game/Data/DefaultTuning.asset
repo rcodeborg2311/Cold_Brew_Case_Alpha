@@ -21,7 +21,7 @@ MonoBehaviour:
   escapeSeconds: 96
   warningAt: 0.8
   pushAlert: 0.15
-  spottedAlert: 0.2
+  spottedAlert: 0.10416667
   missedNetAlert: 0.1
   startingNets: 2
   maxNotes: 5
