@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb46e7b1133996b44802d2bb20bc9323, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.FootstepCue
   playSound: 1
 --- !u!82 &71726548
@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6591d113d50414149b7d5bc13dfc363a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomZone
   id: 4
   scanNeighbor: 3
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -645,7 +645,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -752,7 +752,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -857,7 +857,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65c166d9901246949b4bb8745569bad3, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.DiscoveryMemory
   marker: {fileID: 574250017}
 --- !u!114 &342614412
@@ -870,7 +870,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1e56da63f2474846bba05baa41f6f8a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GameManager
   alert: {fileID: 342614420}
   rooms: {fileID: 342614424}
@@ -887,7 +887,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cb8b66f602a2f14897107265ca68941, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HUDController
   game: {fileID: 342614412}
   alert: {fileID: 342614420}
@@ -913,7 +913,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e927a379b768456419a112d6638a8e15, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.NotesManager
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
   hearingRange: 22
@@ -929,7 +929,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d937f4a654d39c49bdecc458e9554a8, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.PushStick
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
   game: {fileID: 342614412}
@@ -951,7 +951,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3933d9bf8ce8fee46be0372de05e0175, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.NoiseSystem
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
   guards:
@@ -966,7 +966,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 543bfb1cbfe3e8244ba2a1d4b677d6bb, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.CoffeeInventory
   capacity: 3
 --- !u!114 &342614418
@@ -979,7 +979,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 696675fd08179554ba09cb4ff3edcbcf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HeatSightController
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
   game: {fileID: 342614412}
@@ -1004,7 +1004,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fb252d9b32511b4e89eed79e93d52f8, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.ClueMatcher
   notes: {fileID: 342614414}
 --- !u!114 &342614420
@@ -1017,7 +1017,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fcc8535dd0de24e45ae503fb1deec0c2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AlertMeter
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
 --- !u!114 &342614421
@@ -1030,7 +1030,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 33ecf398639a3fb42b35124bfd604b37, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.ShakeController
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
 --- !u!114 &342614422
@@ -1043,7 +1043,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 628f8d60f278719409d84c1b6052d245, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.NetThrower
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
   game: {fileID: 342614412}
@@ -1066,7 +1066,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba7a92c09d782a341bdcac2fc9b345de, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.PlayerInputRouter
   actions: {fileID: -944628639613478452, guid: 59a6e1aed38d2f34fb67f171e71d42e3, type: 3}
   player: {fileID: 807624210}
@@ -1086,7 +1086,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d4855fc0ea74ea42955ae526ce2c0fe, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomManager
   player: {fileID: 807624209}
   zones:
@@ -1104,14 +1104,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d91f361aabe09f94ea67f2ebc3afe2b4, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AnalyticsClient
-  enableCollection: 0
+  enableCollection: 1
   buildId: progress-check-2026-10-13
+  sheetUrl: https://script.google.com/macros/s/AKfycbwfxdAWde6MOHK-FwGFZ0QStvy-1sYSwJLoLCGKWGDHYVjpV6-Wu4As69ppMRjqfWz_Aw/exec
+  heavyShakeThreshold: 0.5
   heat: {fileID: 342614418}
   inventory: {fileID: 342614417}
   rooms: {fileID: 342614424}
   game: {fileID: 342614412}
+  net: {fileID: 0}
+  shake: {fileID: 0}
 --- !u!4 &342614426
 Transform:
   m_ObjectHideFlags: 0
@@ -1171,7 +1175,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -1262,7 +1266,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d32a8228cf01364a85fa1fdb371dddf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HeatTag
   rooms: {fileID: 342614424}
   fixedRoom: 4
@@ -1447,7 +1451,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6591d113d50414149b7d5bc13dfc363a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomZone
   id: 2
   scanNeighbor: 3
@@ -1938,7 +1942,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -2061,7 +2065,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -2134,7 +2138,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58caa0c9efa54e5488238f5d73af9de1, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.VisualSymbol
   kind: 0
   tint: {r: 0.04, g: 0.06, b: 0.08, a: 1}
@@ -2292,7 +2296,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d32a8228cf01364a85fa1fdb371dddf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HeatTag
   rooms: {fileID: 342614424}
   fixedRoom: 4
@@ -2334,7 +2338,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -2456,7 +2460,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -2563,7 +2567,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88ef3459222c31a479a3e8b0c6bd7c1c, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.ViewConeRenderer
   guard: {fileID: 869621356}
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -2669,7 +2673,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -2742,7 +2746,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58caa0c9efa54e5488238f5d73af9de1, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.VisualSymbol
   kind: 0
   tint: {r: 0.04, g: 0.06, b: 0.08, a: 1}
@@ -2790,7 +2794,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -2882,7 +2886,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -3004,7 +3008,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -3111,7 +3115,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -3361,7 +3365,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -3484,7 +3488,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 429df5ced8b8eb249a9f314b0517110f, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.PlayerController
   game: {fileID: 342614412}
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
@@ -3596,7 +3600,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -3690,7 +3694,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 09a7cb45480107744bbd45f9721a06d0, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GuardController
   game: {fileID: 342614412}
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
@@ -3701,6 +3705,7 @@ MonoBehaviour:
   - {fileID: 631818046}
   - {fileID: 2010496604}
   - {fileID: 364476345}
+  fixedPatrol: 0
   blockers:
     serializedVersion: 2
     m_Bits: 1536
@@ -3716,7 +3721,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d32a8228cf01364a85fa1fdb371dddf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HeatTag
   rooms: {fileID: 342614424}
   fixedRoom: 2
@@ -3766,7 +3771,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e97e08694b7197944824827bd153583d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.PushableBody
   body: {fileID: 869621358}
   guard: {fileID: 869621356}
@@ -4030,7 +4035,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -4435,7 +4440,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -4635,7 +4640,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -4874,7 +4879,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e97e08694b7197944824827bd153583d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.PushableBody
   body: {fileID: 1139947584}
   guard: {fileID: 0}
@@ -4918,7 +4923,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d32a8228cf01364a85fa1fdb371dddf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HeatTag
   rooms: {fileID: 342614424}
   fixedRoom: 2
@@ -5024,7 +5029,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bcb7d856dcd5fe42a83f01638b038ee, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.CameraFollow
   target: {fileID: 807624209}
   worldCamera: {fileID: 1143497231}
@@ -5189,7 +5194,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -5357,7 +5362,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -5576,7 +5581,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f9ea123d61069346a7d452015ede3a7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.CoffeePickup
   inventory: {fileID: 342614417}
   game: {fileID: 342614412}
@@ -5591,7 +5596,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c5dfc6357ed8a9488056d73ae424aaf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomVisibility
   rooms: {fileID: 342614424}
   room: 1
@@ -5676,7 +5681,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -5768,7 +5773,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -5890,7 +5895,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -6027,7 +6032,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6591d113d50414149b7d5bc13dfc363a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomZone
   id: 3
   scanNeighbor: 4
@@ -6081,7 +6086,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -6250,7 +6255,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e840b23ac8890e24d82d543741c2e58a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.NetArcVisual
   line: {fileID: 979111069}
 --- !u!4 &1477319444
@@ -6312,7 +6317,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6591d113d50414149b7d5bc13dfc363a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomZone
   id: 1
   scanNeighbor: 2
@@ -6350,7 +6355,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -6473,7 +6478,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f9ea123d61069346a7d452015ede3a7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.CoffeePickup
   inventory: {fileID: 342614417}
   game: {fileID: 342614412}
@@ -6488,7 +6493,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c5dfc6357ed8a9488056d73ae424aaf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomVisibility
   rooms: {fileID: 342614424}
   room: 3
@@ -6604,7 +6609,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad344914ef6dfa9408bc30cc4fd7243d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AimReticle
   input: {fileID: 342614423}
   net: {fileID: 342614422}
@@ -6656,7 +6661,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -6842,7 +6847,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -7016,7 +7021,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -7124,7 +7129,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f9ea123d61069346a7d452015ede3a7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.CoffeePickup
   inventory: {fileID: 342614417}
   game: {fileID: 342614412}
@@ -7139,7 +7144,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c5dfc6357ed8a9488056d73ae424aaf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.RoomVisibility
   rooms: {fileID: 342614424}
   room: 2
@@ -7226,7 +7231,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb46e7b1133996b44802d2bb20bc9323, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.FootstepCue
   playSound: 1
 --- !u!82 &1739560887
@@ -7406,7 +7411,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -7513,7 +7518,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -7626,7 +7631,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e97e08694b7197944824827bd153583d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.PushableBody
   body: {fileID: 1797370333}
   guard: {fileID: 0}
@@ -7643,7 +7648,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d32a8228cf01364a85fa1fdb371dddf, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HeatTag
   rooms: {fileID: 342614424}
   fixedRoom: 4
@@ -7666,7 +7671,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92a4e1658cda760458f870c1c0e504ab, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.ThiefController
   game: {fileID: 342614412}
   tuning: {fileID: 11400000, guid: 10b8fece06666524b952bd3277833bbe, type: 2}
@@ -7692,6 +7697,7 @@ MonoBehaviour:
     m_Bits: 1536
   resistSpeed: 0.8
   resistDistance: 0.55
+  coverSearchRadius: 6
   startDelay: 1.5
 --- !u!58 &1797370332
 CircleCollider2D:
@@ -7800,7 +7806,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -7892,7 +7898,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -8014,7 +8020,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -8216,7 +8222,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -8338,7 +8344,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -8430,7 +8436,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -8742,7 +8748,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -8815,7 +8821,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58caa0c9efa54e5488238f5d73af9de1, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.VisualSymbol
   kind: 0
   tint: {r: 0.04, g: 0.06, b: 0.08, a: 1}
@@ -8912,7 +8918,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -9065,7 +9071,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -9172,7 +9178,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -9358,7 +9364,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -9544,7 +9550,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -9730,7 +9736,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -9916,7 +9922,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -10102,7 +10108,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2790e2a5f0cb5de4787f6297fa5df8d2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 0
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
@@ -10175,7 +10181,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a660f10c9d744f0bd4a1f661fc38e7a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.LevelOneLessons
   game: {fileID: 342614412}
   heat: {fileID: 342614418}
@@ -10192,7 +10198,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c22fb61898a64910bb9ca985aa035e85, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.HelicopterEscape
   approachSeconds: 12
   hoistSeconds: 1
