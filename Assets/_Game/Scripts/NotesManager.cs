@@ -17,6 +17,8 @@ namespace ColdBrewCase
             rooms.Current == SourceRoom && Clock.Now < soundUntil;
         public event Action Changed;
         private RoomManager rooms;
+        private double directionExpiresAt;
+        private const float DirectionDuration = 5f;
         private double soundUntil;
 
         private void OnEnable()
@@ -32,6 +34,8 @@ namespace ColdBrewCase
 
         public bool Hear(Vector2 from, Vector2 target)
         {
+            Direction = DirectionTo(from, target);
+            directionExpiresAt = Clock.Now + DirectionDuration;
             if (rooms == null || Vector2.Distance(from, target) > hearingRange) return false;
             RoomZone source = rooms.Get(rooms.RoomAt(from));
             RoomZone destination = rooms.Get(rooms.RoomAt(target));
@@ -82,6 +86,14 @@ namespace ColdBrewCase
         private void ClearSound(RoomId room)
         {
             HeardRoom = RoomId.Unknown;
+            Changed?.Invoke();
+        }
+
+        private void Update()
+        {
+            if (!HasDirection || Clock.Now < directionExpiresAt) return;
+
+            Direction = "";
             Changed?.Invoke();
         }
     }
