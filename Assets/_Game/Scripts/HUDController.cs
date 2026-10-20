@@ -5,6 +5,7 @@ namespace ColdBrewCase
     public sealed class HUDController : MonoBehaviour
     {
         public GameManager game;
+        public bool ThiefInNetRange { get; set; }
         public AlertMeter alert;
         public HeatSightController heat;
         public ShakeController shake;
@@ -21,8 +22,6 @@ namespace ColdBrewCase
         private double messageUntil, flashUntil;
         private float previousAlert;
         private Vector2 startingPosition;
-        private bool moved, scanned;
-        private GUIStyle title, label, small, button;
         private bool moved, scanned, threw;
         private GUIStyle title, label, small, button, caption, worldTag;
         private CoffeePickup[] pickups;
@@ -196,8 +195,12 @@ namespace ColdBrewCase
         {
             if (visualHintsOnly) return "";
             if (!moved) return "WASD / Arrow keys  Move";
-            if (game.State == RoundState.Opening) return "Follow the thief to see where it goes";
-            if (heat.Active) return "Look for the heat trail   F  Stop scan";
+            if (game.State == RoundState.Opening) 
+                return "Follow the thief to see where it goes";
+            if (heat.Active) 
+                return "Look for the heat trail   F  Stop scan";
+            if (ThiefInNetRange)
+                return "THIEF IN RANGE  -  CLICK TO THROW NET";
             if (!scanned && coffee.Count == 0) return "Walk over coffee to pick it up";
             if (!scanned && coffee.Count > 0) return "F  Drink coffee to scan for heat";
             foreach (PushableBody target in push.targets)
