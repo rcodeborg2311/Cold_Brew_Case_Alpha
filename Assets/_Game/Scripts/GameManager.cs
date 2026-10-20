@@ -88,6 +88,8 @@ namespace ColdBrewCase
         {
             State = state;
             Outcome = outcome;
+            if (state == RoundState.Won)
+                HomeScreen.RecordWin(SceneManager.GetActiveScene().path, alert.RemainingSeconds);
             alert.Stop();
             player.Stop();
             RoundEnded?.Invoke();
