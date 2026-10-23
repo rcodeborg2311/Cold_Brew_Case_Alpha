@@ -6,6 +6,7 @@ namespace ColdBrewCase
     public sealed class HomeScreen : MonoBehaviour
     {
         public const string ScenePath = "Assets/_Game/Scenes/Home.unity";
+        public const string LevelZeroPath = "Assets/_Game/Scenes/Level00.unity";
         public const string LevelOnePath = "Assets/_Game/Scenes/Level01.unity";
         public const string LevelTwoPath = "Assets/_Game/Scenes/Level02.unity";
 
@@ -21,6 +22,7 @@ namespace ColdBrewCase
         private static readonly Color cardHover = new Color(.12f, .17f, .21f);
         private static readonly Color cyan = new Color(.2f, .8f, .8f);
         private static readonly Color orange = new Color(1f, .7f, .3f);
+        private static readonly Color green = new Color(.4f, .95f, .55f);
         private static readonly Color muted = new Color(.7f, .77f, .82f);
 
         public static bool TryLoad(string path)
@@ -57,7 +59,7 @@ namespace ColdBrewCase
             loading = true;
             if (TryLoad(path)) return;
             loading = false;
-            message = "This level is unavailable. Add both levels to the build scene list.";
+            message = "This level is unavailable. Add all levels to the build scene list.";
         }
 
         private void Styles()
@@ -92,7 +94,8 @@ namespace ColdBrewCase
         }
 
         // A whole card is one big button: hover lightens it, click anywhere plays the level.
-        private void LevelCard(Rect card, Color accent, string name, string place, string tag, string scenePath)
+        private void LevelCard(Rect card, Color accent, string name, string place, string tag, string scenePath,
+            bool showBestTime = true)
         {
             bool hover = !loading && !showingHowToPlay && card.Contains(Event.current.mousePosition);
             Fill(card, hover ? cardHover : cardColor);
@@ -106,8 +109,8 @@ namespace ColdBrewCase
             if (TryGetBest(scenePath, out float best))
             {
                 cardTag.normal.textColor = Color.white;
-                GUI.Label(new Rect(card.x, card.y + 128, card.width, 24),
-                    "Cleared  -  best: " + Mathf.CeilToInt(best) + "s left", cardTag);
+                GUI.Label(new Rect(card.x, card.y + 128, card.width, 24), showBestTime ?
+                    "Cleared  -  best: " + Mathf.CeilToInt(best) + "s left" : "Cleared", cardTag);
             }
 
             Rect play = new Rect(card.x + 40, card.y + card.height - 66, card.width - 80, 46);
@@ -175,10 +178,13 @@ namespace ColdBrewCase
                 "A thief is on the loose. Track them down and catch them with your net before time runs out.", story);
             GUI.Label(new Rect(180, 205, 920, 36), "Choose a level", subtitle);
 
-            LevelCard(new Rect(200, 250, 420, 250), cyan, "Level 1", "Courtyard to Hideout",
-                "Beginner  -  learn the basics", LevelOnePath);
-            LevelCard(new Rect(660, 250, 420, 250), orange, "Level 2", "Two-floor pursuit",
-                "Harder  -  two floors, more to search", LevelTwoPath);
+            // Level 0 has no timer, so its card shows "Cleared" without a best time.
+            LevelCard(new Rect(170, 250, 300, 250), green, "Level 0", "Training",
+                "Start here  -  your first catch", LevelZeroPath, false);
+            LevelCard(new Rect(490, 250, 300, 250), cyan, "Level 1", "Courtyard to Hideout",
+                "Beginner  -  now with guards", LevelOnePath);
+            LevelCard(new Rect(810, 250, 300, 250), orange, "Level 2", "Two-floor pursuit",
+                "Harder  -  two floors", LevelTwoPath);
 
             Rect howTo = new Rect(520, 520, 240, 48);
             bool hoverHowTo = !showingHowToPlay && howTo.Contains(Event.current.mousePosition);

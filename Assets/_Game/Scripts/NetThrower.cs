@@ -13,6 +13,8 @@ namespace ColdBrewCase
         public LayerMask hitMask;
         public NetArcVisual arc;
         public HUDController hud;
+        [Tooltip("Practice mode (Level 0): throwing never uses up a net.")]
+        public bool unlimitedNets;
         public int Nets { get; private set; }
         public bool Ready => game.State == RoundState.Playing && !game.IsActionPaused &&
             !heat.Active && Nets > 0 && Clock.Now >= readyAt;
@@ -59,7 +61,7 @@ namespace ColdBrewCase
             Vector2 direction = hasDisplayedAim ? DisplayedDirection : AimDirection(cursor);
             if (direction == Vector2.zero) { hud.Show("Aim away from yourself"); return; }
             readyAt = Clock.Now + .25d;
-            Nets--;
+            if (!unlimitedNets) Nets--;
             float distance = hasDisplayedAim ? DisplayedDistance :
                 Mathf.Min(tuning.netRange, Vector2.Distance(cursor, player.position));
             RaycastHit2D nearest = PreviewHit(direction, distance);
@@ -70,6 +72,11 @@ namespace ColdBrewCase
                 nearest.collider.GetComponentInParent<ThiefController>();
             // Resolve the collision/capture BEFORE the zero-nets loss check.
             if (target != null && game.TryCapture(target)) return;
+            if (unlimitedNets)
+            {
+                hud.Popup("Missed!", "Try again - nets are unlimited here", new Color(1f, .7f, .3f));
+                return;
+            }
             string penalty = "-" + alert.PenaltySeconds(AlertAction.MissedNet).ToString("0.#") + "s";
             alert.Add(AlertAction.MissedNet);
             if (Nets > 0)

@@ -8,6 +8,8 @@ namespace ColdBrewCase
     {
         public Transform player;
         public RoomZone[] zones;
+        [Tooltip("On: coffee shows every room next to you. Off: only the room your mouse points at.")]
+        public bool scanAllNeighbors;
         public RoomId Current { get; private set; } = RoomId.Unknown;
         public RoomId LookingAt { get; private set; } = RoomId.Unknown;
         public event Action<RoomId> CurrentChanged;
@@ -33,8 +35,18 @@ namespace ColdBrewCase
         }
 
         public bool IsVisible(RoomId id) => id != RoomId.Unknown &&
-            (id == Current || id == LookingAt && heat != null && heat.Active && heat.Remaining > 0f);
-        public bool CanScan(RoomId id) => id != RoomId.Unknown && (id == Current || id == LookingAt);
+            (id == Current || IsScanTarget(id) && heat != null && heat.Active && heat.Remaining > 0f);
+        public bool CanScan(RoomId id) => id != RoomId.Unknown && (id == Current || IsScanTarget(id));
+
+        private bool IsScanTarget(RoomId id)
+        {
+            if (!scanAllNeighbors) return id == LookingAt;
+            RoomZone current = Get(Current);
+            if (current == null) return false;
+            foreach (RoomZone neighbor in current.neighbors)
+                if (neighbor != null && neighbor.id == id) return true;
+            return false;
+        }
 
         public void RefreshRoom()
         {

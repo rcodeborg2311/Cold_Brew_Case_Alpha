@@ -20,6 +20,7 @@ namespace ColdBrewCase.EditorTools
             }
             int failures = 0;
             details = "";
+            bool noGuards = UnityEngine.Object.FindObjectsByType<GuardController>(FindObjectsSortMode.None).Length == 0;
             MonoBehaviour[] components = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
                 FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (MonoBehaviour component in components)
@@ -30,7 +31,8 @@ namespace ColdBrewCase.EditorTools
                 foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
                 {
                     bool optional = component is HeatTag && (field.Name == "thief" || field.Name == "memory") ||
-                                    component is PushableBody && field.Name == "guard";
+                                    component is PushableBody && field.Name == "guard" ||
+                                    noGuards && field.Name == "guards"; // Level 0 has no guards.
                     if (optional) continue;
                     object value = field.GetValue(component);
                     bool missing = typeof(UnityEngine.Object).IsAssignableFrom(field.FieldType) &&
@@ -94,7 +96,7 @@ namespace ColdBrewCase.EditorTools
             int failures = 0;
             details = "";
             EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
-            foreach (string path in new[] { HomeScreen.ScenePath, HomeScreen.LevelOnePath, HomeScreen.LevelTwoPath })
+            foreach (string path in new[] { HomeScreen.ScenePath, HomeScreen.LevelZeroPath, HomeScreen.LevelOnePath, HomeScreen.LevelTwoPath })
             {
                 bool included = false;
                 foreach (EditorBuildSettingsScene scene in scenes)
