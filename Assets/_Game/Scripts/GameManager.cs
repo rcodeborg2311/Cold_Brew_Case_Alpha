@@ -12,6 +12,9 @@ namespace ColdBrewCase
         public PlayerController player;
         public ThiefController thief;
         public HUDController hud;
+        [Tooltip("Optional. When set, the win screen shows a button that loads this scene.")]
+        public string nextScenePath = "";
+        public string nextSceneLabel = "";
         public RoundState State { get; private set; } = RoundState.Opening;
         public string Outcome { get; private set; } = "";
         public event Action PlayerCaught, RoundEnded;
@@ -19,7 +22,12 @@ namespace ColdBrewCase
         private double immuneUntil;
         private Vector2 checkpoint;
         public bool ShowingHowToPlay { get; private set; }
-        public bool IsActionPaused => manualPause || focusPause || ShowingHowToPlay;
+        public bool ShowingTip => tips.Count > 0;
+        public string TipTitle => ShowingTip ? tips.Peek().Key : "";
+        public string TipBody => ShowingTip ? tips.Peek().Value : "";
+        private readonly System.Collections.Generic.Queue<System.Collections.Generic.KeyValuePair<string, string>> tips =
+            new System.Collections.Generic.Queue<System.Collections.Generic.KeyValuePair<string, string>>();
+        public bool IsActionPaused => manualPause || focusPause || ShowingHowToPlay || ShowingTip;
         public bool CanMove => !IsActionPaused && (State == RoundState.Opening || State == RoundState.Playing);
         public bool CanRunAI => State == RoundState.Playing && !IsActionPaused;
         private void OnEnable()
@@ -146,6 +154,33 @@ namespace ColdBrewCase
             if (!HomeScreen.TryLoad(HomeScreen.ScenePath))
             {
                 Debug.LogError("Add Home.unity as the first enabled scene in the build scene list.");
+                return;
+            }
+            player.Stop();
+            alert.Stop();
+        }
+        // Pauses the game and shows a pop-up until the player clicks "Got it". The timer is frozen meanwhile.
+        public void ShowTip(string title, string body)
+        {
+            if (State == RoundState.Won || State == RoundState.Lost || State == RoundState.Extracting) return;
+            tips.Enqueue(new System.Collections.Generic.KeyValuePair<string, string>(title, body));
+            player.Stop();
+            alert.Hold();
+        }
+        public void CloseTip()
+        {
+            if (tips.Count > 0) tips.Dequeue();
+            if (tips.Count > 0) return;
+            player.Stop();
+            alert.Release();
+        }
+        public bool HasNextScene => !string.IsNullOrEmpty(nextScenePath);
+        public void LoadNextScene()
+        {
+            if (!HasNextScene) return;
+            if (!HomeScreen.TryLoad(nextScenePath))
+            {
+                Debug.LogError("Add " + nextScenePath + " to the build scene list.");
                 return;
             }
             player.Stop();

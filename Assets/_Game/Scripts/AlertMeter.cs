@@ -6,18 +6,24 @@ namespace ColdBrewCase
     public sealed class AlertMeter : MonoBehaviour
     {
         public GameTuning tuning;
+        [Tooltip("Practice mode (Level 0): the timer never runs out and mistakes cost no time.")]
+        public bool untimed;
         public event Action Warning, Full;
+        // Fired when a mistake costs time, with the seconds lost.
+        public event Action<float> Penalty;
         private double startedAt;
         private float penalties, frozen;
         private bool running, warned, full;
-        public float Value => running ? Mathf.Clamp01((float)((Clock.Now - startedAt) /
+        private double heldAt = -1d;
+        private double Now => heldAt >= 0d ? heldAt : Clock.Now;
+        public float Value => untimed ? 0f : running ? Mathf.Clamp01((float)((Now - startedAt) /
             Mathf.Max(1f, tuning.escapeSeconds)) + penalties) : frozen;
         public bool Running => running;
         public float RemainingSeconds => Mathf.Max(1f, tuning.escapeSeconds) * (1f - Value);
         public float PenaltySeconds(AlertAction action) => Mathf.Max(1f, tuning.escapeSeconds) * tuning.Cost(action);
         public void Begin()
         {
-            startedAt = Clock.Now;
+            startedAt = Now;
             penalties = frozen = 0f;
             running = true;
             warned = full = false;
@@ -31,11 +37,20 @@ namespace ColdBrewCase
         }
         public void Add(AlertAction action)
         {
-            if (!running) return;
+            if (!running || untimed) return;
             penalties += tuning.Cost(action);
+            Penalty?.Invoke(PenaltySeconds(action));
             RefreshNow();
         }
         public void Stop() { frozen = Value; running = false; }
+        // Freeze the timer while a tip pop-up is open, so reading it never costs time.
+        public void Hold() { if (heldAt < 0d) heldAt = Clock.Now; }
+        public void Release()
+        {
+            if (heldAt < 0d) return;
+            startedAt += Clock.Now - heldAt;
+            heldAt = -1d;
+        }
         private void Update() => RefreshNow();
     }
 }

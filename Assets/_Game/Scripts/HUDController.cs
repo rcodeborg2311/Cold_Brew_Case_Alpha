@@ -78,6 +78,9 @@ namespace ColdBrewCase
 
         {
 
+            alert.Penalty += OnPenalty;
+
+
             startingPosition = game.player.transform.position;
 
             pickups = FindObjectsByType<CoffeePickup>(FindObjectsSortMode.None);
@@ -289,6 +292,10 @@ namespace ColdBrewCase
                 case RoomId.StorageLoft: return "STORAGE LOFT";
 
                 case RoomId.Office: return "OFFICE";
+
+                case RoomId.TrainingStart: return "STREET";
+
+                case RoomId.TrainingHideout: return "HIDEOUT";
 
                 default: return room.ToString().ToUpperInvariant();
 
@@ -516,29 +523,162 @@ namespace ColdBrewCase
 
 
 
-        private void DrawStatus()
+        // ---- Header: case card | coffee + nets | aim status | escape timer | pause + help ----
+        private static readonly Color headerBack = new Color(.035f, .05f, .075f, 1f);
+        private static readonly Color card = new Color(.075f, .105f, .15f, .97f);
+        private static readonly Color coral = new Color(1f, .42f, .42f);
+        private static readonly Color amber = new Color(1f, .7f, .28f);
+        private static readonly Color gold = new Color(1f, .82f, .4f);
+        private static readonly Color muted = new Color(.58f, .64f, .71f);
+        private static readonly Color dim = new Color(.22f, .27f, .33f);
+        private GUIStyle tinyCaps, headerBig, headerTimer, badgeText, iconButton;
+        private string caseNumber;
 
+        private void HeaderStyles()
         {
-
-            bool active = heat.Active;
-
-            SymbolKind kind = active ? SymbolKind.Scan : shake.IsShaking ? SymbolKind.Shake : SymbolKind.Net;
-
-            float fraction = active ? heat.Remaining / Mathf.Max(.1f, heat.tuning.heatSeconds) :
-
-                shake.IsShaking ? shake.Remaining / Mathf.Max(.1f, shake.tuning.shakeSeconds) : 1f;
-
-            Color color = active ? Color.cyan : shake.IsShaking ? new Color(1f, .7f, .2f) : Color.white;
-
-            Ring(new Vector2(1055, 70), 19, fraction, color);
-
-            GameSymbols.Draw(new Rect(1044, 59, 22, 22), kind, color);
-
-            GUI.Label(new Rect(1082, 53, 135, 34), active ? "Scanning" : shake.IsShaking ? "Shaking" : "Steady", small);
-
+            if (tinyCaps != null) return;
+            tinyCaps = new GUIStyle(label) { fontSize = 12, fontStyle = FontStyle.Bold };
+            headerBig = new GUIStyle(label) { fontSize = 21, fontStyle = FontStyle.Bold };
+            headerTimer = new GUIStyle(label) { fontSize = 30, fontStyle = FontStyle.Bold };
+            badgeText = new GUIStyle(label) { fontSize = 22, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
+            badgeText.normal.textColor = new Color(.12f, .05f, .06f);
+            iconButton = new GUIStyle(label) { fontSize = 20, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
         }
 
+        private void DrawHeader()
+        {
+            HeaderStyles();
+            Fill(new Rect(0, 0, 1280, 96), headerBack);
 
+            // Case card: level number + current goal
+            Round(new Rect(14, 10, 330, 76), card);
+            Round(new Rect(28, 23, 50, 50), coral);
+            if (caseNumber == null)
+            {
+                string digits = "";
+                foreach (char c in UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
+                    if (char.IsDigit(c)) digits += c;
+                caseNumber = digits.Length > 0 && digits.Length < 4 ? "#" + int.Parse(digits) : "#";
+            }
+            GUI.Label(new Rect(28, 23, 50, 50), caseNumber, badgeText);
+            Caps(new Rect(92, 22, 240, 18), "CASE FILE", coral);
+            headerBig.normal.textColor = Color.white;
+            GUI.Label(new Rect(92, 40, 245, 32), game.State == RoundState.Opening ? "Follow the thief" :
+                game.State == RoundState.Extracting ? "He's escaping!" : "Catch the coffee thief", headerBig);
+
+            // Coffee and nets
+            Round(new Rect(356, 10, 400, 76), card);
+            Caps(new Rect(376, 39, 80, 18), "COFFEE", muted);
+            for (int i = 0; i < coffee.capacity; i++)
+                GameSymbols.Draw(new Rect(444 + i * 34, 33, 28, 28), SymbolKind.Coffee, i < coffee.Count ? amber : dim);
+            Caps(new Rect(566, 39, 60, 18), "NETS", muted);
+            if (net.unlimitedNets)
+            {
+                GameSymbols.Draw(new Rect(616, 33, 28, 28), SymbolKind.Net, Color.white);
+                headerBig.normal.textColor = Color.white;
+                GUI.Label(new Rect(652, 30, 90, 34), "FREE", headerBig);
+            }
+            else
+                for (int i = 0; i < net.tuning.startingNets; i++)
+                    GameSymbols.Draw(new Rect(616 + i * 34, 33, 28, 28), SymbolKind.Net, i < net.Nets ? Color.white : dim);
+
+            // Aim status: Steady / Scanning / Shaking, with a ring for how long it lasts
+            Round(new Rect(768, 10, 170, 76), card);
+            bool scanning = heat.Active;
+            float fraction = scanning ? heat.Remaining / Mathf.Max(.1f, heat.tuning.heatSeconds) :
+                shake.IsShaking ? shake.Remaining / Mathf.Max(.1f, shake.tuning.shakeSeconds) : 1f;
+            Color statusColor = scanning ? new Color(.45f, .78f, 1f) : shake.IsShaking ? amber : Color.white;
+            SymbolKind kind = scanning ? SymbolKind.Scan : shake.IsShaking ? SymbolKind.Shake : SymbolKind.Net;
+            SmoothRing(new Vector2(808, 48), 20, fraction, statusColor);
+            GameSymbols.Draw(new Rect(797, 37, 22, 22), kind, statusColor);
+            Caps(new Rect(840, 26, 95, 18), "AIM", muted);
+            headerBig.normal.textColor = statusColor;
+            GUI.Label(new Rect(840, 42, 98, 30), scanning ? "Scanning" : shake.IsShaking ? "Shaky" : "Steady", headerBig);
+
+            // Escape timer
+            Round(new Rect(950, 10, 254, 76), card);
+            HelicopterEscape helicopter = game.thief.GetComponent<HelicopterEscape>();
+            bool chopper = helicopter != null && game.State == RoundState.Playing && !alert.untimed &&
+                alert.RemainingSeconds <= helicopter.approachSeconds;
+            bool warn = Clock.Now < flashUntil || alert.Value >= alert.tuning.warningAt;
+            Color timerColor = warn && Mathf.Sin((float)Clock.Now * 8) > 0 ? new Color(1f, .35f, .35f) : gold;
+            if (alert.untimed)
+            {
+                SmoothRing(new Vector2(992, 48), 22, 1f, dim);
+                Caps(new Rect(1028, 24, 170, 18), "PRACTICE", muted);
+                headerBig.normal.textColor = Color.white;
+                GUI.Label(new Rect(1028, 42, 170, 32), "No timer", headerBig);
+            }
+            else
+            {
+                if (chopper) GameSymbols.Draw(new Rect(972, 34, 42, 28), SymbolKind.Helicopter, timerColor);
+                else SmoothRing(new Vector2(992, 48), 22, 1f - alert.Value, timerColor);
+                Caps(new Rect(1028, 22, 170, 18), chopper ? "HELICOPTER INCOMING" : "ESCAPE IN", muted);
+                int seconds = Mathf.CeilToInt(alert.RemainingSeconds);
+                headerTimer.normal.textColor = timerColor;
+                GUI.Label(new Rect(1028, 38, 170, 40), (seconds / 60).ToString("00") + ":" + (seconds % 60).ToString("00"), headerTimer);
+            }
+
+            // Pause and help
+            if (IconButton(new Rect(1216, 10, 50, 36), "II")) game.TogglePause();
+            if (IconButton(new Rect(1216, 50, 50, 36), "?")) game.OpenHowToPlay();
+        }
+
+        private void Caps(Rect rect, string text, Color color)
+        {
+            tinyCaps.normal.textColor = color;
+            GUI.Label(rect, string.Join(" ", text.ToCharArray()).Replace("   ", "  "), tinyCaps);
+        }
+
+        private bool IconButton(Rect rect, string text)
+        {
+            bool hover = rect.Contains(Event.current.mousePosition);
+            Round(rect, hover ? new Color(.14f, .19f, .26f) : card);
+            iconButton.normal.textColor = hover ? Color.white : new Color(.85f, .89f, .93f);
+            GUI.Label(rect, text, iconButton);
+            return GUI.Button(rect, GUIContent.none, GUIStyle.none);
+        }
+
+        private static void SmoothRing(Vector2 center, float radius, float amount, Color color)
+        {
+            const int dots = 44;
+            for (int i = 0; i < dots; i++)
+            {
+                float angle = i * Mathf.PI * 2f / dots - Mathf.PI * .5f;
+                Vector2 point = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+                Fill(new Rect(point.x - 2.5f, point.y - 2.5f, 5, 5), i < amount * dots ? color : dim);
+            }
+        }
+
+        // Rounded panel drawn from a small generated texture (9-slice), tinted with GUI.color.
+        private static Texture2D roundTexture;
+        private static GUIStyle roundStyle;
+
+        private static void Round(Rect rect, Color color)
+        {
+            if (Event.current.type != EventType.Repaint) return;
+            if (roundTexture == null)
+            {
+                const int size = 32, radius = 12;
+                roundTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+                    { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp, hideFlags = HideFlags.HideAndDontSave };
+                for (int y = 0; y < size; y++)
+                    for (int x = 0; x < size; x++)
+                    {
+                        float cx = Mathf.Clamp(x + .5f, radius, size - radius);
+                        float cy = Mathf.Clamp(y + .5f, radius, size - radius);
+                        float distance = Vector2.Distance(new Vector2(x + .5f, y + .5f), new Vector2(cx, cy));
+                        roundTexture.SetPixel(x, y, new Color(1, 1, 1, Mathf.Clamp01(radius - distance + .5f)));
+                    }
+                roundTexture.Apply();
+                roundStyle = new GUIStyle { border = new RectOffset(radius, radius, radius, radius) };
+                roundStyle.normal.background = roundTexture;
+            }
+            Color old = GUI.color;
+            GUI.color = color;
+            roundStyle.Draw(rect, false, false, false, false);
+            GUI.color = old;
+        }
 
         private void DrawHowToPlay()
 
@@ -614,65 +754,15 @@ namespace ColdBrewCase
 
             if (game.CanMove && !game.ShowingHowToPlay) DrawWorldLabels();
 
-            Fill(new Rect(0, 0, 1280, 96), panel);
-
-            GUI.Label(new Rect(16, 8, 320, 40), game.State == RoundState.Opening ?
-
-                "Follow the thief" : game.State == RoundState.Extracting ? "Escaping..." : "Find and catch the thief", label);
+            DrawHeader();
 
             if (Clock.Now < roomEntryUntil)
 
             {
 
-                Fill(new Rect(450, 100, 380, 44), panel);
+                Round(new Rect(450, 100, 380, 44), panel);
 
                 GUI.Label(new Rect(450, 100, 380, 44), roomEntryLabel, roomNotice);
-
-            }
-
-            GameSymbols.Draw(new Rect(350, 10, 36, 36), SymbolKind.Coffee, new Color(1, .7f, .3f));
-
-            Pips(395, 22, coffee.Count, coffee.capacity, new Color(1, .7f, .3f));
-
-            GUI.Label(new Rect(474, 10, 40, 36), "F", small);
-
-            GUI.Label(new Rect(350, 48, 200, 20), "Coffee - F: scan next room", caption);
-
-            GameSymbols.Draw(new Rect(552, 10, 36, 36), SymbolKind.Net, Color.white);
-
-            Pips(602, 22, net.Nets, net.tuning.startingNets, Color.white);
-
-            GUI.Label(new Rect(658, 10, 85, 36), "Click", small);
-
-            GUI.Label(new Rect(552, 48, 260, 20), "Nets - Click: throw to catch thief", caption);
-
-            Color alertColor = Clock.Now < flashUntil ||
-
-                (alert.Value >= alert.tuning.warningAt && Mathf.Sin((float)Clock.Now * 8) > 0) ?
-
-                Color.red : new Color(1, .7f, .2f);
-
-            GUI.Label(new Rect(825, 3, 365, 30), "TIME LEFT  " + Mathf.CeilToInt(alert.RemainingSeconds) + "s", small);
-
-            Fill(new Rect(825, 37, 365, 9), gray);
-
-            Fill(new Rect(825, 37, 365 * (1f - alert.Value), 9), alertColor);
-
-            if (GUI.Button(new Rect(1222, 10, 42, 36), "II", button)) game.TogglePause();
-
-            if (GUI.Button(new Rect(1222, 52, 42, 36), "?", button)) game.OpenHowToPlay();
-
-            DrawStatus();
-
-            HelicopterEscape helicopter = game.thief.GetComponent<HelicopterEscape>();
-
-            if (helicopter != null && game.State == RoundState.Playing && alert.RemainingSeconds <= helicopter.approachSeconds)
-
-            {
-
-                GameSymbols.Draw(new Rect(16, 55, 54, 32), SymbolKind.Helicopter, new Color(1f, .7f, .2f));
-
-                Ring(new Vector2(91, 70), 15, alert.RemainingSeconds / Mathf.Max(1f, helicopter.approachSeconds), Color.yellow);
 
             }
 
@@ -750,6 +840,10 @@ namespace ColdBrewCase
 
             if (!terminal && !game.ShowingHowToPlay) DrawPopup();
 
+            if (!terminal && !game.ShowingHowToPlay) DrawBanner();
+
+            if (!terminal) DrawPenalty();
+
             if (game.ShowingHowToPlay)
 
             {
@@ -762,11 +856,25 @@ namespace ColdBrewCase
 
             }
 
+            if (game.ShowingTip && !terminal)
+
+            {
+
+                DrawTip();
+
+                GUI.matrix = old;
+
+                return;
+
+            }
+
             if (terminal || game.IsActionPaused)
 
             {
 
-                Fill(new Rect(420, 220, 440, 310), panel);
+                bool offerNext = game.State == RoundState.Won && game.HasNextScene;
+
+                Fill(new Rect(420, 220, 440, offerNext ? 380 : 310), panel);
 
                 string result = game.State == RoundState.Won ? "Caught!" :
 
@@ -788,6 +896,12 @@ namespace ColdBrewCase
 
                 if (GUI.Button(new Rect(480, 420, 320, 55), "Home", button)) game.ReturnHome();
 
+                if (offerNext && GUI.Button(new Rect(480, 490, 320, 55),
+
+                    string.IsNullOrEmpty(game.nextSceneLabel) ? "Next level" : game.nextSceneLabel, button))
+
+                    game.LoadNextScene();
+
             }
 
             GUI.matrix = old;
@@ -796,7 +910,101 @@ namespace ColdBrewCase
 
 
 
-        private void OnDestroy() => GameSymbols.Cleanup();
+        // Small warning strip near the bottom (TutorialTips). Does not pause the game, and shows
+        // even when Visual Hints Only is on.
+        private string bannerTitle = "", bannerBody = "";
+        private Color bannerColor = Color.white;
+        private double bannerStart, bannerUntil;
+        private GUIStyle bannerTitleStyle, bannerBodyStyle;
+
+        public void Banner(string titleText, string bodyText, Color color, float seconds = 7f)
+        {
+            bannerTitle = titleText;
+            bannerBody = bodyText;
+            bannerColor = color;
+            bannerStart = Clock.Now;
+            bannerUntil = Clock.Now + seconds;
+        }
+
+        private void DrawBanner()
+        {
+            if (Clock.Now >= bannerUntil) return;
+            if (bannerTitleStyle == null)
+            {
+                bannerTitleStyle = new GUIStyle(GUI.skin.label) { fontSize = 19, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
+                bannerBodyStyle = new GUIStyle(GUI.skin.label) { fontSize = 16, wordWrap = true };
+            }
+            float age = (float)(Clock.Now - bannerStart);
+            float alpha = Mathf.Clamp01(Mathf.Min(age / .25f, (float)(bannerUntil - Clock.Now) / .5f));
+            float slide = (1f - Mathf.Clamp01(age / .25f)) * 16f;
+            bannerTitleStyle.normal.textColor = new Color(1f, 1f, 1f, alpha);
+            bannerBodyStyle.normal.textColor = new Color(.9f, .93f, .96f, alpha);
+            if (string.IsNullOrEmpty(bannerBody))
+            {
+                // Short caption: one line, sized to the text, centered near the bottom.
+                float width = bannerTitleStyle.CalcSize(new GUIContent(bannerTitle)).x + 48f;
+                Rect pill = new Rect(640f - width / 2f, 600f + slide, width, 42f);
+                Round(pill, new Color(card.r, card.g, card.b, .95f * alpha));
+                Round(new Rect(pill.x + 10f, pill.y + 11f, 4f, 20f), new Color(bannerColor.r, bannerColor.g, bannerColor.b, alpha));
+                GUI.Label(new Rect(pill.x + 24f, pill.y, width - 28f, pill.height), bannerTitle, bannerTitleStyle);
+                return;
+            }
+            Rect box = new Rect(290f, 572f + slide, 700f, 72f); // Above the bottom hint strip and message bar.
+            Round(box, new Color(card.r, card.g, card.b, .95f * alpha));
+            Round(new Rect(box.x + 10f, box.y + 12f, 5f, box.height - 24f), new Color(bannerColor.r, bannerColor.g, bannerColor.b, alpha));
+            GUI.Label(new Rect(box.x + 28f, box.y + 6f, box.width - 40f, 26f), bannerTitle, bannerTitleStyle);
+            GUI.Label(new Rect(box.x + 28f, box.y + 30f, box.width - 40f, 40f), bannerBody, bannerBodyStyle);
+        }
+
+        // Pause pop-up used by TutorialTips (Level 0 and Level 1). Click "Got it" or press Enter to continue.
+        private void DrawTip()
+        {
+            Fill(new Rect(0, 0, 1280, 720), new Color(0, 0, 0, .55f));
+            Rect box = new Rect(340, 210, 600, 300);
+            Fill(box, panel);
+            Fill(new Rect(box.x, box.y, box.width, 5), new Color(.4f, .95f, .55f));
+            GUI.Label(new Rect(box.x + 30, box.y + 25, box.width - 60, 55), game.TipTitle, title);
+            GUIStyle body = new GUIStyle(label) { wordWrap = true, alignment = TextAnchor.UpperCenter };
+            GUI.Label(new Rect(box.x + 40, box.y + 95, box.width - 80, 110), game.TipBody, body);
+            if (GUI.Button(new Rect(box.x + 170, box.y + 220, 260, 55), "Got it", button)) game.CloseTip();
+            Event e = Event.current;
+            if (e.type == EventType.KeyDown && (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter))
+            {
+                game.CloseTip();
+                e.Use();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (alert != null) alert.Penalty -= OnPenalty;
+            GameSymbols.Cleanup();
+        }
+
+        // "-10s" that pops under the timer and floats up whenever a mistake costs time.
+        private float penaltySeconds;
+        private double penaltyAt = -10d;
+        private GUIStyle penaltyStyle;
+
+        private void OnPenalty(float seconds)
+        {
+            penaltySeconds = seconds;
+            penaltyAt = Clock.Now;
+        }
+
+        private void DrawPenalty()
+        {
+            float age = (float)(Clock.Now - penaltyAt);
+            if (age > 1.8f) return;
+            if (penaltyStyle == null)
+                penaltyStyle = new GUIStyle(GUI.skin.label) { fontSize = 26, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
+            float alpha = Mathf.Clamp01((1.8f - age) / .5f);
+            float pop = age < .15f ? Mathf.Lerp(1.4f, 1f, age / .15f) : 1f;
+            Rect box = new Rect(1027f, 98f - age * 10f, 120f * pop, 40f * pop);
+            Round(box, new Color(.55f, .1f, .12f, .9f * alpha));
+            penaltyStyle.normal.textColor = new Color(1f, .85f, .85f, alpha);
+            GUI.Label(box, "-" + Mathf.RoundToInt(penaltySeconds) + "s", penaltyStyle);
+        }
 
     }
 

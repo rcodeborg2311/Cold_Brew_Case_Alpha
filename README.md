@@ -18,7 +18,8 @@ Start from the **home screen**, pick a level, or open **How to Play** to see the
 
 | Level | Description |
 |---|---|
-| **Level 1 – Courtyard to Hideout** | Beginner level that teaches the basics |
+| **Level 0 – Training** | Two rooms. Chase the thief into the hideout and catch him with your net. No guards, no coffee, no timer |
+| **Level 1 – Courtyard to Hideout** | Three rooms: courtyard, guarded corridor, hideout. A warning at the bottom explains the guard and what coffee does |
 | **Level 2 – Two-floor pursuit** | Harder level with two floors and more to search |
 
 Beat a level and its card on the home screen shows **Cleared** with your best time left.
@@ -63,7 +64,9 @@ Beat a level and its card on the home screen shows **Cleared** with your best ti
    git clone https://github.com/rcodeborg2311/Cold_Brew_Case_Alpha.git
    ```
 3. In Unity Hub, choose **Add → Add project from disk** and select the cloned folder.
-4. Open **Assets/_Game/Scenes/Home** and press ▶. (You can also open **Level01** or **Level02** directly.)
+4. Open **Assets/_Game/Scenes/Home** and press ▶. (You can also open **Level00**, **Level01** or **Level02** directly.)
+5. If **Level00** is missing, run **Tools → Cold Brew Case → Create Level 0 Scene**. It builds the scene and adds it to the build list after Home.
+6. To turn the old 4-room Level 1 into the 3-room version, run **Tools → Cold Brew Case → Update Level 1 (3 Rooms + Pop-ups)** once.
 
 ## Project Structure
 
@@ -74,7 +77,7 @@ Assets/_Game/
   Editor/    Scene generation and validation tools
   Input/     GameInput.inputactions (Input System bindings)
   Data/      DefaultTuning.asset (speeds, timers, costs)
-  Scenes/    Home.unity, Level01.unity, Level02.unity
+  Scenes/    Home.unity, Level00.unity, Level01.unity, Level02.unity
 docs/        WebGL build served by GitHub Pages
 Tools/Analytics/  Playtest analytics scripts
 ```
