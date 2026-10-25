@@ -169,7 +169,7 @@ namespace ColdBrewCase
                 Fill(new Rect(p.x - r, p.y + r, r * 2f, 2f), gold);
                 Fill(new Rect(p.x - r, p.y - r, 2f, r * 2f), gold);
                 Fill(new Rect(p.x + r, p.y - r, 2f, r * 2f + 2f), gold);
-                GUI.Label(new Rect(p.x - 40f, p.y - r - 24f, 80f, 20f), "Coffee", tag);
+                GUI.Label(new Rect(p.x - 40f, p.y - r - 24f, 80f, 20f), "Coffee", coffeeTagStyle);
                 return;
             }
 
@@ -182,7 +182,7 @@ namespace ColdBrewCase
             GUIUtility.RotateAroundPivot(45f, new Vector2(edge.x, edge.y));
             Fill(new Rect(edge.x - 9f, edge.y - 9f, 18f, 18f), gold);
             GUI.matrix = saved;
-            GUI.Label(new Rect(edge.x - 40f, edge.y + 14f, 80f, 20f), "Coffee", tag);
+            GUI.Label(new Rect(edge.x - 40f, edge.y + 14f, 80f, 20f), "Coffee", coffeeTagStyle);
         }
     }
 }

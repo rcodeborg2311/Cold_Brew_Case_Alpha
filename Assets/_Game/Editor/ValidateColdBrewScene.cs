@@ -86,8 +86,9 @@ namespace ColdBrewCase.EditorTools
                     { Report("Level01 lessons need two different gates.", lessons); failures++; }
                 }
             }
-            if (game != null && game.rooms != null && game.gameObject.scene.name == "Level02" && game.rooms.scanAllNeighbors)
+            if (game != null && game.rooms != null && (game.gameObject.scene.name == "Level02" || game.gameObject.scene.name == "Level03") && game.rooms.scanAllNeighbors)
                 failures += ValidateChallenge(game);
+            if (game != null && game.gameObject.scene.name == "Level03") failures += ValidateDistrict(game);
             Debug.Log(failures == 0 ? "Reference checks passed. Unity compile and playtest gates are still required." :
                 failures + " scene check(s) failed:\n" + details);
 
@@ -128,12 +129,34 @@ namespace ColdBrewCase.EditorTools
             return failures;
         }
 
+        private static int ValidateDistrict(GameManager game)
+        {
+            LevelThreeDirector director = game.GetComponent<LevelThreeDirector>();
+            if (director == null) { Report("Level03 needs LevelThreeDirector on Systems.", game); return 1; }
+            int failures = 0;
+            if (game.rooms == null || game.rooms.zones == null || game.rooms.zones.Length != 13)
+            { Report("Level03 needs thirteen room zones.", game); failures++; }
+            if (director.hub == null || director.hub.neighbors == null || director.hub.neighbors.Length != 4)
+            { Report("Level03 courtyard needs four neighboring rooms.", director); failures++; }
+            if (director.hidingSpots == null || director.hidingSpots.Length != 12)
+            { Report("Level03 needs twelve search-room hiding spots.", director); failures++; }
+            else
+                foreach (Transform spot in director.hidingSpots)
+                {
+                    if (spot == null) continue;
+                    if (Physics2D.OverlapCircle(spot.position, .35f, LayerMask.GetMask("Walls", "Crates")) == null) continue;
+                    Report("Hiding spot overlaps cover: " + spot.name, spot);
+                    failures++;
+                }
+            return failures;
+        }
+
         private static void ValidateHome()
         {
             int failures = 0;
             details = "";
             EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
-            foreach (string path in new[] { HomeScreen.ScenePath, HomeScreen.LevelZeroPath, HomeScreen.LevelOnePath, HomeScreen.LevelTwoPath })
+            foreach (string path in new[] { HomeScreen.ScenePath, HomeScreen.LevelZeroPath, HomeScreen.LevelOnePath, HomeScreen.LevelTwoPath, HomeScreen.LevelThreePath })
             {
                 bool included = false;
                 foreach (EditorBuildSettingsScene scene in scenes)

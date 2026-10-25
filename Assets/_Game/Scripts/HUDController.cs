@@ -563,7 +563,8 @@ namespace ColdBrewCase
             GUI.Label(new Rect(28, 23, 50, 50), caseNumber, badgeText);
             Caps(new Rect(92, 22, 240, 18), "CASE FILE", coral);
             headerBig.normal.textColor = Color.white;
-            GUI.Label(new Rect(92, 40, 245, 32), game.State == RoundState.Opening ? "Follow the thief" :
+            GUI.Label(new Rect(92, 40, 245, 32), game.State == RoundState.Opening ?
+                (game.GetComponent<LevelThreeDirector>() != null ? "Choose a direction" : "Follow the thief") :
                 game.State == RoundState.Extracting ? "He's escaping!" : "Catch the coffee thief", headerBig);
 
             // Coffee and nets

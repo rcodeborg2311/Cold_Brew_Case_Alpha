@@ -703,6 +703,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.FootstepCue
   playSound: 1
+  requireHunt: 0
+  repeatSeconds: 0
 --- !u!82 &71726548
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2203,7 +2205,7 @@ MonoBehaviour:
   - {fileID: 1516741939}
   - {fileID: 375701240}
   - {fileID: 94579852}
-  scanAllNeighbors: 1
+  scanAllNeighbors: 0
 --- !u!114 &342614425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7867,6 +7869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.CameraFollow
   target: {fileID: 807624209}
   worldCamera: {fileID: 1143497231}
+  closeViewBetweenScans: 0
 --- !u!20 &1143497231
 Camera:
   m_ObjectHideFlags: 0

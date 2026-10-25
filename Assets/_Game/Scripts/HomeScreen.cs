@@ -9,6 +9,7 @@ namespace ColdBrewCase
         public const string LevelZeroPath = "Assets/_Game/Scenes/Level00.unity";
         public const string LevelOnePath = "Assets/_Game/Scenes/Level01.unity";
         public const string LevelTwoPath = "Assets/_Game/Scenes/Level02.unity";
+        public const string LevelThreePath = "Assets/_Game/Scenes/Level03.unity";
 
         [Tooltip("Shown at the bottom of the home screen. Put your team name here.")]
         public string credit = "Bob The Builder";
@@ -179,12 +180,14 @@ namespace ColdBrewCase
             GUI.Label(new Rect(180, 205, 920, 36), "Choose a level", subtitle);
 
             // Level 0 has no timer, so its card shows "Cleared" without a best time.
-            LevelCard(new Rect(170, 250, 300, 250), green, "Level 0", "Training",
+            LevelCard(new Rect(40, 250, 280, 250), green, "Level 0", "Training",
                 "Start here  -  your first catch", LevelZeroPath, false);
-            LevelCard(new Rect(490, 250, 300, 250), cyan, "Level 1", "Courtyard to Hideout",
+            LevelCard(new Rect(340, 250, 280, 250), cyan, "Level 1", "Courtyard to Hideout",
                 "Beginner  -  now with guards", LevelOnePath);
-            LevelCard(new Rect(810, 250, 300, 250), orange, "Level 2", "Two-floor pursuit",
+            LevelCard(new Rect(640, 250, 280, 250), orange, "Level 2", "Two-floor pursuit",
                 "Harder  -  two floors", LevelTwoPath);
+            LevelCard(new Rect(940, 250, 280, 250), new Color(.8f, .6f, 1f), "Level 3", "District Hunt",
+                "13 rooms - moving target", LevelThreePath);
 
             Rect howTo = new Rect(520, 520, 240, 48);
             bool hoverHowTo = !showingHowToPlay && howTo.Contains(Event.current.mousePosition);

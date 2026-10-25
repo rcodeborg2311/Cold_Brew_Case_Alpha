@@ -7,6 +7,8 @@ namespace ColdBrewCase
     {
         [SerializeField] private bool playSound = true;
         public bool requireHunt;
+        [Min(0f)] public float repeatSeconds;
+        private double readyAt;
         private GameManager game;
         private NotesManager notes;
         private AudioSource sound;
@@ -53,6 +55,7 @@ namespace ColdBrewCase
             Vector2 from = other.transform.position;
             if (!notes.Hear(from, target)) return;
             heard = true;
+            readyAt = Clock.Now + repeatSeconds;
             sound.panStereo = Mathf.Clamp((notes.SoundPosition.x - from.x) / 5f, -.85f, .85f);
             if (playSound) sound.Play();
             foreach (MeshRenderer marker in markers) marker.enabled = false;
@@ -61,6 +64,7 @@ namespace ColdBrewCase
         private void LateUpdate()
         {
             if (game == null || game.rooms == null) return;
+            if (heard && repeatSeconds > 0 && Clock.Now >= readyAt) heard = false;
             bool visible = !heard && game.rooms.IsVisible(game.rooms.RoomAt(transform.position));
             foreach (MeshRenderer marker in markers) marker.enabled = visible;
         }

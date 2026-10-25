@@ -7,6 +7,8 @@ namespace ColdBrewCase
     {
         public Transform target;
         public Camera worldCamera;
+        public bool closeViewBetweenScans;
+        private HeatSightController heat;
         private RoomManager rooms;
         private float minimumSize;
         private Vector2 escapePosition;
@@ -17,6 +19,7 @@ namespace ColdBrewCase
         {
             rooms = Object.FindFirstObjectByType<RoomManager>();
             minimumSize = worldCamera.orthographicSize;
+            if (rooms != null) heat = rooms.GetComponent<HeatSightController>();
         }
 
         private void LateUpdate()
@@ -33,6 +36,15 @@ namespace ColdBrewCase
             if (current == null)
             {
                 transform.position = new Vector3(target.position.x, target.position.y, -10f);
+                return;
+            }
+
+            if (closeViewBetweenScans)
+            {
+                float blend = 1f - Mathf.Exp(-8f * Time.unscaledDeltaTime);
+                Vector2 focus = Vector2.Lerp(current.transform.position, target.position, .35f);
+                transform.position = Vector3.Lerp(transform.position, new Vector3(focus.x, focus.y + .5f, -10), blend);
+                worldCamera.orthographicSize = Mathf.Lerp(worldCamera.orthographicSize, minimumSize, blend);
                 return;
             }
 

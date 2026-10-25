@@ -8,7 +8,10 @@ namespace ColdBrewCase
         Unknown, Courtyard, Corridor, Fork, Hideout,
         CafeLobby, StorageRoom, LoadingBay, Kitchen, BackAlley, UpperLanding, StorageLoft, Office,
         // Level 0 rooms.
-        TrainingStart, TrainingHideout
+        TrainingStart, TrainingHideout,
+        DistrictHub, DistrictNorth, DistrictEast, DistrictSouth, DistrictWest,
+        DistrictNorthEast, DistrictSouthEast, DistrictSouthWest, DistrictNorthWest,
+        DistrictNorthEnd, DistrictEastEnd, DistrictSouthEnd, DistrictWestEnd
     }
     public enum RoundState { Opening, Playing, Won, Lost, Extracting }
     public enum AlertAction { Push, Spotted, MissedNet }

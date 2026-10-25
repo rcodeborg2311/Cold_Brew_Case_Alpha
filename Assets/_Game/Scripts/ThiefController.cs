@@ -20,6 +20,10 @@ namespace ColdBrewCase
 
         [Min(0f)] public float startDelay = 1.5f;
         private float waited;
+        private Vector2[] relocationRoute;
+        private int relocationPoint;
+        private float relocationSpeed, blockedSeconds;
+        public bool Relocating => relocationRoute != null;
 
         private readonly List<RaycastHit2D> hits = new List<RaycastHit2D>(8);
         private readonly Vector2[] corners = new Vector2[4];
@@ -45,6 +49,11 @@ namespace ColdBrewCase
         private void FixedUpdate()
         {
             if (captured || gone || escaping) return;
+            if (Relocating)
+            {
+                if (game.CanRunAI) MoveToNextRoom();
+                return;
+            }
             if (hidden)
             {
                 if (!SameRoom) { cover = null; nextDecision = 0; return; }
@@ -202,6 +211,42 @@ namespace ColdBrewCase
             Vector2 delta = to - from;
             if (delta.sqrMagnitude < .0001f) return true;
             return Physics2D.CircleCast(from, .35f, delta.normalized, delta.magnitude, blockers).collider == null;
+        }
+
+        public void StartHiddenAt(Vector2 position)
+        {
+            body.position = position;
+            transform.position = new Vector3(position.x, position.y, 0);
+            hidden = true;
+            Physics2D.SyncTransforms();
+        }
+
+        public bool BeginRelocation(Vector2[] route, float speed)
+        {
+            if (!CanBeCaptured || Relocating || route == null || route.Length == 0) return false;
+            relocationRoute = route;
+            relocationPoint = 0;
+            relocationSpeed = speed;
+            blockedSeconds = 0;
+            cover = null;
+            return true;
+        }
+
+        private void MoveToNextRoom()
+        {
+            Vector2 delta = relocationRoute[relocationPoint] - body.position;
+            if (delta.magnitude < .08f)
+            {
+                relocationPoint++;
+                if (relocationPoint >= relocationRoute.Length)
+                { relocationRoute = null; nextDecision = 0; aware = false; }
+                return;
+            }
+            Vector2 step = Vector2.ClampMagnitude(delta, relocationSpeed * Time.fixedDeltaTime);
+            Vector2 safe = BodyMover.SafeDelta(body, step, blockers, hits);
+            blockedSeconds = safe.sqrMagnitude < .000001f ? blockedSeconds + Time.fixedDeltaTime : 0;
+            if (blockedSeconds > 1.5f) { relocationRoute = null; nextDecision = 0; return; }
+            body.MovePosition(body.position + safe);
         }
 
         public void Capture() { captured = true; hidden = false; }

@@ -725,7 +725,7 @@ MonoBehaviour:
   zones:
   - {fileID: 601313295}
   - {fileID: 878391343}
-  scanAllNeighbors: 1
+  scanAllNeighbors: 0
 --- !u!114 &146505662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3398,6 +3398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.CameraFollow
   target: {fileID: 2122479003}
   worldCamera: {fileID: 834797227}
+  closeViewBetweenScans: 0
 --- !u!20 &834797227
 Camera:
   m_ObjectHideFlags: 0
