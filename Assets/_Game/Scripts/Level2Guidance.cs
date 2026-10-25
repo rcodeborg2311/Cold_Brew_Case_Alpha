@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace ColdBrewCase
 {
-    // Level 2 only. Self-installs when a scene named "Level02*" loads; reads existing
-    // public state and draws its own overlay, so no existing script or scene is modified.
+    // Optional nudges for older aim-to-scan Level 2 layouts.
     public sealed class Level2Guidance : MonoBehaviour
     {
         private const float NudgeOne = 15f, NudgeTwo = 30f, NudgeThree = 45f;
@@ -19,7 +18,7 @@ namespace ColdBrewCase
         private int lastCoffee, lastNets, caughtCount;
         private bool lowTimeShown;
         private RoomId lastRoom = RoomId.Unknown;
-        private GUIStyle text, tag;
+        private GUIStyle text, coffeeTagStyle;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Hook()
@@ -31,6 +30,8 @@ namespace ColdBrewCase
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (!scene.name.StartsWith("Level02")) return;
+            RoomManager rooms = FindFirstObjectByType<RoomManager>();
+            if (rooms != null && rooms.scanAllNeighbors) return;
             if (FindFirstObjectByType<Level2Guidance>() != null) return;
             new GameObject("Level2Guidance").AddComponent<Level2Guidance>();
         }
@@ -128,8 +129,8 @@ namespace ColdBrewCase
             {
                 text = new GUIStyle(GUI.skin.label) { fontSize = 18, alignment = TextAnchor.MiddleLeft };
                 text.normal.textColor = Color.white;
-                tag = new GUIStyle(text) { fontSize = 14, alignment = TextAnchor.MiddleCenter };
-                tag.normal.textColor = new Color(1f, .7f, .3f);
+                coffeeTagStyle = new GUIStyle(text) { fontSize = 14, alignment = TextAnchor.MiddleCenter };
+                coffeeTagStyle.normal.textColor = new Color(1f, .7f, .3f);
             }
             Matrix4x4 old = GUI.matrix;
             GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity,

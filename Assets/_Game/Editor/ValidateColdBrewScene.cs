@@ -86,9 +86,46 @@ namespace ColdBrewCase.EditorTools
                     { Report("Level01 lessons need two different gates.", lessons); failures++; }
                 }
             }
+            if (game != null && game.rooms != null && game.gameObject.scene.name == "Level02" && game.rooms.scanAllNeighbors)
+                failures += ValidateChallenge(game);
             Debug.Log(failures == 0 ? "Reference checks passed. Unity compile and playtest gates are still required." :
                 failures + " scene check(s) failed:\n" + details);
 
+        }
+
+        private static int ValidateChallenge(GameManager game)
+        {
+            int failures = 0;
+            if (game.rooms.zones == null) return failures;
+            Physics2D.SyncTransforms();
+            int blockers = LayerMask.GetMask("Walls", "Crates");
+            foreach (RoomZone room in game.rooms.zones)
+            {
+                if (room == null) continue;
+                if (!room.Contains(room.safeCheckpoint) || Physics2D.OverlapCircle(room.safeCheckpoint, .33f, blockers) != null)
+                { Report(room.name + ": checkpoint must be inside the room and clear of cover.", room); failures++; }
+                if (room.neighbors == null) continue;
+                foreach (RoomZone neighbor in room.neighbors)
+                {
+                    if (neighbor == null) continue;
+                    if (neighbor.neighbors != null && Array.IndexOf(neighbor.neighbors, room) >= 0) continue;
+                    Report(room.name + ": room connections must work in both directions.", room);
+                    failures++;
+                }
+            }
+            if (game.thief != null && game.thief.openingRoute != null)
+            {
+                Vector2 from = game.thief.transform.position;
+                foreach (Transform point in game.thief.openingRoute)
+                {
+                    if (point == null) continue;
+                    Vector2 delta = (Vector2)point.position - from;
+                    if (delta.sqrMagnitude > .001f && Physics2D.CircleCast(from, .33f, delta.normalized, delta.magnitude, blockers).collider != null)
+                    { Report("Thief opening route crosses a wall or crate near " + point.name, point); failures++; }
+                    from = point.position;
+                }
+            }
+            return failures;
         }
 
         private static void ValidateHome()

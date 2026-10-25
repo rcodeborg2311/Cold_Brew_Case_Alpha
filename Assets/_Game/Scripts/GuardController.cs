@@ -12,7 +12,7 @@ namespace ColdBrewCase
         public Transform[] waypoints;
         public bool fixedPatrol;
         public LayerMask blockers;
-        public HeatTag tag;
+        public new HeatTag tag;
         [Min(1f)] public float turnSpeed = 90f;
         public Vector2 Facing { get; private set; } = Vector2.right;
         public Vector2 NextFacing { get; private set; } = Vector2.right;

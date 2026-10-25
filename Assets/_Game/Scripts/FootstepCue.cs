@@ -6,6 +6,7 @@ namespace ColdBrewCase
     public sealed class FootstepCue : MonoBehaviour
     {
         [SerializeField] private bool playSound = true;
+        public bool requireHunt;
         private GameManager game;
         private NotesManager notes;
         private AudioSource sound;
@@ -47,6 +48,7 @@ namespace ColdBrewCase
         {
             if (heard || game == null || notes == null || game.thief == null ||
                 !game.CanMove || other.GetComponent<PlayerController>() == null) return;
+            if (requireHunt && game.State != RoundState.Playing) return;
             Vector2 target = game.thief.transform.position;
             Vector2 from = other.transform.position;
             if (!notes.Hear(from, target)) return;
