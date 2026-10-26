@@ -215,6 +215,40 @@ namespace ColdBrewCase.EditorTools
             MakeCoffee("Coffee - Courtyard", new Vector2(2.7f, -2.7f), RoomId.DistrictHub, coffee);
             MakeCoffee("Coffee - West Entry", new Vector2(-12.5f, 2.6f), RoomId.DistrictWest, coffee);
             MakeCoffee("Coffee - East Hideout", new Vector2(12.5f, 7.3f), RoomId.DistrictNorthEast, coffee);
+
+            
+            // Hidden backup net tucked behind the West Hideout cover.
+            Transform hiddenNet = Node(
+                "Hidden Extra Net",
+                pickups,
+                new Vector2(-6.2f, 11.5f)
+            );
+
+            hiddenNet.gameObject.layer = LayerMask.NameToLayer("Pickups");
+
+            CircleCollider2D hiddenNetCollider =
+                hiddenNet.gameObject.AddComponent<CircleCollider2D>();
+
+            hiddenNetCollider.radius = 0.5f;
+            hiddenNetCollider.isTrigger = true;
+
+            Shape(
+                "Hidden Net Visual",
+                hiddenNet,
+                Vector2.zero,
+                new Vector2(0.4f, 0.4f),
+                PrimitiveKind.Box,
+                new Color(0.3f, 0.8f, 1f),
+                20
+            );
+
+            HiddenNetPickup hiddenNetPickup =
+                hiddenNet.gameObject.AddComponent<HiddenNetPickup>();
+
+            hiddenNetPickup.net = net;
+            net.hiddenNetAvailable = true;
+
+
             MakeLevel2FootstepCue("Listen - West Entry", new Vector2(-5.5f, 0));
             MakeLevel2FootstepCue("Listen - Courtyard", new Vector2(0, 4.5f));
             MakeLevel2FootstepCue("Listen - East Entry", new Vector2(5.5f, 0));
@@ -268,8 +302,7 @@ namespace ColdBrewCase.EditorTools
                 build.Add(new EditorBuildSettingsScene(HomeScreen.LevelFourPath, true));
             EditorBuildSettings.scenes = build.ToArray();
             AssetDatabase.SaveAssets();
-            Debug.Log("Level 4 created with nine rooms, two thief hideouts, five guards, and decorative solid props spread across the rooms. Existing level scenes were not changed.");
-        }
+            Debug.Log("LEVEL 4 BUILDER CHECK - HIDDEN NET VERSION");            }
 
         private static void MakeFixedProp(string name, Vector2 position, Vector2 size)
         {
