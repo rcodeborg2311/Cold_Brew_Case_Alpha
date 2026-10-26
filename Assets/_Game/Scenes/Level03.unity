@@ -2087,7 +2087,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d91f361aabe09f94ea67f2ebc3afe2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AnalyticsClient
-  enableCollection: 0
+  enableCollection: 1
   buildId: level-3-district
   sheetUrl: https://script.google.com/macros/s/AKfycbwfxdAWde6MOHK-FwGFZ0QStvy-1sYSwJLoLCGKWGDHYVjpV6-Wu4As69ppMRjqfWz_Aw/exec
   heavyShakeThreshold: 0.5
@@ -2096,7 +2096,7 @@ MonoBehaviour:
   rooms: {fileID: 101734444}
   game: {fileID: 101734432}
   net: {fileID: 0}
-  shake: {fileID: 0}
+  stats: {fileID: 0}
 --- !u!4 &101734447
 Transform:
   m_ObjectHideFlags: 0

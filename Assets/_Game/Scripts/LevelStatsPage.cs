@@ -19,6 +19,20 @@ namespace ColdBrewCase
 
         public bool Showing => ended && Time.unscaledTime >= showAt;
 
+        // Read by AnalyticsClient to send a one-row summary of the round.
+        public float HuntSeconds => huntSeconds;
+        public float ScanSeconds => scanSeconds;
+        public float SecondsLost => secondsLost;
+        // -1 means the level has no timer (Level 0).
+        public float TimeLeft => alert.untimed ? -1f : game.State == RoundState.Won ? timeLeft : 0f;
+        public int Throws => throws;
+        public int Hits => hits;
+        public int Scans => scans;
+        public int RoomsVisited => visited.Count;
+        public int TotalRooms => totalRooms;
+        public int Spotted => spotted;
+        public int Pushes => pushes;
+
         private bool ended;
         private float showAt;
         private float huntSeconds, scanSeconds, secondsLost, timeLeft;
