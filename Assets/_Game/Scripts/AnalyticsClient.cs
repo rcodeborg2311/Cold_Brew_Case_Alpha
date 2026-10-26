@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.Text;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 
 namespace ColdBrewCase
@@ -20,6 +21,9 @@ namespace ColdBrewCase
             public int netNumber, netsLeft, hit;
             public float shakeIntensity;
             public string shakeLevel;
+            // Round summary (only filled on session_end rows), read by the Home screen stats page.
+            public float huntSeconds, timeLeft, secondsLost, scanSeconds;
+            public int roundThrows, roundHits, scans, roomsVisited, totalRooms, spotted, pushes;
         }
         public bool enableCollection = false;
         public string buildId = "alpha-2026-10-19";
@@ -30,63 +34,80 @@ namespace ColdBrewCase
         public RoomManager rooms;
         public GameManager game;
         public NetThrower net;
-        public ShakeController shake;
-        private string sessionId;
+        public LevelStatsPage stats;
+        private string sessionId, levelName;
         private double startedAt;
-        private int sequence, coffeeNumber, netNumber, lastNets;
+        private int sequence, coffeeNumber, netNumber;
+        private bool endPending;
 #if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")] private static extern void CBC_Enqueue(string json);
 #endif
         private void Awake()
         {
             if (net == null) net = FindFirstObjectByType<NetThrower>();
-            if (shake == null && net != null) shake = net.shake;
+            if (stats == null) stats = FindFirstObjectByType<LevelStatsPage>();
+            levelName = SceneManager.GetActiveScene().name;
         }
         private void OnEnable()
         {
             heat.CoffeeDrunk += OnCoffee; rooms.CurrentChanged += OnRoom; game.RoundEnded += OnEnd;
+            if (net != null) net.Thrown += OnThrown;
         }
         private void OnDisable()
         {
             heat.CoffeeDrunk -= OnCoffee; rooms.CurrentChanged -= OnRoom; game.RoundEnded -= OnEnd;
+            if (net != null) net.Thrown -= OnThrown;
         }
         private void Start()
         {
-            if (net != null) lastNets = net.Nets;
             if (!enableCollection) return;
             rooms.RefreshRoom();
             sessionId = Guid.NewGuid().ToString("N"); startedAt = Clock.Now;
             Record("session_start", rooms.Current, inventory.Count);
         }
-        // NetThrower only changes Nets inside Throw(), so a drop means a net was released this frame.
-        private void LateUpdate() => CheckNetThrow();
-        private void CheckNetThrow()
+        private void OnThrown(bool hit, float intensity)
         {
-            if (net == null || net.Nets >= lastNets) return;
-            lastNets = net.Nets;
             netNumber++;
-            float intensity = shake != null ? shake.Intensity : 0f;
-            string level = intensity <= 0f ? "Steady" : intensity < heavyShakeThreshold ? "Light" : "Heavy";
-            bool hit = game.State == RoundState.Won;
-            Record("net_throw", rooms.Current, inventory.Count, hit ? "Hit" : "Miss",
-                intensity, level, hit);
+            Record("net_throw", rooms.Current, inventory.Count, hit ? "Hit" : "Miss", row =>
+            {
+                row.hit = hit ? 1 : 0;
+                row.shakeIntensity = intensity;
+                row.shakeLevel = LevelStatsPage.ShakeLevel(intensity, heavyShakeThreshold);
+            });
         }
         private void OnCoffee(RoomId room, int remaining)
         {
             coffeeNumber++; Record("coffee_drunk", room, remaining);
         }
         private void OnRoom(RoomId room) => Record("zone_enter", room, inventory.Count);
-        private void OnEnd()
+        // A catching net ends the round before NetThrower reports the throw, so the summary
+        // waits until the end of the frame, when every count is final.
+        private void OnEnd() => endPending = true;
+        private void LateUpdate()
         {
-            // A catching net or a last-net miss ends the round inside Throw(); log the throw first.
-            CheckNetThrow();
-            Record("session_end", rooms.Current, inventory.Count,
-                game.State == RoundState.Won ? "Won" : "Lost");
+            if (!endPending) return;
+            endPending = false;
+            Record("session_end", rooms.Current, inventory.Count, game.Outcome, row =>
+            {
+                if (stats == null) return;
+                row.huntSeconds = stats.HuntSeconds;
+                row.timeLeft = stats.TimeLeft;
+                row.secondsLost = stats.SecondsLost;
+                row.scanSeconds = stats.ScanSeconds;
+                row.roundThrows = stats.Throws;
+                row.roundHits = stats.Hits;
+                row.scans = stats.Scans;
+                row.roomsVisited = stats.RoomsVisited;
+                row.totalRooms = stats.TotalRooms;
+                row.spotted = stats.Spotted;
+                row.pushes = stats.Pushes;
+            });
         }
-        private void Record(string name, RoomId room, int remaining, string outcome = "",
-            float shakeIntensity = 0f, string shakeLevel = "", bool hit = false)
+        private void Record(string name, RoomId room, int remaining, string outcome = "", Action<Row> extra = null)
         {
-            if (!enableCollection || string.IsNullOrEmpty(sessionId) || sequence >= 100) return;
+            // session_end is always sent so every round is counted on the stats page.
+            if (!enableCollection || string.IsNullOrEmpty(sessionId) ||
+                (sequence >= 100 && name != "session_end")) return;
             int index = sequence++;
             var row = new Row
             {
@@ -94,7 +115,7 @@ namespace ColdBrewCase
                 sessionId = sessionId,
                 sequence = index,
                 eventName = name,
-                level = "back_alley_market",
+                level = levelName,
                 zone = room.ToString(),
                 clientUtc = DateTime.UtcNow.ToString("O"),
                 elapsedSeconds = Clock.Now - startedAt,
@@ -104,10 +125,9 @@ namespace ColdBrewCase
                 outcome = outcome,
                 netNumber = netNumber,
                 netsLeft = net != null ? net.Nets : 0,
-                hit = hit ? 1 : 0,
-                shakeIntensity = shakeIntensity,
-                shakeLevel = shakeLevel
+                shakeLevel = ""
             };
+            extra?.Invoke(row);
             string json = JsonUtility.ToJson(row);
             StartCoroutine(Send(json));
         }

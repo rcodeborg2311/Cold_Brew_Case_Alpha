@@ -473,6 +473,7 @@ GameObject:
   - component: {fileID: 146505663}
   - component: {fileID: 146505662}
   - component: {fileID: 146505648}
+  - component: {fileID: 146505665}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -509,6 +510,7 @@ MonoBehaviour:
   rooms: {fileID: 146505661}
   player: {fileID: 2122479004}
   thief: {fileID: 64163915}
+  levelFourDirector: {fileID: 0}
   hud: {fileID: 146505650}
   nextScenePath: Assets/_Game/Scenes/Level01.unity
   nextSceneLabel: 'Next: Level 1'
@@ -689,6 +691,7 @@ MonoBehaviour:
   arc: {fileID: 1061410722}
   hud: {fileID: 146505650}
   unlimitedNets: 1
+  hiddenNetAvailable: 0
 --- !u!114 &146505660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,7 +764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d91f361aabe09f94ea67f2ebc3afe2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AnalyticsClient
-  enableCollection: 0
+  enableCollection: 1
   buildId: level-0
   sheetUrl: https://script.google.com/macros/s/AKfycbwfxdAWde6MOHK-FwGFZ0QStvy-1sYSwJLoLCGKWGDHYVjpV6-Wu4As69ppMRjqfWz_Aw/exec
   heavyShakeThreshold: 0.5
@@ -770,7 +773,7 @@ MonoBehaviour:
   rooms: {fileID: 146505661}
   game: {fileID: 146505649}
   net: {fileID: 0}
-  shake: {fileID: 0}
+  stats: {fileID: 0}
 --- !u!4 &146505664
 Transform:
   m_ObjectHideFlags: 0
@@ -786,6 +789,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &146505665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146505647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc46fbfa5593b44ea8dc69f23c715f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.LevelStatsPage
+  game: {fileID: 0}
+  alert: {fileID: 0}
+  heat: {fileID: 0}
+  net: {fileID: 0}
+  push: {fileID: 0}
+  rooms: {fileID: 0}
+  heavyShakeThreshold: 0.5
 --- !u!1 &154793280
 GameObject:
   m_ObjectHideFlags: 0

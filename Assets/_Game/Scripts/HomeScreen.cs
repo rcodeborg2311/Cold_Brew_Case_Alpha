@@ -17,6 +17,7 @@ namespace ColdBrewCase
 
         private GUIStyle title, subtitle, story, small, cardTitle, cardTag, playLabel, plain, rowKey, rowText;
         private bool loading, showingHowToPlay;
+        private PlaytestStatsPage statsPage;
         private string message = "";
 
         private static readonly Color background = new Color(.04f, .06f, .08f);
@@ -26,6 +27,8 @@ namespace ColdBrewCase
         private static readonly Color orange = new Color(1f, .7f, .3f);
         private static readonly Color green = new Color(.4f, .95f, .55f);
         private static readonly Color muted = new Color(.7f, .77f, .82f);
+
+        private void Awake() => statsPage = FindFirstObjectByType<PlaytestStatsPage>();
 
         public static bool TryLoad(string path)
         {
@@ -67,8 +70,11 @@ namespace ColdBrewCase
         private void Styles()
         {
             if (title != null) return;
-            title = new GUIStyle(GUI.skin.label) {
-                fontSize = 56, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter
+            title = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 56,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter
             };
             title.normal.textColor = Color.white;
             subtitle = new GUIStyle(title) { fontSize = 24, fontStyle = FontStyle.Normal };
@@ -175,6 +181,15 @@ namespace ColdBrewCase
                 (Screen.height - 720f * scale) / 2f, 0);
             GUI.matrix = Matrix4x4.TRS(offset, Quaternion.identity, new Vector3(scale, scale, 1));
 
+            // The playtest stats page takes over the whole Home screen while it is open.
+            if (statsPage != null && statsPage.IsOpen)
+            {
+                statsPage.Draw();
+                GUI.matrix = old;
+                GUI.enabled = enabled;
+                return;
+            }
+
             GUI.Label(new Rect(180, 50, 920, 80), "COLD BREW CASE", title);
             GUI.Label(new Rect(240, 128, 800, 60),
                 "Thieves are on the loose. Track them down and catch them with your net before time runs out.", story);
@@ -192,7 +207,8 @@ namespace ColdBrewCase
             LevelCard(new Rect(1018, 250, 236, 250), new Color(.35f, .9f, .65f), "Level 4", "Double Pursuit",
                 "6 rooms - catch both", LevelFourPath);
 
-            Rect howTo = new Rect(520, 520, 240, 48);
+            // Two buttons side by side when the stats page is in the scene, otherwise one centred.
+            Rect howTo = statsPage != null ? new Rect(390, 520, 240, 48) : new Rect(520, 520, 240, 48);
             bool hoverHowTo = !showingHowToPlay && howTo.Contains(Event.current.mousePosition);
             Fill(howTo, hoverHowTo ? cardHover : cardColor);
             Fill(new Rect(howTo.x, howTo.y + howTo.height - 3, howTo.width, 3), muted);
@@ -200,6 +216,18 @@ namespace ColdBrewCase
             GUI.enabled = enabled && !loading && !showingHowToPlay;
             if (GUI.Button(howTo, GUIContent.none, plain)) showingHowToPlay = true;
             GUI.enabled = enabled;
+
+            if (statsPage != null)
+            {
+                Rect stats = new Rect(650, 520, 240, 48);
+                bool hoverStats = !showingHowToPlay && stats.Contains(Event.current.mousePosition);
+                Fill(stats, hoverStats ? cardHover : cardColor);
+                Fill(new Rect(stats.x, stats.y + stats.height - 3, stats.width, 3), cyan);
+                GUI.Label(stats, "Playtest Stats", new GUIStyle(subtitle) { fontSize = 22 });
+                GUI.enabled = enabled && !loading && !showingHowToPlay;
+                if (GUI.Button(stats, GUIContent.none, plain)) statsPage.Open();
+                GUI.enabled = enabled;
+            }
 
             if (loading || message.Length > 0)
                 GUI.Label(new Rect(160, 595, 960, 45), loading ? "Loading..." : message, small);
