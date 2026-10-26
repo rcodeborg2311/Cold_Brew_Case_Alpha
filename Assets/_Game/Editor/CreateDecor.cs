@@ -35,6 +35,14 @@ namespace ColdBrewCase.EditorTools
             return Node(name, decor, position);
         }
 
+        
+        private static void AddFurnitureCollider(Transform furniture, Vector2 size)
+        {
+            BoxCollider2D collider = furniture.gameObject.AddComponent<BoxCollider2D>();
+            collider.size = size;
+        }
+
+
         private static void Rug(Vector2 at, Vector2 size)
         {
             Transform rug = Piece("Rug", at);
@@ -48,6 +56,7 @@ namespace ColdBrewCase.EditorTools
         private static void Sofa(Vector2 at, bool facingDown = true)
         {
             Transform sofa = Piece("Sofa", at);
+            AddFurnitureCollider(sofa, new Vector2(2.4f, 0.9f));
             float back = facingDown ? .38f : -.38f;
             Shape("Seat", sofa, Vector2.zero, new Vector2(2.4f, .9f), PrimitiveKind.Box, Fabric, 6);
             Shape("Back", sofa, new Vector2(0, back), new Vector2(2.4f, .3f), PrimitiveKind.Box, FabricDark, 7);
@@ -60,6 +69,7 @@ namespace ColdBrewCase.EditorTools
         private static void CafeTable(Vector2 at)
         {
             Transform table = Piece("Cafe Table", at);
+            AddFurnitureCollider(table, new Vector2(1.75f, 1.0f));
             Shape("Chair L", table, new Vector2(-.65f, 0), new Vector2(.45f, .45f), PrimitiveKind.Box, WoodDark, 5);
             Shape("Chair R", table, new Vector2(.65f, 0), new Vector2(.45f, .45f), PrimitiveKind.Box, WoodDark, 5);
             Shape("Top", table, Vector2.zero, new Vector2(.85f, .85f), PrimitiveKind.Circle, Wood, 6);
@@ -69,6 +79,7 @@ namespace ColdBrewCase.EditorTools
         private static void Plant(Vector2 at)
         {
             Transform plant = Piece("Plant", at);
+            AddFurnitureCollider(plant, new Vector2(0.75f, 0.75f));
             Shape("Pot", plant, Vector2.zero, new Vector2(.5f, .5f), PrimitiveKind.Box, Pot, 6);
             Shape("Leaves", plant, new Vector2(0, .05f), new Vector2(.75f, .75f), PrimitiveKind.Circle, Leaf, 7);
             Shape("Leaf A", plant, new Vector2(-.15f, .15f), new Vector2(.35f, .35f), PrimitiveKind.Circle, LeafLight, 8);
@@ -79,6 +90,7 @@ namespace ColdBrewCase.EditorTools
         private static void Shelf(Vector2 at, float width = 2.2f)
         {
             Transform shelf = Piece("Shelf", at);
+            AddFurnitureCollider(shelf, new Vector2(width, 0.5f));
             Shape("Frame", shelf, Vector2.zero, new Vector2(width, .5f), PrimitiveKind.Box, WoodDark, 5);
             Color[] books = { new Color(.45f, .28f, .28f), new Color(.3f, .38f, .45f), new Color(.5f, .45f, .3f), new Color(.32f, .42f, .33f) };
             int count = Mathf.FloorToInt(width / .3f) - 1;
