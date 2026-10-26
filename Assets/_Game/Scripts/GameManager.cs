@@ -11,6 +11,8 @@ namespace ColdBrewCase
         public RoomManager rooms;
         public PlayerController player;
         public ThiefController thief;
+        [Tooltip("Optional Level 4 objective for catching both thieves.")]
+        public LevelFourDirector levelFourDirector;
         public HUDController hud;
         [Tooltip("Optional. When set, the win screen shows a button that loads this scene.")]
         public string nextScenePath = "";
@@ -28,7 +30,11 @@ namespace ColdBrewCase
         private readonly System.Collections.Generic.Queue<System.Collections.Generic.KeyValuePair<string, string>> tips =
             new System.Collections.Generic.Queue<System.Collections.Generic.KeyValuePair<string, string>>();
         public bool IsActionPaused => manualPause || focusPause || ShowingHowToPlay || ShowingTip;
-        public bool CanMove => !IsActionPaused && (State == RoundState.Opening || State == RoundState.Playing);
+        // Level 4's two-thief opening is a short scripted escape. Keep the detective
+        // at the starting point until both thieves reach their separate hideouts.
+        // Other levels keep their existing movement behavior during Opening.
+        public bool CanMove => !IsActionPaused &&
+            (State == RoundState.Playing || (State == RoundState.Opening && levelFourDirector == null));
         public bool CanRunAI => State == RoundState.Playing && !IsActionPaused;
         private void OnEnable()
         {
@@ -69,10 +75,15 @@ namespace ColdBrewCase
         }
         public bool TryCapture(ThiefController target)
         {
+            if (levelFourDirector != null) return levelFourDirector.TryCapture(target);
             if (!AllowAction() || target != thief || !target.CanBeCaptured) return false;
             target.Capture();
             Finish(RoundState.Won, "Won");
             return true;
+        }
+        public void CompleteMultiThiefWin()
+        {
+            if (State == RoundState.Playing) Finish(RoundState.Won, "Won");
         }
         public void Lose(LossReason reason)
         {

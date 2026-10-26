@@ -10,6 +10,7 @@ namespace ColdBrewCase
         public const string LevelOnePath = "Assets/_Game/Scenes/Level01.unity";
         public const string LevelTwoPath = "Assets/_Game/Scenes/Level02.unity";
         public const string LevelThreePath = "Assets/_Game/Scenes/Level03.unity";
+        public const string LevelFourPath = "Assets/_Game/Scenes/Level04.unity";
 
         [Tooltip("Shown at the bottom of the home screen. Put your team name here.")]
         public string credit = "Bob The Builder";
@@ -139,7 +140,7 @@ namespace ColdBrewCase
             Fill(new Rect(panel.x, panel.y, panel.width, 5), cyan);
             GUI.Label(new Rect(panel.x, panel.y + 20, panel.width, 50), "How to Play", new GUIStyle(title) { fontSize = 34 });
             GUI.Label(new Rect(panel.x + 40, panel.y + 72, panel.width - 80, 50),
-                "Your goal: catch the thief with a net before time runs out.", story);
+                "Your goal: catch every thief with a net before time runs out.", story);
             string[,] rows =
             {
                 { "WASD / Arrows", "Move" },
@@ -176,18 +177,20 @@ namespace ColdBrewCase
 
             GUI.Label(new Rect(180, 50, 920, 80), "COLD BREW CASE", title);
             GUI.Label(new Rect(240, 128, 800, 60),
-                "A thief is on the loose. Track them down and catch them with your net before time runs out.", story);
+                "Thieves are on the loose. Track them down and catch them with your net before time runs out.", story);
             GUI.Label(new Rect(180, 205, 920, 36), "Choose a level", subtitle);
 
             // Level 0 has no timer, so its card shows "Cleared" without a best time.
-            LevelCard(new Rect(40, 250, 280, 250), green, "Level 0", "Training",
+            LevelCard(new Rect(30, 250, 236, 250), green, "Level 0", "Training",
                 "Start here  -  your first catch", LevelZeroPath, false);
-            LevelCard(new Rect(340, 250, 280, 250), cyan, "Level 1", "Courtyard to Hideout",
+            LevelCard(new Rect(277, 250, 236, 250), cyan, "Level 1", "Courtyard to Hideout",
                 "Beginner  -  now with guards", LevelOnePath);
-            LevelCard(new Rect(640, 250, 280, 250), orange, "Level 2", "Two-floor pursuit",
+            LevelCard(new Rect(524, 250, 236, 250), orange, "Level 2", "Two-floor pursuit",
                 "Harder  -  two floors", LevelTwoPath);
-            LevelCard(new Rect(940, 250, 280, 250), new Color(.8f, .6f, 1f), "Level 3", "District Hunt",
+            LevelCard(new Rect(771, 250, 236, 250), new Color(.8f, .6f, 1f), "Level 3", "District Hunt",
                 "13 rooms - moving target", LevelThreePath);
+            LevelCard(new Rect(1018, 250, 236, 250), new Color(.35f, .9f, .65f), "Level 4", "Double Pursuit",
+                "6 rooms - catch both", LevelFourPath);
 
             Rect howTo = new Rect(520, 520, 240, 48);
             bool hoverHowTo = !showingHowToPlay && howTo.Contains(Event.current.mousePosition);
