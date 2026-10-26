@@ -148,42 +148,46 @@ namespace ColdBrewCase.EditorTools
 
             // Keep the starting courtyard clear. Two guards patrol square routes in each entry room.
             Vector2[] westLaneA = {
-                new Vector2(-13f, -2f), new Vector2(-10f, -2f),
-                new Vector2(-10f, .5f), new Vector2(-13f, .5f)
+                new Vector2(-12f, -2f), new Vector2(-10.5f, -2f),
+                new Vector2(-10.5f, .5f), new Vector2(-12f, .5f)
             };
+
             Vector2[] westLaneB = {
-                new Vector2(-6f, 3.5f), new Vector2(-9f, 3.5f),
-                new Vector2(-9f, 1f), new Vector2(-6f, 1f)
+                new Vector2(-6.5f, 3.5f), new Vector2(-8.5f, 3.5f),
+                new Vector2(-8.5f, 1.5f), new Vector2(-6.5f, 1.5f)
             };
+
             Vector2[] eastLaneA = {
-                new Vector2(7f, -2f), new Vector2(10f, -2f),
-                new Vector2(10f, .5f), new Vector2(7f, .5f)
+                new Vector2(7f, -2f), new Vector2(9.5f, -2f),
+                new Vector2(9.5f, .5f), new Vector2(7f, .5f)
             };
+
             Vector2[] eastLaneB = {
-                new Vector2(14f, 3.5f), new Vector2(11f, 3.5f),
-                new Vector2(11f, 1f), new Vector2(14f, 1f)
+                new Vector2(12f, 3.5f), new Vector2(11.5f, 3.5f),
+                new Vector2(11.5f, 1.5f), new Vector2(12f, 1.5f)
             };
+
             Vector2[] southwestLane = {
-                new Vector2(-13f, -13f), new Vector2(-11f, -13f),
-                new Vector2(-11f, -11f), new Vector2(-13f, -11f)
+                new Vector2(-12f, -12f), new Vector2(-11f, -12f),
+                new Vector2(-11f, -11f), new Vector2(-12f, -11f)
             };
+
             Vector2[] eastHideoutLane = {
-                new Vector2(6.5f, 6.5f), new Vector2(8.2f, 6.5f),
-                new Vector2(8.2f, 8.5f), new Vector2(6.5f, 8.5f)
+                new Vector2(7f, 7f), new Vector2(8f, 7f),
+                new Vector2(8f, 8f), new Vector2(7f, 8f)
             };
+        
             GuardController westGuardA = MakeGuard("West Entry Guard A", westLaneA[0], player.transform, westLaneA);
             westGuardA.tag.fixedRoom = RoomId.DistrictWest;
             GuardController westGuardB = MakeGuard("West Entry Guard B", westLaneB[0], player.transform, westLaneB);
             westGuardB.tag.fixedRoom = RoomId.DistrictWest;
             GuardController eastGuardA = MakeGuard("East Entry Guard A", eastLaneA[0], player.transform, eastLaneA);
             eastGuardA.tag.fixedRoom = RoomId.DistrictEast;
-            GuardController eastGuardB = MakeGuard("East Entry Guard B", eastLaneB[0], player.transform, eastLaneB);
-            eastGuardB.tag.fixedRoom = RoomId.DistrictEast;
             GuardController southwestGuard = MakeGuard("Southwest Walk Guard", southwestLane[0], player.transform, southwestLane);
             southwestGuard.tag.fixedRoom = RoomId.DistrictSouthWest;
             GuardController eastHideoutGuard = MakeGuard("East Hideout Guard", eastHideoutLane[0], player.transform, eastHideoutLane);
             eastHideoutGuard.tag.fixedRoom = RoomId.DistrictNorthEast;
-            GuardController[] guards = { westGuardA, westGuardB, eastGuardA, eastGuardB, southwestGuard, eastHideoutGuard };
+            GuardController[] guards = { westGuardA, westGuardB, eastGuardA, southwestGuard, eastHideoutGuard };
 
             GameObject firstObject = Actor("Thief One", new Vector2(-.48f, -1.2f), "Thief", Color.white, out Rigidbody2D firstBody);
             GameObject secondObject = Actor("Thief Two", new Vector2(.48f, -1.2f), "Thief", new Color(.82f, .91f, 1f), out Rigidbody2D secondBody);
@@ -264,7 +268,7 @@ namespace ColdBrewCase.EditorTools
                 build.Add(new EditorBuildSettingsScene(HomeScreen.LevelFourPath, true));
             EditorBuildSettings.scenes = build.ToArray();
             AssetDatabase.SaveAssets();
-            Debug.Log("Level 4 created with nine rooms, two thief hideouts, six guards, and decorative solid props spread across the rooms. Existing level scenes were not changed.");
+            Debug.Log("Level 4 created with nine rooms, two thief hideouts, five guards, and decorative solid props spread across the rooms. Existing level scenes were not changed.");
         }
 
         private static void MakeFixedProp(string name, Vector2 position, Vector2 size)
