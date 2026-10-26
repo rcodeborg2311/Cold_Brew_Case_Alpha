@@ -72,6 +72,8 @@ namespace ColdBrewCase
 
         private static readonly Color gray = new Color(.26f, .3f, .34f);
 
+        private LevelStatsPage statsPage;
+
 
 
         private void Start()
@@ -79,6 +81,8 @@ namespace ColdBrewCase
         {
 
             alert.Penalty += OnPenalty;
+
+            statsPage = FindFirstObjectByType<LevelStatsPage>();
 
 
             startingPosition = game.player.transform.position;
@@ -479,11 +483,11 @@ namespace ColdBrewCase
 
             if (!moved) return "WASD / Arrow keys  Move";
 
-            if (game.State == RoundState.Opening) 
+            if (game.State == RoundState.Opening)
 
                 return "Follow the thief to see where it goes";
 
-            if (heat.Active) 
+            if (heat.Active)
 
                 return "Look for the heat trail   F  Stop scan";
 
@@ -662,7 +666,7 @@ namespace ColdBrewCase
             {
                 const int size = 32, radius = 12;
                 roundTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
-                    { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp, hideFlags = HideFlags.HideAndDontSave };
+                { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp, hideFlags = HideFlags.HideAndDontSave };
                 for (int y = 0; y < size; y++)
                     for (int x = 0; x < size; x++)
                     {
@@ -867,6 +871,13 @@ namespace ColdBrewCase
 
                 return;
 
+            }
+
+            // The level stats page replaces the end-of-round panel when it is in the scene.
+            if (terminal && statsPage != null)
+            {
+                GUI.matrix = old;
+                return;
             }
 
             if (terminal || game.IsActionPaused)

@@ -24163,6 +24163,7 @@ GameObject:
   - component: {fileID: 1795554688}
   - component: {fileID: 1795554673}
   - component: {fileID: 1795554682}
+  - component: {fileID: 1795554690}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -24438,6 +24439,7 @@ MonoBehaviour:
   arc: {fileID: 570033026}
   hud: {fileID: 1795554675}
   unlimitedNets: 0
+  hiddenNetAvailable: 0
 --- !u!114 &1795554686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24519,6 +24521,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1795554690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795554672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc46fbfa5593b44ea8dc69f23c715f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.LevelStatsPage
+  game: {fileID: 0}
+  alert: {fileID: 0}
+  heat: {fileID: 0}
+  net: {fileID: 0}
+  push: {fileID: 0}
+  rooms: {fileID: 0}
+  heavyShakeThreshold: 0.5
 --- !u!1 &1809637211
 GameObject:
   m_ObjectHideFlags: 0

@@ -1948,6 +1948,7 @@ GameObject:
   - component: {fileID: 342614425}
   - component: {fileID: 342614411}
   - component: {fileID: 342614427}
+  - component: {fileID: 342614428}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -1984,6 +1985,7 @@ MonoBehaviour:
   rooms: {fileID: 342614424}
   player: {fileID: 807624210}
   thief: {fileID: 1797370331}
+  levelFourDirector: {fileID: 0}
   hud: {fileID: 342614413}
   nextScenePath: Assets/_Game/Scenes/Level02.unity
   nextSceneLabel: 'Next: Level 2'
@@ -2168,6 +2170,7 @@ MonoBehaviour:
   arc: {fileID: 1477319443}
   hud: {fileID: 342614413}
   unlimitedNets: 0
+  hiddenNetAvailable: 0
 --- !u!114 &342614423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2266,6 +2269,25 @@ MonoBehaviour:
   bannerSeconds: 8
   coffeeTitle: Coffee!  Press F to see where the thief is hiding
   coffeeBody: 
+--- !u!114 &342614428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 342614410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc46fbfa5593b44ea8dc69f23c715f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.LevelStatsPage
+  game: {fileID: 0}
+  alert: {fileID: 0}
+  heat: {fileID: 0}
+  net: {fileID: 0}
+  push: {fileID: 0}
+  rooms: {fileID: 0}
+  heavyShakeThreshold: 0.5
 --- !u!1 &345778246
 GameObject:
   m_ObjectHideFlags: 0

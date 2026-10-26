@@ -12,6 +12,7 @@ namespace ColdBrewCase
         public PushableBody[] targets;
         public HUDController hud;
         private double readyAt;
+        public event System.Action Pushed;
         public float Cooldown => Mathf.Max(0f, (float)(readyAt - Clock.Now));
         public void Use(Vector2 cursor)
         {
@@ -27,7 +28,7 @@ namespace ColdBrewCase
                 Vector2 delta = candidate.body.position - (Vector2)player.position;
                 float distance = delta.magnitude;
                 RaycastHit2D obstruction = Physics2D.Raycast(player.position, delta.normalized, distance,
-                    LayerMask.GetMask("Walls","Crates"));
+                    LayerMask.GetMask("Walls", "Crates"));
                 if (obstruction.collider != null &&
                     obstruction.collider.GetComponentInParent<PushableBody>() != candidate) continue;
                 if (distance <= nearest && (distance < .001f || Vector2.Dot(direction, delta / distance) > .4f))
@@ -39,6 +40,7 @@ namespace ColdBrewCase
             hud.Show((closest != null ? "Push! -" : "Missed push: -") +
                 alert.PenaltySeconds(AlertAction.Push).ToString("0.#") + "s");
             alert.Add(AlertAction.Push);
+            Pushed?.Invoke();
         }
     }
 }

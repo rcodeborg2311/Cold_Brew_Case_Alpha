@@ -11379,6 +11379,7 @@ GameObject:
   - component: {fileID: 1828801775}
   - component: {fileID: 1828801777}
   - component: {fileID: 1828801763}
+  - component: {fileID: 1828801779}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -11415,6 +11416,7 @@ MonoBehaviour:
   rooms: {fileID: 1828801776}
   player: {fileID: 1968180858}
   thief: {fileID: 1614048658}
+  levelFourDirector: {fileID: 0}
   hud: {fileID: 1828801765}
   nextScenePath: Assets/_Game/Scenes/Level03.unity
   nextSceneLabel: 'Next: Level 3'
@@ -11605,6 +11607,7 @@ MonoBehaviour:
   arc: {fileID: 1583761107}
   hud: {fileID: 1828801765}
   unlimitedNets: 0
+  hiddenNetAvailable: 0
 --- !u!114 &1828801775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11683,6 +11686,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1828801779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828801762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc46fbfa5593b44ea8dc69f23c715f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.LevelStatsPage
+  game: {fileID: 0}
+  alert: {fileID: 0}
+  heat: {fileID: 0}
+  net: {fileID: 0}
+  push: {fileID: 0}
+  rooms: {fileID: 0}
+  heavyShakeThreshold: 0.5
 --- !u!1 &1846139620
 GameObject:
   m_ObjectHideFlags: 0

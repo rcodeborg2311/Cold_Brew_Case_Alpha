@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 namespace ColdBrewCase
@@ -22,6 +21,9 @@ namespace ColdBrewCase
         public bool hiddenNetAvailable;
 
         public int Nets { get; private set; }
+
+        // Fired once per throw: whether it caught a thief, and the aim shake (0-1) at release.
+        public event System.Action<bool, float> Thrown;
 
         public bool Ready =>
             game.State == RoundState.Playing &&
@@ -182,7 +184,10 @@ namespace ColdBrewCase
                 : nearest.collider.GetComponentInParent<ThiefController>();
 
             // Resolve a successful capture before checking remaining nets.
-            if (target != null && game.TryCapture(target))
+            float shakeAtRelease = shake.Intensity;
+            bool caught = target != null && game.TryCapture(target);
+            Thrown?.Invoke(caught, shakeAtRelease);
+            if (caught)
                 return;
 
             // Practice mode: nets are unlimited.
