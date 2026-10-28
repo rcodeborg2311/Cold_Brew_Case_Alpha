@@ -88,6 +88,15 @@ namespace ColdBrewCase.EditorTools
             Solid("Hideout Shelf", walls, new Vector2(18.6f, 4), new Vector2(1f, 2.2f), "Crates");
             AddLevel0Decor(); // Carpets and furniture (decoration only, no colliders)
 
+            // Coffee pickup in the starting Street room.
+            MakeCoffee("Coffee - Street", new Vector2(6f, 7f),
+                RoomId.TrainingStart, coffee);
+
+            foreach (CoffeePickup cup in UnityEngine.Object.FindObjectsByType<CoffeePickup>(FindObjectsSortMode.None))
+            {
+                cup.GetComponent<RoomVisibility>()
+                    .visual.gameObject.AddComponent<VisualSymbol>().kind = SymbolKind.Coffee;
+            }
             // Player
             GameObject playerObject = Actor("Detective", new Vector2(2.5f, 5), "Player", Color.cyan, out Rigidbody2D playerBody);
             playerBody.bodyType = RigidbodyType2D.Dynamic;
@@ -97,6 +106,19 @@ namespace ColdBrewCase.EditorTools
             var player = playerObject.AddComponent<PlayerController>();
             player.game = game; player.tuning = tuning; player.body = playerBody;
             rooms.player = player.transform;
+
+            // Guard in the Hideout for the Level 0 tutorial.
+            GuardController guard = MakeGuard(
+                "Hideout Guard",
+                new Vector2(17f, 5f),
+                player.transform,
+                new[] {
+                    new Vector2(15f, 5f),
+        new Vector2(16f, 5f),
+        new Vector2(16f, 6f),
+        new Vector2(15f, 6f)
+                            }
+                        );
 
             var cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
             var camera = cameraObject.AddComponent<Camera>();
@@ -124,13 +146,18 @@ namespace ColdBrewCase.EditorTools
             AddPushable(thiefObject, thiefBody, null);
 
             // The one pop-up in this level
-            tips.game = game; tips.rooms = rooms; tips.coffee = coffee;
+            
+            // Level 0 Hideout guard tutorial.
+            tips.game = game;
+            tips.rooms = rooms;
+            tips.coffee = coffee;
+            tips.pauseGame = true;
+
             tips.roomTips = new[] {
                 new TutorialTips.RoomTip {
                     room = RoomId.TrainingHideout,
-                    title = "Catch him!  Aim with the mouse and click to throw your net",
-                    body = ""
-                }
+                    title = "GUARD AHEAD — WATCH YOUR STEP",
+                    body = "Dodge the guard to avoid being caught and losing time."                }
             };
 
             // Wiring (same as the other levels)
@@ -140,8 +167,7 @@ namespace ColdBrewCase.EditorTools
             game.nextScenePath = HomeScreen.LevelOnePath; game.nextSceneLabel = "Next: Level 1";
             heat.tuning = tuning; heat.game = game; heat.rooms = rooms; heat.inventory = coffee;
             heat.shake = shake; heat.matcher = matcher; heat.tags = tags.ToArray(); heat.hud = hud;
-            noise.tuning = tuning; noise.guards = new GuardController[0];
-            push.tuning = tuning; push.game = game; push.alert = alert; push.noise = noise;
+            noise.tuning = tuning; noise.guards = new[] { guard }; push.tuning = tuning; push.game = game; push.alert = alert; push.noise = noise;
             push.player = player.transform; push.targets = pushables.ToArray(); push.hud = hud;
             net.tuning = tuning; net.game = game; net.heat = heat; net.shake = shake;
             net.alert = alert; net.player = player.transform; net.hud = hud; net.unlimitedNets = true;
@@ -157,8 +183,7 @@ namespace ColdBrewCase.EditorTools
             reticle.directionLine = Line("Actual Aim", reticle.transform, Color.white, .02f, 200);
             hud.game = game; hud.alert = alert; hud.heat = heat; hud.shake = shake;
             hud.coffee = coffee; hud.net = net; hud.push = push; hud.notes = notes;
-            hud.rooms = rooms; hud.memory = memory; hud.guards = new GuardController[0]; hud.worldCamera = camera;
-            analytics.game = game; analytics.heat = heat; analytics.inventory = coffee; analytics.rooms = rooms;
+            hud.rooms = rooms; hud.memory = memory; hud.guards = new[] { guard }; hud.worldCamera = camera; analytics.game = game; analytics.heat = heat; analytics.inventory = coffee; analytics.rooms = rooms;
             analytics.enableCollection = false;
             analytics.buildId = "level-0";
 

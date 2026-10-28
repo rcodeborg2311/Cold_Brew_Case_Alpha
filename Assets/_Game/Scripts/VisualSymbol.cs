@@ -23,7 +23,12 @@ namespace ColdBrewCase
                 child.transform.SetParent(transform, false);
                 Rect rect = parts[i].rect;
                 child.transform.localPosition = new Vector3(rect.center.x - .5f, .5f - rect.center.y, 0);
-                child.transform.localScale = new Vector3(rect.width, rect.height, 1);
+                float iconScale = 2f;
+                child.transform.localScale = new Vector3(
+                    rect.width * iconScale,
+                    rect.height * iconScale,
+                    1
+                );                
                 child.transform.localRotation = Quaternion.Euler(0, 0, -parts[i].angle);
                 GrayboxShape shape = child.AddComponent<GrayboxShape>();
                 shape.shape = parts[i].shape;
