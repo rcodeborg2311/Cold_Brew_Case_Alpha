@@ -18,7 +18,7 @@ MonoBehaviour:
   guardTurnWait: 0.9
   heatSeconds: 10
   shakeSeconds: 18
-  escapeSeconds: 96
+  escapeSeconds: 120
   warningAt: 0.8
   pushAlert: 0.15
   spottedAlert: 0.10416667

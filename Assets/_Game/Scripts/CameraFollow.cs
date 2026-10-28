@@ -8,6 +8,7 @@ namespace ColdBrewCase
         public Transform target;
         public Camera worldCamera;
         public bool closeViewBetweenScans;
+        public bool frameSelectedNeighborDuringScan;
         private HeatSightController heat;
         private RoomManager rooms;
         private float minimumSize;
@@ -39,7 +40,10 @@ namespace ColdBrewCase
                 return;
             }
 
-            if (closeViewBetweenScans)
+            bool framingScanTarget = frameSelectedNeighborDuringScan && heat != null && heat.Active &&
+                heat.Remaining > 0f;
+
+            if (closeViewBetweenScans && !framingScanTarget)
             {
                 float blend = 1f - Mathf.Exp(-8f * Time.unscaledDeltaTime);
                 Vector2 focus = Vector2.Lerp(current.transform.position, target.position, .35f);
@@ -50,18 +54,34 @@ namespace ColdBrewCase
 
             Vector2 min = (Vector2)current.transform.position - current.size / 2f;
             Vector2 max = (Vector2)current.transform.position + current.size / 2f;
-            foreach (RoomZone next in current.neighbors)
+            if (framingScanTarget)
             {
-                if (next == null) continue;
-                min = Vector2.Min(min, (Vector2)next.transform.position - next.size / 2f);
-                max = Vector2.Max(max, (Vector2)next.transform.position + next.size / 2f);
+                // During coffee, frame the current room and only the selected neighbor.
+                // Centering the pair keeps left/right scans balanced instead of leaving
+                // a large black margin on one side. The tighter vertical fit preserves
+                // both rooms while avoiding the extra zoom-out caused by the HUD margin.
+                RoomZone selected = rooms.Get(rooms.LookingAt);
+                if (selected != null && selected != current && rooms.CanScan(selected.id))
+                {
+                    min = Vector2.Min(min, (Vector2)selected.transform.position - selected.size / 2f);
+                    max = Vector2.Max(max, (Vector2)selected.transform.position + selected.size / 2f);
+                }
+            }
+            else
+            {
+                foreach (RoomZone next in current.neighbors)
+                {
+                    if (next == null) continue;
+                    min = Vector2.Min(min, (Vector2)next.transform.position - next.size / 2f);
+                    max = Vector2.Max(max, (Vector2)next.transform.position + next.size / 2f);
+                }
             }
 
             Vector2 center = (min + max) / 2f;
             Vector2 half = (max - min) / 2f + Vector2.one * .5f;
             // Leave space for the HUD and bottom messages.
             worldCamera.orthographicSize = Mathf.Max(minimumSize,
-                Mathf.Max(half.y / .75f, half.x / Mathf.Max(.1f, worldCamera.aspect)));
+                Mathf.Max(half.y / .84f, half.x / Mathf.Max(.1f, worldCamera.aspect)));
             center.y += worldCamera.orthographicSize * .04f;
             transform.position = new Vector3(center.x, center.y, -10f);
         }

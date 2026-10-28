@@ -2041,7 +2041,7 @@ MonoBehaviour:
   - {fileID: 632447357}
   - {fileID: 508793988}
   - {fileID: 513835908}
-  scanAllNeighbors: 1
+  scanAllNeighbors: 0
 --- !u!114 &101734445
 MonoBehaviour:
   m_ObjectHideFlags: 0

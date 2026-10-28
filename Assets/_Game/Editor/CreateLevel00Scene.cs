@@ -73,7 +73,7 @@ namespace ColdBrewCase.EditorTools
             street.neighbors = new[] { hideout };
             hideout.neighbors = new[] { street };
             rooms.zones = new[] { street, hideout };
-            rooms.scanAllNeighbors = true;
+            rooms.scanAllNeighbors = false;
 
             // Walls, with one doorway between the rooms
             Solid("South Wall", walls, new Vector2(10, 0), new Vector2(20 + Level2Wall, Level2Wall));
