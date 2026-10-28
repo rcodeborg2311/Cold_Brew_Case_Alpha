@@ -79,7 +79,7 @@ namespace ColdBrewCase.EditorTools
             zones.Add(MakeDistrictRoom(roomRoot, RoomId.DistrictSouthEnd, "SCRAPYARD", new Vector2(0, -20), new Vector2(0, -20)));
             zones.Add(MakeDistrictRoom(roomRoot, RoomId.DistrictWestEnd, "PICNIC COURT", new Vector2(-20, 0), new Vector2(-20, 0)));
             rooms.zones = zones.ToArray();
-            rooms.scanAllNeighbors = true;
+            rooms.scanAllNeighbors = false;
             foreach (RoomZone room in rooms.zones)
             {
                 var neighbors = new List<RoomZone>();

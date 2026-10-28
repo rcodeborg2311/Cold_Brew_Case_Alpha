@@ -146,10 +146,10 @@ namespace ColdBrewCase.EditorTools
                     body = ""
                 }
             };
-            tips.coffeeTitle = "Coffee!  Press F to see where the thief is hiding";
+            tips.coffeeTitle = "Aim at one neighboring room, then press F to scan it";
             tips.coffeeBody = "";
             tips.pauseGame = false;
-            rooms.scanAllNeighbors = true; // F shows every room next to you; no aiming needed.
+            rooms.scanAllNeighbors = false; // F reveals only the neighboring room selected by mouse aim.
             EditorUtility.SetDirty(rooms);
             EditorUtility.SetDirty(tips);
         }

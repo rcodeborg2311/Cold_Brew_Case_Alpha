@@ -1753,6 +1753,7 @@ GameObject:
   - component: {fileID: 101734446}
   - component: {fileID: 101734431}
   - component: {fileID: 101734445}
+  - component: {fileID: 101734448}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -1992,6 +1993,7 @@ MonoBehaviour:
   arc: {fileID: 1465946850}
   hud: {fileID: 101734433}
   unlimitedNets: 0
+  hiddenNetAvailable: 0
 --- !u!114 &101734443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2039,7 +2041,7 @@ MonoBehaviour:
   - {fileID: 632447357}
   - {fileID: 508793988}
   - {fileID: 513835908}
-  scanAllNeighbors: 1
+  scanAllNeighbors: 0
 --- !u!114 &101734445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2085,7 +2087,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d91f361aabe09f94ea67f2ebc3afe2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AnalyticsClient
-  enableCollection: 0
+  enableCollection: 1
   buildId: level-3-district
   sheetUrl: https://script.google.com/macros/s/AKfycbwfxdAWde6MOHK-FwGFZ0QStvy-1sYSwJLoLCGKWGDHYVjpV6-Wu4As69ppMRjqfWz_Aw/exec
   heavyShakeThreshold: 0.5
@@ -2094,7 +2096,7 @@ MonoBehaviour:
   rooms: {fileID: 101734444}
   game: {fileID: 101734432}
   net: {fileID: 0}
-  shake: {fileID: 0}
+  stats: {fileID: 0}
 --- !u!4 &101734447
 Transform:
   m_ObjectHideFlags: 0
@@ -2110,6 +2112,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &101734448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101734430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc46fbfa5593b44ea8dc69f23c715f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.LevelStatsPage
+  game: {fileID: 0}
+  alert: {fileID: 0}
+  heat: {fileID: 0}
+  net: {fileID: 0}
+  push: {fileID: 0}
+  rooms: {fileID: 0}
+  heavyShakeThreshold: 0.5
 --- !u!1 &107597697
 GameObject:
   m_ObjectHideFlags: 0

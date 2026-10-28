@@ -5647,7 +5647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {r: 1, g: 0.35, b: 0.45, a: 1}
   sortingOrder: 20
 --- !u!23 &331282209
 MeshRenderer:
@@ -21344,6 +21344,7 @@ MonoBehaviour:
   target: {fileID: 1071150239}
   worldCamera: {fileID: 1578727647}
   closeViewBetweenScans: 1
+  frameSelectedNeighborDuringScan: 1
 --- !u!20 &1578727647
 Camera:
   m_ObjectHideFlags: 0
@@ -21672,7 +21673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.GrayboxShape
   shape: 1
   material: {fileID: 2100000, guid: f6f240ea5313ef6409b5bb9298159b67, type: 2}
-  color: {r: 0.82, g: 0.91, b: 1, a: 1}
+  color: {r: 1, g: 0.35, b: 0.45, a: 1}
   sortingOrder: 20
 --- !u!23 &1582014966
 MeshRenderer:
@@ -24163,6 +24164,7 @@ GameObject:
   - component: {fileID: 1795554688}
   - component: {fileID: 1795554673}
   - component: {fileID: 1795554682}
+  - component: {fileID: 1795554690}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -24438,6 +24440,7 @@ MonoBehaviour:
   arc: {fileID: 570033026}
   hud: {fileID: 1795554675}
   unlimitedNets: 0
+  hiddenNetAvailable: 0
 --- !u!114 &1795554686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24481,7 +24484,7 @@ MonoBehaviour:
   - {fileID: 1207792293}
   - {fileID: 118106496}
   - {fileID: 1713248087}
-  scanAllNeighbors: 1
+  scanAllNeighbors: 0
 --- !u!114 &1795554688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24494,7 +24497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d91f361aabe09f94ea67f2ebc3afe2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AnalyticsClient
-  enableCollection: 0
+  enableCollection: 1
   buildId: level-4-two-thieves
   sheetUrl: https://script.google.com/macros/s/AKfycbwfxdAWde6MOHK-FwGFZ0QStvy-1sYSwJLoLCGKWGDHYVjpV6-Wu4As69ppMRjqfWz_Aw/exec
   heavyShakeThreshold: 0.5
@@ -24503,7 +24506,7 @@ MonoBehaviour:
   rooms: {fileID: 1795554687}
   game: {fileID: 1795554674}
   net: {fileID: 0}
-  shake: {fileID: 0}
+  stats: {fileID: 0}
 --- !u!4 &1795554689
 Transform:
   m_ObjectHideFlags: 0
@@ -24519,6 +24522,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1795554690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795554672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc46fbfa5593b44ea8dc69f23c715f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.LevelStatsPage
+  game: {fileID: 0}
+  alert: {fileID: 0}
+  heat: {fileID: 0}
+  net: {fileID: 0}
+  push: {fileID: 0}
+  rooms: {fileID: 0}
+  heavyShakeThreshold: 0.5
 --- !u!1 &1809637211
 GameObject:
   m_ObjectHideFlags: 0

@@ -87,7 +87,7 @@ namespace ColdBrewCase.EditorTools
             landing.neighbors = new[] { lobby, loft, office };
             office.neighbors = new[] { landing, kitchen };
             rooms.zones = new[] { storage, lobby, kitchen, loft, landing, office };
-            rooms.scanAllNeighbors = true;
+            rooms.scanAllNeighbors = false;
             GameObject escapeGate = BuildLevel2Walls();
             BuildLevel2StairMarks();
 
