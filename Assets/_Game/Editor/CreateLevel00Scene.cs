@@ -138,13 +138,18 @@ namespace ColdBrewCase.EditorTools
             AddPushable(thiefObject, thiefBody, null);
 
             // The one pop-up in this level
-            tips.game = game; tips.rooms = rooms; tips.coffee = coffee;
+            
+            // Level 0 Hideout guard tutorial.
+            tips.game = game;
+            tips.rooms = rooms;
+            tips.coffee = coffee;
+            tips.pauseGame = true;
+
             tips.roomTips = new[] {
                 new TutorialTips.RoomTip {
                     room = RoomId.TrainingHideout,
-                    title = "Catch him!  Aim with the mouse and click to throw your net",
-                    body = ""
-                }
+                    title = "GUARD AHEAD — WATCH YOUR STEP",
+                    body = "Dodge the guard to avoid being caught and losing time."                }
             };
 
             // Wiring (same as the other levels)
