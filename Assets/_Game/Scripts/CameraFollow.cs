@@ -56,15 +56,15 @@ namespace ColdBrewCase
             Vector2 max = (Vector2)current.transform.position + current.size / 2f;
             if (framingScanTarget)
             {
-                // Level 4 keeps the camera focused on the selected neighboring room
-                // while scanning. Fitting two vertically stacked rooms at once would
-                // force a much wider zoom than a left/right scan, so frame the target
-                // room itself at a consistent scale in every direction.
+                // During coffee, frame the current room and only the selected neighbor.
+                // Centering the pair keeps left/right scans balanced instead of leaving
+                // a large black margin on one side. The tighter vertical fit preserves
+                // both rooms while avoiding the extra zoom-out caused by the HUD margin.
                 RoomZone selected = rooms.Get(rooms.LookingAt);
                 if (selected != null && selected != current && rooms.CanScan(selected.id))
                 {
-                    min = (Vector2)selected.transform.position - selected.size / 2f;
-                    max = (Vector2)selected.transform.position + selected.size / 2f;
+                    min = Vector2.Min(min, (Vector2)selected.transform.position - selected.size / 2f);
+                    max = Vector2.Max(max, (Vector2)selected.transform.position + selected.size / 2f);
                 }
             }
             else
@@ -81,7 +81,7 @@ namespace ColdBrewCase
             Vector2 half = (max - min) / 2f + Vector2.one * .5f;
             // Leave space for the HUD and bottom messages.
             worldCamera.orthographicSize = Mathf.Max(minimumSize,
-                Mathf.Max(half.y / .75f, half.x / Mathf.Max(.1f, worldCamera.aspect)));
+                Mathf.Max(half.y / .84f, half.x / Mathf.Max(.1f, worldCamera.aspect)));
             center.y += worldCamera.orthographicSize * .04f;
             transform.position = new Vector3(center.x, center.y, -10f);
         }
