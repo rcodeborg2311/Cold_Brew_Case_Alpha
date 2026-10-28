@@ -88,7 +88,15 @@ namespace ColdBrewCase.EditorTools
             Solid("Hideout Shelf", walls, new Vector2(18.6f, 4), new Vector2(1f, 2.2f), "Crates");
             AddLevel0Decor(); // Carpets and furniture (decoration only, no colliders)
 
-            
+            // Coffee pickup in the starting Street room.
+            MakeCoffee("Coffee - Street", new Vector2(6f, 7f),
+                RoomId.TrainingStart, coffee);
+
+            foreach (CoffeePickup cup in UnityEngine.Object.FindObjectsByType<CoffeePickup>(FindObjectsSortMode.None))
+            {
+                cup.GetComponent<RoomVisibility>()
+                    .visual.gameObject.AddComponent<VisualSymbol>().kind = SymbolKind.Coffee;
+            }
             // Player
             GameObject playerObject = Actor("Detective", new Vector2(2.5f, 5), "Player", Color.cyan, out Rigidbody2D playerBody);
             playerBody.bodyType = RigidbodyType2D.Dynamic;
