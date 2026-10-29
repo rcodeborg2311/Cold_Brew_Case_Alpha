@@ -4,6 +4,23 @@ using UnityEngine.SceneManagement;
 
 namespace ColdBrewCase
 {
+    public enum TipSide { Right, Left, Above, Below }
+
+    // A label pinned next to something in the world while a tip pop-up is open.
+    public struct TipCallout
+    {
+        public Vector3 world;
+        public string text;
+        public TipSide side;
+
+        public TipCallout(Vector3 world, string text, TipSide side)
+        {
+            this.world = world;
+            this.text = text;
+            this.side = side;
+        }
+    }
+
     [DefaultExecutionOrder(-50)]
     public sealed class GameManager : MonoBehaviour
     {
@@ -25,10 +42,13 @@ namespace ColdBrewCase
         private Vector2 checkpoint;
         public bool ShowingHowToPlay { get; private set; }
         public bool ShowingTip => tips.Count > 0;
-        public string TipTitle => ShowingTip ? tips.Peek().Key : "";
-        public string TipBody => ShowingTip ? tips.Peek().Value : "";
-        private readonly System.Collections.Generic.Queue<System.Collections.Generic.KeyValuePair<string, string>> tips =
-            new System.Collections.Generic.Queue<System.Collections.Generic.KeyValuePair<string, string>>();
+        public string TipTitle => ShowingTip ? tips.Peek().title : "";
+        public string TipBody => ShowingTip ? tips.Peek().body : "";
+        public TipCallout[] TipCallouts => ShowingTip ? tips.Peek().callouts : NoCallouts;
+        private sealed class Tip { public string title, body; public TipCallout[] callouts; }
+        private static readonly TipCallout[] NoCallouts = new TipCallout[0];
+        private readonly System.Collections.Generic.Queue<Tip> tips = new System.Collections.Generic.Queue<Tip>();
+        private bool tipFrozeTime;
         public bool IsActionPaused => manualPause || focusPause || ShowingHowToPlay || ShowingTip;
         // Level 4's two-thief opening is a short scripted escape. Keep the detective
         // at the starting point until both thieves reach their separate hideouts.
@@ -171,12 +191,19 @@ namespace ColdBrewCase
             alert.Stop();
         }
         // Pauses the game and shows a pop-up until the player clicks "Got it". The timer is frozen meanwhile.
-        public void ShowTip(string title, string body)
+        // With callouts, labels are pinned next to things in the world and the whole screen freezes
+        // (time scale 0), so nothing moves or fades while the player reads.
+        public void ShowTip(string title, string body, params TipCallout[] callouts)
         {
             if (State == RoundState.Won || State == RoundState.Lost || State == RoundState.Extracting) return;
-            tips.Enqueue(new System.Collections.Generic.KeyValuePair<string, string>(title, body));
+            tips.Enqueue(new Tip { title = title, body = body, callouts = callouts ?? NoCallouts });
             player.Stop();
             alert.Hold();
+            if (callouts != null && callouts.Length > 0 && !tipFrozeTime)
+            {
+                tipFrozeTime = true;
+                Time.timeScale = 0f;
+            }
         }
         public void CloseTip()
         {
@@ -184,6 +211,11 @@ namespace ColdBrewCase
             if (tips.Count > 0) return;
             player.Stop();
             alert.Release();
+            if (tipFrozeTime)
+            {
+                tipFrozeTime = false;
+                Time.timeScale = 1f;
+            }
         }
         public bool HasNextScene => !string.IsNullOrEmpty(nextScenePath);
         public void LoadNextScene()

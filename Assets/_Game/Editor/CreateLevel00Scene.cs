@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace ColdBrewCase.EditorTools
 {
-    // Level 0: two rooms, no guards, no coffee, no timer.
-    // The thief runs from the Street into the Hideout. When the player follows him in,
-    // a banner at the bottom explains how to throw the net. Catch him to clear the level.
+    // Level 0: two rooms, one coffee, one guard, no timer.
+    // The thief runs from the Street into the Hideout. LevelZeroTutorial freezes the screen twice:
+    // in the Street (footprints + coffee) and on entering the Hideout (guard + thief).
     //
     //   [ Street ]-door-[ Hideout ]
     //   x=0        10           20
@@ -62,6 +62,8 @@ namespace ColdBrewCase.EditorTools
             var input = systems.gameObject.AddComponent<PlayerInputRouter>();
             var analytics = systems.gameObject.AddComponent<AnalyticsClient>();
             var tips = systems.gameObject.AddComponent<TutorialTips>();
+            var tutorial = systems.gameObject.AddComponent<LevelZeroTutorial>();
+            systems.gameObject.AddComponent<LevelStatsPage>(); // end-of-level stats, finds its own references
             memory = systems.gameObject.AddComponent<DiscoveryMemory>();
             memory.marker = Shape("Last Seen Marker", visuals, Vector2.zero, new Vector2(.9f, .9f),
                 PrimitiveKind.Circle, new Color(.8f, .8f, .8f, .35f), 120);
@@ -96,6 +98,7 @@ namespace ColdBrewCase.EditorTools
             {
                 cup.GetComponent<RoomVisibility>()
                     .visual.gameObject.AddComponent<VisualSymbol>().kind = SymbolKind.Coffee;
+                tutorial.coffee = cup.transform;
             }
             // Player
             GameObject playerObject = Actor("Detective", new Vector2(2.5f, 5), "Player", Color.cyan, out Rigidbody2D playerBody);
@@ -145,20 +148,19 @@ namespace ColdBrewCase.EditorTools
             thiefTag.thief = thief; thiefTag.memory = memory; thiefTag.onlyFromRoom = RoomId.Unknown;
             AddPushable(thiefObject, thiefBody, null);
 
-            // The one pop-up in this level
-            
-            // Level 0 Hideout guard tutorial.
+
+            // Level 0 freeze-frame tutorial (Street, then the Hideout guard and thief).
+            // Its texts can be edited on the Level Zero Tutorial component in the scene.
+            tutorial.game = game;
+            tutorial.rooms = rooms;
+            tutorial.guard = guard;
+
+            // The Hideout guard tip now lives in LevelZeroTutorial, so it can point at the guard and thief.
             tips.game = game;
             tips.rooms = rooms;
             tips.coffee = coffee;
             tips.pauseGame = true;
-
-            tips.roomTips = new[] {
-                new TutorialTips.RoomTip {
-                    room = RoomId.TrainingHideout,
-                    title = "GUARD AHEAD — WATCH YOUR STEP",
-                    body = "Dodge the guard to avoid being caught and losing time."                }
-            };
+            tips.roomTips = new TutorialTips.RoomTip[0];
 
             // Wiring (same as the other levels)
             alert.tuning = tuning; alert.untimed = true;
@@ -184,7 +186,7 @@ namespace ColdBrewCase.EditorTools
             hud.game = game; hud.alert = alert; hud.heat = heat; hud.shake = shake;
             hud.coffee = coffee; hud.net = net; hud.push = push; hud.notes = notes;
             hud.rooms = rooms; hud.memory = memory; hud.guards = new[] { guard }; hud.worldCamera = camera; analytics.game = game; analytics.heat = heat; analytics.inventory = coffee; analytics.rooms = rooms;
-            analytics.enableCollection = false;
+            analytics.enableCollection = true;
             analytics.buildId = "level-0";
 
             EditorSceneManager.SaveScene(scene, LevelZeroPath);

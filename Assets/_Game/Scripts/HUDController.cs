@@ -969,22 +969,81 @@ namespace ColdBrewCase
         }
 
         // Pause pop-up used by TutorialTips (Level 0 and Level 1). Click "Got it" or press Enter to continue.
+        // A tip with callouts (LevelZeroTutorial) is a freeze frame instead: no pop-up and no darkening,
+        // just white text beside each thing it explains. Press Enter to continue (a click would also throw a net).
+        private GUIStyle calloutStyle, calloutShadow, continueStyle, continueShadow;
+
         private void DrawTip()
         {
-            Fill(new Rect(0, 0, 1280, 720), new Color(0, 0, 0, .55f));
-            Rect box = new Rect(340, 210, 600, 300);
-            Fill(box, panel);
-            Fill(new Rect(box.x, box.y, box.width, 5), new Color(.4f, .95f, .55f));
-            GUI.Label(new Rect(box.x + 30, box.y + 25, box.width - 60, 55), game.TipTitle, title);
-            GUIStyle body = new GUIStyle(label) { wordWrap = true, alignment = TextAnchor.UpperCenter };
-            GUI.Label(new Rect(box.x + 40, box.y + 95, box.width - 80, 110), game.TipBody, body);
-            if (GUI.Button(new Rect(box.x + 170, box.y + 220, 260, 55), "Got it", button)) game.CloseTip();
             Event e = Event.current;
-            if (e.type == EventType.KeyDown && (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter))
+            bool proceed = e.type == EventType.KeyDown && (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter);
+            TipCallout[] callouts = game.TipCallouts;
+            if (callouts.Length > 0)
+            {
+                foreach (TipCallout callout in callouts) DrawCallout(callout);
+                ShadowedLabel(new Rect(0, 650, 1280, 30), "Press Enter to continue", continueStyle, continueShadow);
+            }
+            else
+            {
+                Fill(new Rect(0, 0, 1280, 720), new Color(0, 0, 0, .55f));
+                Rect box = new Rect(340, 210, 600, 300);
+                Fill(box, panel);
+                Fill(new Rect(box.x, box.y, box.width, 5), new Color(.4f, .95f, .55f));
+                GUI.Label(new Rect(box.x + 30, box.y + 25, box.width - 60, 55), game.TipTitle, title);
+                GUIStyle body = new GUIStyle(label) { wordWrap = true, alignment = TextAnchor.UpperCenter };
+                GUI.Label(new Rect(box.x + 40, box.y + 95, box.width - 80, 110), game.TipBody, body);
+                if (GUI.Button(new Rect(box.x + 170, box.y + 220, 260, 55), "Got it", button)) game.CloseTip();
+            }
+            if (proceed)
             {
                 game.CloseTip();
                 e.Use();
             }
+        }
+
+        private static void ShadowedLabel(Rect rect, string text, GUIStyle style, GUIStyle shadow)
+        {
+            GUI.Label(new Rect(rect.x + 2f, rect.y + 2f, rect.width, rect.height), text, shadow);
+            GUI.Label(rect, text, style);
+        }
+
+        // White text placed beside a point in the world, with a soft shadow so it reads on any floor.
+        private void DrawCallout(TipCallout callout)
+        {
+            if (worldCamera == null || string.IsNullOrEmpty(callout.text)) return;
+            Vector3 screen = worldCamera.WorldToScreenPoint(callout.world);
+            if (screen.z < 0) return;
+            Vector2 target = new Vector2(screen.x * 1280f / Screen.width, (Screen.height - screen.y) * 720f / Screen.height);
+            if (calloutStyle == null)
+            {
+                calloutStyle = new GUIStyle(label) { fontSize = 19, fontStyle = FontStyle.Bold, wordWrap = true };
+                calloutStyle.normal.textColor = Color.white;
+                calloutShadow = new GUIStyle(calloutStyle);
+                calloutShadow.normal.textColor = new Color(0f, 0f, 0f, .85f);
+                continueStyle = new GUIStyle(label) { fontSize = 16, alignment = TextAnchor.MiddleCenter };
+                continueStyle.normal.textColor = new Color(.85f, .88f, .92f);
+                continueShadow = new GUIStyle(continueStyle);
+                continueShadow.normal.textColor = new Color(0f, 0f, 0f, .85f);
+            }
+
+            const float gap = 26f, maxWidth = 360f;
+            GUIContent content = new GUIContent(callout.text);
+            float width = Mathf.Min(calloutStyle.CalcSize(content).x + 4f, maxWidth);
+            float height = calloutStyle.CalcHeight(content, width);
+            calloutStyle.alignment = callout.side == TipSide.Left ? TextAnchor.MiddleRight :
+                callout.side == TipSide.Right ? TextAnchor.MiddleLeft : TextAnchor.MiddleCenter;
+            calloutShadow.alignment = calloutStyle.alignment;
+            Rect rect;
+            switch (callout.side)
+            {
+                case TipSide.Left: rect = new Rect(target.x - gap - width, target.y - height / 2f, width, height); break;
+                case TipSide.Above: rect = new Rect(target.x - width / 2f, target.y - gap - height, width, height); break;
+                case TipSide.Below: rect = new Rect(target.x - width / 2f, target.y + gap, width, height); break;
+                default: rect = new Rect(target.x + gap, target.y - height / 2f, width, height); break;
+            }
+            rect.x = Mathf.Clamp(rect.x, 10f, 1270f - width);
+            rect.y = Mathf.Clamp(rect.y, 10f, 640f - height);
+            ShadowedLabel(rect, callout.text, calloutStyle, calloutShadow);
         }
 
         private void OnDestroy()
