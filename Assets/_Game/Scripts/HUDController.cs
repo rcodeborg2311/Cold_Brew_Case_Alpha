@@ -873,8 +873,8 @@ namespace ColdBrewCase
 
             }
 
-            // The level stats page replaces the end-of-round panel when it is in the scene.
-            if (terminal && statsPage != null)
+            // The level stats page covers the end-of-round panel while the player has it open.
+            if (terminal && statsPage != null && statsPage.Showing)
             {
                 GUI.matrix = old;
                 return;
@@ -886,7 +886,11 @@ namespace ColdBrewCase
 
                 bool offerNext = game.State == RoundState.Won && game.HasNextScene;
 
-                Fill(new Rect(420, 220, 440, offerNext ? 380 : 310), panel);
+                bool offerStats = terminal && statsPage != null;
+
+                int buttonCount = 2 + (offerNext ? 1 : 0) + (offerStats ? 1 : 0);
+
+                Fill(new Rect(420, 220, 440, 170 + buttonCount * 70), panel);
 
                 string result = game.State == RoundState.Won ? "Caught!" :
 
@@ -913,6 +917,10 @@ namespace ColdBrewCase
                     string.IsNullOrEmpty(game.nextSceneLabel) ? "Next level" : game.nextSceneLabel, button))
 
                     game.LoadNextScene();
+
+                if (offerStats && GUI.Button(new Rect(480, offerNext ? 560 : 490, 320, 55), "View level stats", button))
+
+                    statsPage.Open();
 
             }
 

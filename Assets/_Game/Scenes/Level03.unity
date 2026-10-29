@@ -1792,8 +1792,8 @@ MonoBehaviour:
   thief: {fileID: 1638802681}
   levelFourDirector: {fileID: 0}
   hud: {fileID: 101734433}
-  nextScenePath: 
-  nextSceneLabel: 
+  nextScenePath: Assets/_Game/Scenes/Level04.unity
+  nextSceneLabel: 'Next: Level 4'
 --- !u!114 &101734433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7565,6 +7565,7 @@ MonoBehaviour:
   target: {fileID: 1337731198}
   worldCamera: {fileID: 507177949}
   closeViewBetweenScans: 1
+  frameSelectedNeighborDuringScan: 0
 --- !u!20 &507177949
 Camera:
   m_ObjectHideFlags: 0

@@ -215,6 +215,7 @@ namespace ColdBrewCase.EditorTools
             director.hub = rooms.Get(RoomId.DistrictHub); director.hidingSpots = hides.ToArray();
             alert.tuning = tuning; notes.tuning = tuning; shake.tuning = tuning; matcher.notes = notes;
             game.alert = alert; game.rooms = rooms; game.player = player; game.thief = thief; game.hud = hud;
+            game.nextScenePath = HomeScreen.LevelFourPath; game.nextSceneLabel = "Next: Level 4";
             heat.tuning = tuning; heat.game = game; heat.rooms = rooms; heat.inventory = coffee;
             heat.shake = shake; heat.matcher = matcher; heat.tags = tags.ToArray(); heat.hud = hud;
             noise.tuning = tuning; noise.guards = guards;
