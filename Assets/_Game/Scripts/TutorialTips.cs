@@ -7,6 +7,7 @@ namespace ColdBrewCase
     // screen (default), or a pause pop-up if Pause Game is ticked.
     //  - Room tips: shown once, the first time the player walks into that room.
     //  - Coffee tip: shown once, the first time the player picks up a coffee.
+    //  - Spot tips: shown once, when the player walks near a point (e.g. just before a guarded door).
     // Leave a title empty to skip that tip. Works in any level scene.
     public sealed class TutorialTips : MonoBehaviour
     {
@@ -22,6 +23,16 @@ namespace ColdBrewCase
         public RoomManager rooms;
         public CoffeeInventory coffee;
         public RoomTip[] roomTips = new RoomTip[0];
+
+        [Serializable]
+        public sealed class SpotTip
+        {
+            public Vector2 position;
+            [Min(.5f)] public float radius = 2f;
+            public string title = "";
+        }
+        [Tooltip("Warnings that show when the player gets close to a spot, before they reach it.")]
+        public SpotTip[] spotTips = new SpotTip[0];
         [Tooltip("Off: show a small banner at the bottom and keep playing. On: pause with a pop-up.")]
         public bool pauseGame;
         [Min(1f)] public float bannerSeconds = 8f;
@@ -29,13 +40,14 @@ namespace ColdBrewCase
         [TextArea(2, 4)] public string coffeeBody = "";
 
         private static readonly Color Neutral = new Color(.78f, .83f, .88f);
-        private bool[] shown;
+        private bool[] shown, spotShown;
         private bool coffeeShown;
         private int lastCoffee;
 
         private void OnEnable()
         {
             shown = new bool[roomTips.Length];
+            spotShown = new bool[spotTips.Length];
             rooms.CurrentChanged += OnRoom;
             if (coffee != null) { lastCoffee = coffee.Count; coffee.Changed += OnCoffee; }
         }
@@ -54,6 +66,19 @@ namespace ColdBrewCase
                 shown[i] = true;
                 if (!string.IsNullOrEmpty(roomTips[i].title))
                     Show(roomTips[i].title, roomTips[i].body, Neutral);
+            }
+        }
+
+        private void Update()
+        {
+            if (game.IsActionPaused || (game.State != RoundState.Opening && game.State != RoundState.Playing)) return;
+            Vector2 player = rooms.player.position;
+            for (int i = 0; i < spotTips.Length; i++)
+            {
+                SpotTip tip = spotTips[i];
+                if (spotShown[i] || tip == null || Vector2.Distance(player, tip.position) > tip.radius) continue;
+                spotShown[i] = true;
+                if (!string.IsNullOrEmpty(tip.title)) Show(tip.title, "", Neutral);
             }
         }
 

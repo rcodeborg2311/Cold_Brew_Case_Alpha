@@ -32,7 +32,8 @@ namespace ColdBrewCase.EditorTools
                 {
                     bool optional = component is HeatTag && (field.Name == "thief" || field.Name == "memory") ||
                                     component is PushableBody && field.Name == "guard" ||
-                                    noGuards && field.Name == "guards"; // Level 0 has no guards.
+                                    noGuards && field.Name == "guards" || // Level 0 has no guards.
+                                    component is TutorialTips && (field.Name == "roomTips" || field.Name == "spotTips");
                     if (optional) continue;
                     object value = field.GetValue(component);
                     bool missing = typeof(UnityEngine.Object).IsAssignableFrom(field.FieldType) &&
