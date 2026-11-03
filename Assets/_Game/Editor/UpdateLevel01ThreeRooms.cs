@@ -140,10 +140,13 @@ namespace ColdBrewCase.EditorTools
             tips.rooms = rooms;
             tips.coffee = game.GetComponent<CoffeeInventory>();
             tips.roomTips = new[] {
-                new TutorialTips.RoomTip {
-                    room = RoomId.Corridor,
-                    title = "Guard ahead!  Stay out of the yellow cone",
-                    body = ""
+                new TutorialTips.RoomTip { room = RoomId.Hideout, title = "The thief is hiding in here.  Throw your net!", body = "" }
+            };
+            // Warn just before the Courtyard -> Corridor door (x = 10), not after the guard can already see you.
+            tips.spotTips = new[] {
+                new TutorialTips.SpotTip {
+                    position = new Vector2(8.4f, 5f), radius = 2f,
+                    title = "Guard in the next room! Press F to peek"
                 }
             };
             tips.coffeeTitle = "Aim at one neighboring room, then press F to scan it";
