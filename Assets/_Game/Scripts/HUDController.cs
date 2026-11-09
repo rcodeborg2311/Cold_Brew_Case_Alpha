@@ -245,9 +245,13 @@ namespace ColdBrewCase
 
             popupSmall = new GUIStyle(label) { fontSize = 20, alignment = TextAnchor.MiddleCenter };
 
-            hintStyle = new GUIStyle(label) { fontSize = 16, alignment = TextAnchor.MiddleCenter };
-
-            hintStyle.normal.textColor = new Color(.85f, .88f, .92f);
+            hintStyle = new GUIStyle(label)
+            {
+                fontSize = 21,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter
+            };
+            hintStyle.normal.textColor = new Color(1f, .9f, .55f);
 
             roomNotice = new GUIStyle(label)
 
@@ -493,7 +497,7 @@ namespace ColdBrewCase
 
             if (ThiefInNetRange)
 
-                return "THIEF IN RANGE  -  CLICK TO THROW NET";
+                return "THIEF IN RANGE!  LEFT-CLICK TO THROW YOUR NET";
 
             if (!scanned && coffee.Count == 0) return "Walk over coffee to pick it up";
 
@@ -511,7 +515,7 @@ namespace ColdBrewCase
 
             if (memory.Known && net.Nets > 0)
 
-                return "Mouse  Aim     Click  Throw";
+                return "AIM AT THE THIEF WITH YOUR MOUSE  |  LEFT-CLICK TO THROW NET";
 
             if (coffee.Count > 0 && !memory.Known) return "F  Scan";
 
@@ -823,12 +827,10 @@ namespace ColdBrewCase
 
                     float hintWidth = hintStyle.CalcSize(new GUIContent(hint)).x + 32f;
 
-                    Rect strip = new Rect(640f - hintWidth / 2f, 690f, hintWidth, 28f);
-
-                    Fill(strip, new Color(panel.r, panel.g, panel.b, .8f));
-
+                    float width = Mathf.Min(hintWidth + 20f, 1200f);
+                    Rect strip = new Rect(640f - width / 2f, 676f, width, 38f);
+                    Fill(strip, new Color(panel.r, panel.g, panel.b, .95f));
                     GUI.Label(strip, hint, hintStyle);
-
                 }
 
                 if (Clock.Now < messageUntil)
