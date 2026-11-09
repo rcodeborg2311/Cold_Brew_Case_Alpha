@@ -4,8 +4,8 @@ using UnityEngine.SceneManagement;
 
 namespace ColdBrewCase
 {
-    // End-of-level stats page. Tracks this round only (not aggregate) and replaces the
-    // HUD's Restart / Home panel once the round is over.
+    // End-of-level stats page. Tracks this round only (not aggregate). Opened from the
+    // "View level stats" button on the HUD's end-of-round panel; Back returns to that panel.
     public sealed class LevelStatsPage : MonoBehaviour
     {
         public GameManager game;
@@ -17,7 +17,7 @@ namespace ColdBrewCase
         [Tooltip("Shake at or above this counts as Heavy; below it (but above zero) is Light.")]
         [Range(0f, 1f)] public float heavyShakeThreshold = .5f;
 
-        public bool Showing => ended && Time.unscaledTime >= showAt;
+        public bool Showing => ended && open;
 
         // Read by AnalyticsClient to send a one-row summary of the round.
         public float HuntSeconds => huntSeconds;
@@ -33,8 +33,7 @@ namespace ColdBrewCase
         public int Spotted => spotted;
         public int Pushes => pushes;
 
-        private bool ended;
-        private float showAt;
+        private bool ended, open;
         private float huntSeconds, scanSeconds, secondsLost, timeLeft;
         private int throws, hits, steadyThrows, lightThrows, heavyThrows, scans, spotted, pushes;
         private readonly HashSet<RoomId> visited = new HashSet<RoomId>();
@@ -125,9 +124,10 @@ namespace ColdBrewCase
         {
             ended = true;
             timeLeft = alert.RemainingSeconds;
-            // Let the slow-motion "CAUGHT!" moment play before the page appears.
-            showAt = Time.unscaledTime + (game.State == RoundState.Won ? 1.8f : .8f);
         }
+
+        public void Open() { if (ended) open = true; }
+        public void Close() => open = false;
 
         private void Styles()
         {
@@ -185,6 +185,8 @@ namespace ColdBrewCase
         {
             if (!Showing) return;
             Styles();
+            Event e = Event.current;
+            if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape) { Close(); e.Use(); return; }
             GUI.depth = -10;
             Matrix4x4 old = GUI.matrix;
             float scale = Mathf.Min(Screen.width / 1280f, Screen.height / 720f);
@@ -221,12 +223,14 @@ namespace ColdBrewCase
             Row(panel, 7, SymbolKind.Push, muted, "Spotted  /  pushes", spotted + "  /  " + pushes);
 
             bool offerNext = won && game.HasNextScene;
-            float width = offerNext ? 190 : 260, gap = 20;
-            float total = offerNext ? width * 3 + gap * 2 : width * 2 + gap;
+            int count = offerNext ? 4 : 3;
+            float gap = 16, width = offerNext ? 145 : 190;
+            float total = width * count + gap * (count - 1);
             float x = panel.x + (panel.width - total) / 2f, y = panel.y + panel.height - 82;
-            if (Button(new Rect(x, y, width, 52), "Restart", cyan, background)) game.Restart();
-            if (Button(new Rect(x + width + gap, y, width, 52), "Home", cardHover, Color.white)) game.ReturnHome();
-            if (offerNext && Button(new Rect(x + (width + gap) * 2, y, width, 52),
+            if (Button(new Rect(x, y, width, 52), "Back", cardHover, Color.white)) Close();
+            if (Button(new Rect(x + (width + gap), y, width, 52), "Restart", cyan, background)) game.Restart();
+            if (Button(new Rect(x + (width + gap) * 2, y, width, 52), "Home", cardHover, Color.white)) game.ReturnHome();
+            if (offerNext && Button(new Rect(x + (width + gap) * 3, y, width, 52),
                 string.IsNullOrEmpty(game.nextSceneLabel) ? "Next level" : game.nextSceneLabel, green, background))
                 game.LoadNextScene();
 
