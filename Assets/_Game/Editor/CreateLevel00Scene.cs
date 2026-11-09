@@ -156,8 +156,8 @@ namespace ColdBrewCase.EditorTools
             tips.roomTips = new[] {
                 new TutorialTips.RoomTip {
                     room = RoomId.TrainingHideout,
-                    title = "GUARD AHEAD — WATCH YOUR STEP",
-                    body = "Dodge the guard to avoid being caught and losing time."                }
+                    title = "AVOID THE GUARDS",
+                    body = "Stay out of the guards' view to avoid getting caught."                }
             };
 
             // Wiring (same as the other levels)
