@@ -20,7 +20,7 @@ namespace ColdBrewCase
         [Header("Street freeze")]
         [TextArea(2, 3)] public string goalLabel = "Catch the thief with your nets and evade the guards in the given time";
         public string footprintsLabel = "This shows which way the thief went";
-        public string coffeeLabel = "Drink coffee to scan neighbouring rooms";
+        public string coffeeLabel = "Grab coffee for +10 seconds, then press F to scan nearby rooms";
 
         [Header("Hideout freeze")]
         public string guardLabel = "Dodge the guard to avoid being caught";
