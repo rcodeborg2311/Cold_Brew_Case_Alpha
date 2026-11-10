@@ -105,30 +105,22 @@ namespace ColdBrewCase.EditorTools
             BeginDecor();
             Rug(new Vector2(6.5f, 2.2f), new Vector2(3.2f, 2f));
             Sofa(new Vector2(3, 9.2f));
-            Plant(new Vector2(.8f, .8f));
-            Plant(new Vector2(9.2f, 9.2f));
             Rug(new Vector2(15, 5), new Vector2(3.6f, 2.6f));
             Shelf(new Vector2(12.6f, 9.55f));
             CafeTable(new Vector2(12.2f, 6.8f));
-            Plant(new Vector2(19.2f, .8f));
         }
 
         // Level 1 after the Fork is cut: Courtyard (0-10), Corridor (10-20), Hideout (20-30).
         private static void AddLevel1Decor()
         {
             BeginDecor();
-            Plant(new Vector2(.8f, 9.2f));
-            Plant(new Vector2(.8f, .8f));
-            Plant(new Vector2(9.2f, .8f));
             CafeTable(new Vector2(7, 7.8f));
             CafeTable(new Vector2(7, 2.2f));
             Rug(new Vector2(15, 5), new Vector2(7f, 1.3f));
-            Plant(new Vector2(19.2f, .8f));
             Shelf(new Vector2(16.5f, .45f));
             Rug(new Vector2(24, 3), new Vector2(3.4f, 2.2f));
             Sofa(new Vector2(23.5f, 9.2f));
             Shelf(new Vector2(28.4f, .45f), 2.4f);
-            Plant(new Vector2(29.2f, 9.2f));
         }
 
         // Called by the Level 1 update tool, which edits an existing scene.

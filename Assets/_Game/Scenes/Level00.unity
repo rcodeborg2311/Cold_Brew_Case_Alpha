@@ -403,7 +403,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &121220463
 Transform:
   m_ObjectHideFlags: 0
@@ -3567,7 +3567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &646069410
 Transform:
   m_ObjectHideFlags: 0
@@ -4401,7 +4401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &791353552
 Transform:
   m_ObjectHideFlags: 0
@@ -5194,7 +5194,7 @@ MonoBehaviour:
   thiefRunBeforeFreeze: 3
   goalLabel: Catch the thief with your nets and evade the guards in the given time
   footprintsLabel: This shows which way the thief went
-  coffeeLabel: Drink coffee to scan neighbouring rooms
+  coffeeLabel: Grab coffee for +10 seconds, then press F to scan nearby rooms
   guardLabel: Dodge the guard to avoid being caught
   thiefLabel: Throw your net to catch the thief
 --- !u!114 &843275845

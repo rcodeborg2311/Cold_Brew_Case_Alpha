@@ -130,23 +130,15 @@ namespace ColdBrewCase.EditorTools
             Solid("East Hideout Cover", walls, new Vector2(7.5f, 12.7f), new Vector2(1.3f, .8f), "Crates");
             MakeCrate(new Vector2(12.5f, -2.7f));
 
-            MakePlant("Southwest Green Plant", new Vector2(-7.2f, -12.8f));
             MakeFixedProp("Southwest Bench", new Vector2(-7.5f, -7.7f), new Vector2(1.8f, .75f));
             MakeFrame("Southwest Picture Frame", new Vector2(-12.8f, -7.4f));
             MakeFixedProp("South Arcade Counter", new Vector2(-2.8f, -12.7f), new Vector2(1.4f, .9f));
             MakeFixedProp("South Arcade Bench", new Vector2(2.8f, -7.7f), new Vector2(1.8f, .75f));
-            MakePlant("South Arcade Green Plant", new Vector2(-3.5f, -7.8f));
-            MakePlant("Southeast Green Plant", new Vector2(12.7f, -12.7f));
-            MakePlant("North Junction Green Plant", new Vector2(-3.8f, 7.5f));
             MakeFixedProp("West Entry Bench", new Vector2(-7.3f, -3.8f), new Vector2(1.8f, .75f));
             MakeFixedProp("East Entry Planter", new Vector2(7.3f, -3.8f), new Vector2(1.2f, 1.2f));
             MakeFixedProp("North Junction Counter", new Vector2(2.8f, 12.7f), new Vector2(1.5f, .9f));
-            MakePlant("West Entry Green Plant", new Vector2(-12.7f, -3.8f));
-            MakePlant("East Entry Green Plant", new Vector2(12.7f, -3.8f));
             MakeFrame("East Entry Picture Frame", new Vector2(12.7f, 3.8f));
             MakeFrame("South Arcade Picture Frame", new Vector2(3.3f, -12.7f));
-            MakePlant("West Hideout Green Plant", new Vector2(-13.7f, 7.5f));
-            MakePlant("East Hideout Green Plant", new Vector2(13.8f, 8.8f));
             MakeFrame("East Hideout Picture Frame", new Vector2(9.2f, 7.4f));
 
             // Keep the starting courtyard clear. Two guards patrol square routes in each entry room.
@@ -348,8 +340,6 @@ namespace ColdBrewCase.EditorTools
                 PrimitiveKind.Box, new Color(.40f, .24f, .12f), 12);
             Shape("Picture", frame, Vector2.zero, new Vector2(.84f, .56f),
                 PrimitiveKind.Box, new Color(.80f, .76f, .57f), 13);
-            Shape("Picture Plant", frame, Vector2.zero, new Vector2(.32f, .32f),
-                PrimitiveKind.Circle, new Color(.22f, .56f, .27f), 14);
         }
 
         private static ThiefController SetupLevelFourThief(GameObject root, Rigidbody2D body)
