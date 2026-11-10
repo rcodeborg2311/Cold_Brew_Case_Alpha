@@ -43,6 +43,12 @@ namespace ColdBrewCase
 
         public event Action PlayerCaught, RoundEnded;
 
+        // Metric 4 (read by AnalyticsClient in its PlayerCaught handler): the room the
+        // spot happened in (before the respawn teleport), who spotted, and the time fine.
+        public RoomId LastSpotRoom { get; private set; } = RoomId.Unknown;
+        public bool LastSpotByWatcher { get; private set; }
+        public float LastSpotFine { get; private set; }
+
         private bool manualPause, focusPause;
         private double immuneUntil;
         private double movementLockedUntil;
@@ -246,6 +252,15 @@ namespace ColdBrewCase
                 source.guardType == GuardType.DoorWatcher;
 
             immuneUntil = Clock.Now + (watcher ? 3d : 1d);
+
+            RoomId guardRoom = source != null && source.body != null
+                ? rooms.RoomAt(source.body.position)
+                : RoomId.Unknown;
+            LastSpotRoom = guardRoom != RoomId.Unknown ? guardRoom : rooms.Current;
+            LastSpotByWatcher = watcher;
+            LastSpotFine = alert.untimed ? 0f
+                : watcher ? 10f
+                : alert.PenaltySeconds(AlertAction.Spotted);
 
             if (source != null)
             {
