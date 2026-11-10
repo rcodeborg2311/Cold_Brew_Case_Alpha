@@ -1063,29 +1063,82 @@ namespace ColdBrewCase
         }
 
         // "-10s" that pops under the timer and floats up whenever a mistake costs time.
+
+        // Floating time notification below the escape timer.
+        // Red for penalties, green for coffee time bonuses.
         private float penaltySeconds;
         private double penaltyAt = -10d;
+        private bool showingTimeBonus;
         private GUIStyle penaltyStyle;
 
         private void OnPenalty(float seconds)
         {
             penaltySeconds = seconds;
             penaltyAt = Clock.Now;
+            showingTimeBonus = false;
+        }
+
+        // Called when coffee adds time to the countdown.
+        public void ShowTimeBonus(float seconds)
+        {
+            if (seconds <= 0f) return;
+
+            penaltySeconds = seconds;
+            penaltyAt = Clock.Now;
+            showingTimeBonus = true;
         }
 
         private void DrawPenalty()
         {
             float age = (float)(Clock.Now - penaltyAt);
-            if (age > 1.8f) return;
+
+            if (age < 0f || age > 1.8f)
+                return;
+
             if (penaltyStyle == null)
-                penaltyStyle = new GUIStyle(GUI.skin.label) { fontSize = 26, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
+            {
+                penaltyStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 26,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter
+                };
+            }
+
             float alpha = Mathf.Clamp01((1.8f - age) / .5f);
-            float pop = age < .15f ? Mathf.Lerp(1.4f, 1f, age / .15f) : 1f;
-            Rect box = new Rect(1027f, 98f - age * 10f, 120f * pop, 40f * pop);
-            Round(box, new Color(.55f, .1f, .12f, .9f * alpha));
-            penaltyStyle.normal.textColor = new Color(1f, .85f, .85f, alpha);
-            GUI.Label(box, "-" + Mathf.RoundToInt(penaltySeconds) + "s", penaltyStyle);
+
+            float pop = age < .15f
+                ? Mathf.Lerp(1.4f, 1f, age / .15f)
+                : 1f;
+
+            Rect box = new Rect(
+                1027f,
+                98f - age * 10f,
+                120f * pop,
+                40f * pop
+            );
+
+            Color background = showingTimeBonus
+                ? new Color(.08f, .42f, .24f, .9f * alpha)
+                : new Color(.55f, .1f, .12f, .9f * alpha);
+
+            Color foreground = showingTimeBonus
+                ? new Color(.8f, 1f, .86f, alpha)
+                : new Color(1f, .85f, .85f, alpha);
+
+            Round(box, background);
+
+            penaltyStyle.normal.textColor = foreground;
+
+            string sign = showingTimeBonus ? "+" : "-";
+
+            GUI.Label(
+                box,
+                sign + Mathf.RoundToInt(penaltySeconds) + "s",
+                penaltyStyle
+            );
         }
+
 
     }
 
