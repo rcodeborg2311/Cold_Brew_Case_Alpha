@@ -26,6 +26,7 @@ namespace ColdBrewCase
         private static readonly Color orange = new Color(1f, .7f, .3f);
         private static readonly Color green = new Color(.4f, .95f, .55f);
         private static readonly Color muted = new Color(.7f, .77f, .82f);
+        private PlaytestStatsPage statsPage;
 
         public static bool TryLoad(string path)
         {
@@ -167,7 +168,10 @@ namespace ColdBrewCase
             if (GUI.Button(close, GUIContent.none, plain)) showingHowToPlay = false;
         }
 
-        
+    private void Awake()
+    {
+        statsPage = FindFirstObjectByType<PlaytestStatsPage>();
+    }
     private void OnGUI()
     {
         Styles();
@@ -187,29 +191,49 @@ namespace ColdBrewCase
         GUI.matrix = Matrix4x4.TRS(
             offset, Quaternion.identity, new Vector3(scale, scale, 1)
         );
-
+        if (statsPage != null && statsPage.IsOpen)
+        {
+            statsPage.Draw();
+            GUI.matrix = old;
+            GUI.enabled = enabled;
+            return;
+        }
         GUI.Label(
             new Rect(180, 220, 920, 100),
             "COLD BREW CASE",
             title
         );
 
-        Rect startButton = new Rect(440, 390, 400, 75);
-        bool hover = !loading && startButton.Contains(Event.current.mousePosition);
+        // Start Game button
+Rect startButton = new Rect(440, 360, 400, 75);
+bool hover = !loading && startButton.Contains(Event.current.mousePosition);
 
-        Fill(
-            startButton,
-            hover ? Color.Lerp(green, Color.white, .2f) : green
-        );
+Fill(startButton, hover ? Color.Lerp(green, Color.white, .2f) : green);
+GUI.Label(startButton, "START GAME", playLabel);
 
-        GUI.Label(startButton, "START GAME", playLabel);
+GUI.enabled = enabled && !loading;
 
-        GUI.enabled = enabled && !loading;
+if (GUI.Button(startButton, GUIContent.none, plain))
+    Play(LevelZeroPath);
 
-        if (GUI.Button(startButton, GUIContent.none, plain))
-            Play(LevelZeroPath);
+// Analytics button
+Rect analyticsButton = new Rect(440, 455, 400, 65);
+bool analyticsHover = !loading && analyticsButton.Contains(Event.current.mousePosition);
 
-        GUI.enabled = enabled;
+Fill(analyticsButton, analyticsHover ? Color.Lerp(cyan, Color.white, .2f) : cyan);
+GUIStyle analyticsLabel = new GUIStyle(playLabel);
+analyticsLabel.fontSize = 21;
+GUI.Label(analyticsButton, "ANALYTICS", analyticsLabel);
+
+if (GUI.Button(analyticsButton, GUIContent.none, plain))
+{
+    if (statsPage != null)
+        statsPage.Open();
+    else
+        message = "Analytics page is unavailable.";
+}
+
+GUI.enabled = enabled;
 
         if (loading || message.Length > 0)
         {
@@ -219,6 +243,7 @@ namespace ColdBrewCase
                 small
             );
         }
+        
 
         GUI.matrix = old;
         GUI.enabled = enabled;
