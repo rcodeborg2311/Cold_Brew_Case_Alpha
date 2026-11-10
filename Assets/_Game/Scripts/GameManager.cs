@@ -7,7 +7,6 @@ namespace ColdBrewCase
 {
     public enum TipSide { Right, Left, Above, Below }
 
-    // A label pinned next to something in the world while a tip pop-up is open.
     public struct TipCallout
     {
         public Vector3 world;
@@ -46,17 +45,21 @@ namespace ColdBrewCase
 
         private bool manualPause, focusPause;
         private double immuneUntil;
+        private double movementLockedUntil;
+
         private Vector2 checkpoint;
 
-        // Remember which room the detective entered from.
+        // Remember the room the detective entered from.
         private RoomId currentRoom = RoomId.Unknown;
         private RoomId enteredFromRoom = RoomId.Unknown;
         private bool isRespawning;
 
         public bool ShowingHowToPlay { get; private set; }
         public bool ShowingTip => tips.Count > 0;
+
         public string TipTitle => ShowingTip ? tips.Peek().title : "";
         public string TipBody => ShowingTip ? tips.Peek().body : "";
+
         public TipCallout[] TipCallouts =>
             ShowingTip ? tips.Peek().callouts : NoCallouts;
 
@@ -77,10 +80,12 @@ namespace ColdBrewCase
         public bool IsActionPaused =>
             manualPause || focusPause || ShowingHowToPlay || ShowingTip;
 
-        // Preserve the original main-branch opening behavior.
-        public bool CanMove => !IsActionPaused &&
-            (State == RoundState.Playing ||
-             (State == RoundState.Opening && levelFourDirector == null));
+        // NEW: Detective stays frozen throughout the thief's opening run.
+        // After being caught, movement is locked for one more second.
+        public bool CanMove =>
+            State == RoundState.Playing &&
+            !IsActionPaused &&
+            Clock.Now >= movementLockedUntil;
 
         public bool CanRunAI =>
             State == RoundState.Playing && !IsActionPaused;
@@ -102,8 +107,14 @@ namespace ColdBrewCase
         private void Start()
         {
             checkpoint = player.transform.position;
+
             rooms.RefreshRoom();
             OnRoomChanged(rooms.Current);
+
+            // Detective cannot move yet.
+            // The thief finishes the opening run first.
+            player.Stop();
+
             hud.Show("Follow the thief", 6f);
         }
 
@@ -124,18 +135,30 @@ namespace ColdBrewCase
             checkpoint = room.safeCheckpoint;
         }
 
+        // NEW: Called when the thief finishes its opening run.
+
         public void BeginHunt()
         {
-            if (State != RoundState.Opening) return;
+            if (State != RoundState.Opening)
+                return;
 
             State = RoundState.Playing;
             alert.Begin();
-            hud.Show("Find and catch the thief", 6f);
+
+            player.Stop();
+
+            ShowTip(
+                "Let the chase begin!",
+                ""
+            );
         }
+
 
         public bool AllowAction()
         {
+            // Resolve timer deadlines before allowing an action.
             alert.RefreshNow();
+
             return State == RoundState.Playing && !IsActionPaused;
         }
 
@@ -150,6 +173,7 @@ namespace ColdBrewCase
                 return false;
 
             target.Capture();
+
             Finish(RoundState.Won, "Won");
             return true;
         }
@@ -162,12 +186,17 @@ namespace ColdBrewCase
 
         public void Lose(LossReason reason)
         {
-            if (State != RoundState.Playing) return;
+            if (State != RoundState.Playing)
+                return;
 
             if (reason == LossReason.Escaped)
             {
                 State = RoundState.Extracting;
-                manualPause = focusPause = ShowingHowToPlay = false;
+
+                manualPause = false;
+                focusPause = false;
+                ShowingHowToPlay = false;
+
                 alert.Stop();
                 player.Stop();
                 thief.Escape();
@@ -227,7 +256,9 @@ namespace ColdBrewCase
                     cone.Flash();
             }
 
-            // Determine the destination before applying any time fine.
+            // Determine the destination before applying the time fine.
+            // Moving guards: current room checkpoint.
+            // Door watchers: checkpoint outside the guarded room.
             Vector2 destination = checkpoint;
 
             if (watcher)
@@ -238,8 +269,8 @@ namespace ColdBrewCase
 
                 RoomZone outside = rooms.Get(enteredFromRoom);
 
-                // If the room-entry event hasn't fired yet,
-                // rooms.Current may still be the room outside.
+                // If the room-entry event has not fired yet,
+                // RoomManager.Current may still be the outside room.
                 if (outside == null ||
                     outside.id == watched ||
                     rooms.RoomAt(outside.safeCheckpoint) != outside.id)
@@ -258,7 +289,7 @@ namespace ColdBrewCase
                     }
                 }
 
-                // Fall back to a neighboring room with a valid checkpoint.
+                // Fall back to the nearest valid neighboring room.
                 if (outside == null)
                 {
                     RoomZone guarded = rooms.Get(watched);
@@ -276,8 +307,7 @@ namespace ColdBrewCase
                         {
                             if (neighbor == null ||
                                 neighbor.id == watched ||
-                                rooms.RoomAt(neighbor.safeCheckpoint) !=
-                                neighbor.id)
+                                rooms.RoomAt(neighbor.safeCheckpoint) != neighbor.id)
                             {
                                 continue;
                             }
@@ -307,13 +337,13 @@ namespace ColdBrewCase
                         source
                     );
 
-                    // Do not deduct time if the player cannot be moved.
+                    // Do not charge the player if safe respawn fails.
                     return;
                 }
             }
 
-            // Teleport first so the player cannot remain inside
-            // the watcher's detection area.
+            // Teleport first so the detective is safely outside
+            // the door watcher's detection area.
             isRespawning = true;
 
             try
@@ -335,10 +365,14 @@ namespace ColdBrewCase
             if (now != null)
                 checkpoint = now.safeCheckpoint;
 
+            // NEW: One-second recovery after every guard catch.
+            movementLockedUntil = Clock.Now + 1d;
+            player.Stop();
+
             PlayerCaught?.Invoke();
 
-            // Door watchers always cost exactly 10 seconds.
-            // Moving guards use their original penalty.
+            // Door watchers cost exactly 10 seconds.
+            // Moving guards retain their existing fine.
             float fine = watcher
                 ? 10f
                 : alert.PenaltySeconds(AlertAction.Spotted);
@@ -432,7 +466,8 @@ namespace ColdBrewCase
             alert.Stop();
         }
 
-        // Pause the game and display a tip.
+        // Displays the existing interactive tutorial popup.
+        // The timer stays paused until all tips are dismissed.
         public void ShowTip(
             string title,
             string body,
