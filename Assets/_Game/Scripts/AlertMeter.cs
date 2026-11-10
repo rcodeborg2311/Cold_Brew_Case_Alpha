@@ -9,7 +9,6 @@ namespace ColdBrewCase
         [Tooltip("Practice mode (Level 0): the timer never runs out and mistakes cost no time.")]
         public bool untimed;
         public event Action Warning, Full;
-        // Fired when a mistake costs time, with the seconds lost.
         public event Action<float> Penalty;
         private double startedAt;
         private float penalties, frozen;
@@ -42,8 +41,16 @@ namespace ColdBrewCase
             Penalty?.Invoke(PenaltySeconds(action));
             RefreshNow();
         }
+        // Doorway watchers use a fixed number of real game-timer seconds.
+        public void AddSeconds(float seconds)
+        {
+            if (!running || untimed) return;
+            seconds = Mathf.Max(0f, seconds);
+            penalties += seconds / Mathf.Max(1f, tuning.escapeSeconds);
+            Penalty?.Invoke(seconds);
+            RefreshNow();
+        }
         public void Stop() { frozen = Value; running = false; }
-        // Freeze the timer while a tip pop-up is open, so reading it never costs time.
         public void Hold() { if (heldAt < 0d) heldAt = Clock.Now; }
         public void Release()
         {
