@@ -12654,15 +12654,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d91f361aabe09f94ea67f2ebc3afe2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColdBrewCase.AnalyticsClient
-  enableCollection: 0
+  enableCollection: 1
   buildId: level-2
   sheetUrl: https://script.google.com/macros/s/AKfycbwfxdAWde6MOHK-FwGFZ0QStvy-1sYSwJLoLCGKWGDHYVjpV6-Wu4As69ppMRjqfWz_Aw/exec
   heavyShakeThreshold: 0.5
+  maxEvents: 250
   heat: {fileID: 1828801770}
   inventory: {fileID: 1828801769}
   rooms: {fileID: 1828801776}
   game: {fileID: 1828801764}
   net: {fileID: 0}
+  push: {fileID: 0}
   stats: {fileID: 0}
 --- !u!4 &1828801778
 Transform:
