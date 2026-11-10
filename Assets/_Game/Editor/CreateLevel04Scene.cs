@@ -33,6 +33,7 @@ namespace ColdBrewCase.EditorTools
             }
             EditorUtility.CopySerialized(source, tuning);
             tuning.name = "Level04Tuning";
+            tuning.escapeSeconds = 120f;
             EditorUtility.SetDirty(tuning);
 
             var inputAsset = MakeInput();
@@ -83,7 +84,7 @@ namespace ColdBrewCase.EditorTools
                 MakeDistrictRoom(roomRoot, RoomId.DistrictNorthEast, "EAST HIDEOUT", new Vector2(10, 10), new Vector2(10, 10))
             };
             rooms.zones = zones.ToArray();
-            rooms.scanAllNeighbors = true;
+            rooms.scanAllNeighbors = false;
             foreach (RoomZone room in rooms.zones)
             {
                 var neighbors = new List<RoomZone>();
@@ -118,7 +119,9 @@ namespace ColdBrewCase.EditorTools
             camera.backgroundColor = new Color(.04f, .06f, .08f); camera.clearFlags = CameraClearFlags.SolidColor;
             camera.transform.position = new Vector3(0, 0, -10);
             var follow = cameraObject.AddComponent<CameraFollow>();
-            follow.target = player.transform; follow.worldCamera = camera; follow.closeViewBetweenScans = true;
+            follow.target = player.transform; follow.worldCamera = camera;
+            follow.closeViewBetweenScans = true;
+            follow.frameSelectedNeighborDuringScan = true;
             cameraObject.AddComponent<AudioListener>();
 
             // Static props are solid and stay fixed. Keep the thief routes and guard lanes clear.
@@ -190,7 +193,7 @@ namespace ColdBrewCase.EditorTools
             GuardController[] guards = { westGuardA, westGuardB, eastGuardA, southwestGuard, eastHideoutGuard };
 
             GameObject firstObject = Actor("Thief One", new Vector2(-.48f, -1.2f), "Thief", Color.white, out Rigidbody2D firstBody);
-            GameObject secondObject = Actor("Thief Two", new Vector2(.48f, -1.2f), "Thief", new Color(.82f, .91f, 1f), out Rigidbody2D secondBody);
+            GameObject secondObject = Actor("Thief Two", new Vector2(.48f, -1.2f), "Thief", new Color(1f, .35f, .45f), out Rigidbody2D secondBody);
             ThiefController firstThief = SetupLevelFourThief(firstObject, firstBody);
             ThiefController secondThief = SetupLevelFourThief(secondObject, secondBody);
 

@@ -2262,9 +2262,13 @@ MonoBehaviour:
   rooms: {fileID: 342614424}
   coffee: {fileID: 342614417}
   roomTips:
-  - room: 2
-    title: Guard ahead!  Stay out of the yellow cone
+  - room: 4
+    title: The thief is hiding in here.  Throw your net!
     body: 
+  spotTips:
+  - position: {x: 8.4, y: 5}
+    radius: 2
+    title: Guard in the next room! Press F to peek
   pauseGame: 0
   bannerSeconds: 8
   coffeeTitle: Coffee!  Press F to see where the thief is hiding
