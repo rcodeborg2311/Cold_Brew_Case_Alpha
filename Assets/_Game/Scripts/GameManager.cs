@@ -21,6 +21,10 @@ namespace ColdBrewCase
         private bool manualPause, focusPause;
         private double immuneUntil;
         private Vector2 checkpoint;
+        private Vector2 roomEntryPosition;
+        private RoomId roomEntryRoom = RoomId.Unknown;
+        private RoomId currentRoom = RoomId.Unknown;
+        private bool isRespawning;
         public bool ShowingHowToPlay { get; private set; }
         public bool ShowingTip => tips.Count > 0;
         public string TipTitle => ShowingTip ? tips.Peek().Key : "";
@@ -47,12 +51,21 @@ namespace ColdBrewCase
             checkpoint = player.transform.position;
             rooms.RefreshRoom();
             OnRoomChanged(rooms.Current);
+            currentRoom = roomEntryRoom = rooms.Current;
+            roomEntryPosition = player.transform.position;
             hud.Show("Follow the thief", 6f);
         }
         private void OnRoomChanged(RoomId id)
         {
             RoomZone room = rooms.Get(id);
-            if (room != null) checkpoint = room.safeCheckpoint;
+            if (room == null) return;
+            if (!isRespawning && currentRoom != RoomId.Unknown && currentRoom != id)
+            {
+                roomEntryRoom = id;
+                roomEntryPosition = player.transform.position;
+            }
+            currentRoom = id;
+            checkpoint = room.safeCheckpoint;
         }
         public void BeginHunt()
         {
@@ -115,8 +128,19 @@ namespace ColdBrewCase
             }
             alert.Add(AlertAction.Spotted);
             if (State != RoundState.Playing) return;
-            player.Teleport(checkpoint);
-            rooms.RefreshRoom();
+            Vector2 destination = roomEntryRoom == rooms.Current ? roomEntryPosition : checkpoint;
+            isRespawning = true;
+            try
+            {
+                player.Teleport(destination);
+                rooms.RefreshRoom();
+            }
+            finally
+            {
+                isRespawning = false;
+            }
+            currentRoom = roomEntryRoom = rooms.Current;
+            roomEntryPosition = player.transform.position;
             PlayerCaught?.Invoke();
             hud.Show("Spotted! -" + alert.PenaltySeconds(AlertAction.Spotted).ToString("0.#") + "s", 3f);
         }
