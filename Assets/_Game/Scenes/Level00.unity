@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 39963298}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1, y: 0, z: 0}
+  m_LocalPosition: {x: 0.19, y: -1.9, z: 0}
   m_LocalScale: {x: 0.25, y: 0.9, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -403,7 +403,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &121220463
 Transform:
   m_ObjectHideFlags: 0
@@ -1061,7 +1061,7 @@ Transform:
   m_GameObject: {fileID: 203083599}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: -0.114, z: 0}
+  m_LocalPosition: {x: -0.41, y: -1.84, z: 0}
   m_LocalScale: {x: 0.85, y: 0.45, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1780,7 +1780,7 @@ Transform:
   m_GameObject: {fileID: 344989742}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19999999, y: 0, z: 0}
+  m_LocalPosition: {x: -1.01, y: -0.78, z: 0}
   m_LocalScale: {x: 0.2, y: 0.34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3072,7 +3072,7 @@ Transform:
   m_GameObject: {fileID: 573010104}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.8, y: 0, z: 0}
+  m_LocalPosition: {x: -1.69, y: -0.78, z: 0}
   m_LocalScale: {x: 0.2, y: 0.34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3179,7 +3179,7 @@ Transform:
   m_GameObject: {fileID: 612953893}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.89, y: -1.88, z: 0}
   m_LocalScale: {x: 2.4, y: 0.9, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3393,7 +3393,7 @@ Transform:
   m_GameObject: {fileID: 624283389}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.114, z: 0}
+  m_LocalPosition: {x: -1.36, y: -1.81, z: 0}
   m_LocalScale: {x: 0.85, y: 0.45, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3567,7 +3567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &646069410
 Transform:
   m_ObjectHideFlags: 0
@@ -4401,7 +4401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &791353552
 Transform:
   m_ObjectHideFlags: 0
@@ -4495,7 +4495,7 @@ Transform:
   m_GameObject: {fileID: 801218054}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.38, z: 0}
+  m_LocalPosition: {x: -0.89, y: -1.31, z: 0}
   m_LocalScale: {x: 2.4, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5194,7 +5194,7 @@ MonoBehaviour:
   thiefRunBeforeFreeze: 3
   goalLabel: Catch the thief with your nets and evade the guards in the given time
   footprintsLabel: This shows which way the thief went
-  coffeeLabel: Drink coffee to scan neighbouring rooms
+  coffeeLabel: Grab coffee for +10 seconds, then press F to scan nearby rooms
   guardLabel: Dodge the guard to avoid being caught
   thiefLabel: Throw your net to catch the thief
 --- !u!114 &843275845
@@ -5213,6 +5213,7 @@ MonoBehaviour:
   rooms: {fileID: 843275842}
   coffee: {fileID: 843275835}
   roomTips: []
+  spotTips: []
   pauseGame: 1
   bannerSeconds: 8
   coffeeTitle: 
@@ -5233,11 +5234,13 @@ MonoBehaviour:
   buildId: level-0
   sheetUrl: https://script.google.com/macros/s/AKfycbwfxdAWde6MOHK-FwGFZ0QStvy-1sYSwJLoLCGKWGDHYVjpV6-Wu4As69ppMRjqfWz_Aw/exec
   heavyShakeThreshold: 0.5
+  maxEvents: 250
   heat: {fileID: 843275836}
   inventory: {fileID: 843275835}
   rooms: {fileID: 843275842}
   game: {fileID: 843275830}
   net: {fileID: 0}
+  push: {fileID: 0}
   stats: {fileID: 0}
 --- !u!4 &843275847
 Transform:
@@ -5986,7 +5989,7 @@ Transform:
   m_GameObject: {fileID: 945500836}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.40000004, y: 0, z: 0}
+  m_LocalPosition: {x: -0.28, y: -0.76, z: 0}
   m_LocalScale: {x: 0.2, y: 0.34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6661,7 +6664,7 @@ Transform:
   m_GameObject: {fileID: 1124643951}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0, z: 0}
+  m_LocalPosition: {x: -1.36, y: -0.78, z: 0}
   m_LocalScale: {x: 0.2, y: 0.34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7402,7 +7405,7 @@ Transform:
   m_GameObject: {fileID: 1258527130}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.70000005, y: 0, z: 0}
+  m_LocalPosition: {x: 0.1, y: -0.76, z: 0}
   m_LocalScale: {x: 0.2, y: 0.34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8046,6 +8049,7 @@ MonoBehaviour:
   inventory: {fileID: 843275835}
   game: {fileID: 843275830}
   hud: {fileID: 843275831}
+  timeBonusSeconds: 10
 --- !u!114 &1339615866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9167,7 +9171,7 @@ Transform:
   m_GameObject: {fileID: 1584434893}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.76, y: -0.78, z: 0}
   m_LocalScale: {x: 2.2, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9915,6 +9919,14 @@ MonoBehaviour:
     m_Bits: 1536
   tag: {fileID: 1782814022}
   turnSpeed: 90
+  guardType: 0
+  watchedDoor: {fileID: 0}
+  lookAtDoorSeconds: 3
+  lookAwaySeconds: 3
+  retreatDistance: 1.25
+  cycleWithoutScan: 0
+  turnAwayFromDoor: 0
+  patrolRoute: []
 --- !u!114 &1782814022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10392,7 +10404,7 @@ Transform:
   m_GameObject: {fileID: 1979406145}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1, y: 0, z: 0}
+  m_LocalPosition: {x: -1.99, y: -1.86, z: 0}
   m_LocalScale: {x: 0.25, y: 0.9, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10658,7 +10670,7 @@ Transform:
   m_GameObject: {fileID: 2116047200}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.100000024, y: 0, z: 0}
+  m_LocalPosition: {x: -0.69, y: -0.78, z: 0}
   m_LocalScale: {x: 0.2, y: 0.34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

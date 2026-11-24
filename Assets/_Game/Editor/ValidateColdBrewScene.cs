@@ -32,7 +32,8 @@ namespace ColdBrewCase.EditorTools
                 {
                     bool optional = component is HeatTag && (field.Name == "thief" || field.Name == "memory") ||
                                     component is PushableBody && field.Name == "guard" ||
-                                    noGuards && field.Name == "guards"; // Level 0 has no guards.
+                                    noGuards && field.Name == "guards" || // Level 0 has no guards.
+                                    component is TutorialTips && (field.Name == "roomTips" || field.Name == "spotTips");
                     if (optional) continue;
                     object value = field.GetValue(component);
                     bool missing = typeof(UnityEngine.Object).IsAssignableFrom(field.FieldType) &&
@@ -148,6 +149,13 @@ namespace ColdBrewCase.EditorTools
                     Report("Hiding spot overlaps cover: " + spot.name, spot);
                     failures++;
                 }
+            int cafePatioGuards = 0;
+            if (game.rooms != null)
+                foreach (GuardController guard in UnityEngine.Object.FindObjectsByType<GuardController>(FindObjectsSortMode.None))
+                    if (guard != null && guard.body != null && game.rooms.RoomAt(guard.body.position) == RoomId.DistrictWest)
+                        cafePatioGuards++;
+            if (cafePatioGuards < 2)
+            { Report("Level03 needs two guards inside the Cafe Patio room.", director); failures++; }
             return failures;
         }
 
