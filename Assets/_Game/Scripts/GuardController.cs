@@ -22,6 +22,10 @@ namespace ColdBrewCase
         public Transform watchedDoor;
         [Min(.2f)] public float lookAtDoorSeconds = 3f;
         [Min(.2f)] public float lookAwaySeconds = 3f;
+        [Min(.5f)] public float retreatDistance = 1.25f;
+        public bool cycleWithoutScan;
+        public bool turnAwayFromDoor;
+        public Vector2[] patrolRoute = new Vector2[0];
 
         public Vector2 Facing { get; private set; } = Vector2.right;
         public Vector2 NextFacing { get; private set; } = Vector2.right;
@@ -33,6 +37,9 @@ namespace ColdBrewCase
         private WatcherPhase watcherPhase = WatcherPhase.WatchingDoor;
         private float watcherWait;
         private HeatSightController coffeeScan;
+        private Vector2 watcherHomePosition, watcherAwayPosition, watcherDoorPosition;
+        private int patrolRouteIndex;
+        private float patrolRouteWait;
         private double stunnedUntil, nextSense;
         private Vector2 investigateDirection;
         private readonly List<RaycastHit2D> hits = new List<RaycastHit2D>(8);
@@ -47,11 +54,17 @@ namespace ColdBrewCase
         {
             if (guardType == GuardType.DoorWatcher && watchedDoor != null)
             {
-                Vector2 toward = (Vector2)watchedDoor.position - body.position;
+                watcherHomePosition = body.position;
+                watcherDoorPosition = watchedDoor.position;
+                Vector2 toward = watcherDoorPosition - watcherHomePosition;
                 Facing = toward.sqrMagnitude > .001f ? toward.normalized : Vector2.left;
                 NextFacing = Facing;
+                Vector2 stepIntoRoom = -toward.normalized;
+                if (stepIntoRoom.sqrMagnitude < .001f) stepIntoRoom = Vector2.right;
+                watcherAwayPosition = watcherHomePosition + stepIntoRoom * retreatDistance;
+                patrolRouteIndex = patrolRoute != null && patrolRoute.Length > 1 ? 1 : 0;
                 watcherPhase = WatcherPhase.WatchingDoor;
-                watcherWait = 0f;
+                watcherWait = cycleWithoutScan ? Mathf.Max(.5f, lookAtDoorSeconds) : 0f;
                 coffeeScan = game != null ? game.GetComponent<HeatSightController>() : null;
                 if (coffeeScan != null) coffeeScan.CoffeeDrunk += OnCoffeeDrunk;
             }
@@ -75,8 +88,9 @@ namespace ColdBrewCase
                 tag == null || tag.rooms == null || watchedDoor == null) return;
             // Only a scan aimed at this guard's neighboring room unlocks its turning cycle.
             if (sourceRoom == tag.Room || tag.rooms.LookingAt != tag.Room) return;
-            watcherPhase = WatcherPhase.Delay;
-            watcherWait = Mathf.Max(0f, lookAtDoorSeconds);
+            // Let an aimed coffee scan open a brief route past this guard now.
+            watcherPhase = cycleWithoutScan ? WatcherPhase.TurningAway : WatcherPhase.Delay;
+            watcherWait = cycleWithoutScan ? 0f : Mathf.Max(0f, lookAtDoorSeconds);
         }
 
         public void Stun() { stunnedUntil = Clock.Now + tuning.pushStunSeconds; }
@@ -93,7 +107,10 @@ namespace ColdBrewCase
             if (!game.CanRunAI || Stunned) return;
             if (guardType == GuardType.DoorWatcher)
             {
-                UpdateDoorWatcher();
+                if (patrolRoute != null && patrolRoute.Length > 1)
+                    UpdateRoomPatrol();
+                else
+                    UpdateDoorWatcher();
                 return;
             }
             if (waypoints == null || waypoints.Length == 0 || waypoints[waypoint] == null) return;
@@ -122,19 +139,32 @@ namespace ColdBrewCase
         private void UpdateDoorWatcher()
         {
             if (watchedDoor == null) return;
-            Vector2 toward = (Vector2)watchedDoor.position - body.position;
+            Vector2 toward = watcherDoorPosition - body.position;
             if (toward.sqrMagnitude < .001f) return;
             Vector2 doorDirection = toward.normalized;
-            Vector2 awayDirection = new Vector2(-doorDirection.y, doorDirection.x);
+            Vector2 awayDirection = turnAwayFromDoor ? -doorDirection :
+                new Vector2(-doorDirection.y, doorDirection.x);
 
-            if (watcherPhase == WatcherPhase.Delay)
+            if (watcherPhase == WatcherPhase.WatchingDoor)
+            {
+                if (cycleWithoutScan)
+                {
+                    watcherWait -= Time.fixedDeltaTime;
+                    if (watcherWait <= 0f) watcherPhase = WatcherPhase.TurningAway;
+                    else TurnTowards(doorDirection);
+                }
+                else TurnTowards(doorDirection);
+            }
+            else if (watcherPhase == WatcherPhase.Delay)
             {
                 watcherWait -= Time.fixedDeltaTime;
                 if (watcherWait <= 0f) watcherPhase = WatcherPhase.TurningAway;
             }
             else if (watcherPhase == WatcherPhase.TurningAway)
             {
-                if (TurnTowards(awayDirection))
+                bool facingAway = TurnTowards(awayDirection);
+                MoveWatcherToward(watcherAwayPosition);
+                if (facingAway)
                 {
                     watcherPhase = WatcherPhase.LookingAway;
                     watcherWait = Mathf.Max(.2f, lookAwaySeconds);
@@ -142,19 +172,56 @@ namespace ColdBrewCase
             }
             else if (watcherPhase == WatcherPhase.LookingAway)
             {
+                MoveWatcherToward(watcherAwayPosition);
                 watcherWait -= Time.fixedDeltaTime;
                 if (watcherWait <= 0f) watcherPhase = WatcherPhase.TurningBack;
             }
             else if (watcherPhase == WatcherPhase.TurningBack)
             {
-                if (TurnTowards(doorDirection))
+                bool facingDoor = TurnTowards(doorDirection);
+                bool returnedHome = MoveWatcherToward(watcherHomePosition);
+                if (facingDoor && returnedHome)
+                {
                     watcherPhase = WatcherPhase.WatchingDoor;
+                    watcherWait = cycleWithoutScan ? Mathf.Max(.5f, lookAtDoorSeconds) : 0f;
+                }
             }
-            else
-                TurnTowards(doorDirection);
 
             NextFacing = watcherPhase == WatcherPhase.TurningAway ||
                          watcherPhase == WatcherPhase.LookingAway ? awayDirection : doorDirection;
+        }
+
+        private void UpdateRoomPatrol()
+        {
+            if (patrolRoute == null || patrolRoute.Length < 2) return;
+            if (patrolRouteWait > 0f)
+            {
+                patrolRouteWait -= Time.fixedDeltaTime;
+                return;
+            }
+
+            Vector2 destination = patrolRoute[patrolRouteIndex];
+            Vector2 delta = destination - body.position;
+            if (delta.magnitude <= .12f)
+            {
+                patrolRouteIndex = (patrolRouteIndex + 1) % patrolRoute.Length;
+                patrolRouteWait = .2f;
+                return;
+            }
+
+            NextFacing = delta.normalized;
+            if (!TurnTowards(NextFacing)) return;
+            Vector2 step = Vector2.ClampMagnitude(delta, tuning.guardSpeed * Time.fixedDeltaTime);
+            body.MovePosition(body.position + BodyMover.SafeDelta(body, step, blockers, hits));
+        }
+
+        private bool MoveWatcherToward(Vector2 destination)
+        {
+            Vector2 delta = destination - body.position;
+            if (delta.sqrMagnitude <= .0064f) return true;
+            Vector2 step = Vector2.ClampMagnitude(delta, tuning.guardSpeed * Time.fixedDeltaTime);
+            body.MovePosition(body.position + BodyMover.SafeDelta(body, step, blockers, hits));
+            return delta.sqrMagnitude <= .0064f;
         }
 
         private bool TurnTowards(Vector2 direction)
@@ -181,11 +248,12 @@ namespace ColdBrewCase
 
                 // While waiting for a scan, block entry right at this door.
                 // After turning away, normal vision rules still apply.
-                bool blocking = watcherPhase == WatcherPhase.WatchingDoor ||
+                bool blocking = (patrolRoute == null || patrolRoute.Length < 2) &&
+                                (watcherPhase == WatcherPhase.WatchingDoor ||
                                 watcherPhase == WatcherPhase.Delay ||
-                                watcherPhase == WatcherPhase.TurningBack;
+                                watcherPhase == WatcherPhase.TurningBack);
                 if (blocking && watchedDoor != null &&
-                    Vector2.Distance(player.position, watchedDoor.position) <= 2.5f)
+                    Vector2.Distance(player.position, watcherDoorPosition) <= 2.5f)
                 {
                     // Respect walls and crates even at a watcher-controlled door.
                     Vector2 toPlayer = (Vector2)player.position - body.position;

@@ -35,11 +35,11 @@ namespace ColdBrewCase
         private void LateUpdate()
         {
             bool thermal = guard.tag.ThermalVisible;
-            bool guardInCurrentRoom = guard.tag.rooms != null &&
-                guard.tag.Room == guard.tag.rooms.Current;
-            bool scannedRoom = thermal && guard.tag.rooms != null &&
-                guard.tag.rooms.CanScan(guard.tag.Room);
-            draw.enabled = !guard.Stunned && (guardInCurrentRoom || scannedRoom);
+            bool guardRoomVisible = guard.tag.rooms != null &&
+                guard.tag.rooms.IsVisible(guard.tag.Room);
+            // Draw every guard cone in a visible room. Gating this on each
+            // guard's thermal tag can hide a second guard in the same scanned room.
+            draw.enabled = !guard.Stunned && guardRoomVisible;
             // Keep the cone behind solid walls and props, including during scans.
             // This prevents clipped cone edges from appearing as isolated yellow marks.
             draw.sortingOrder = 9;
@@ -54,7 +54,7 @@ namespace ColdBrewCase
             if (Clock.Now < flashUntil) color = new Color(1f, .15f, .1f, .5f);
             for (int i = 0; i < colors.Length; i++) colors[i] = color;
             float center = Mathf.Atan2(guard.Facing.y, guard.Facing.x) * Mathf.Rad2Deg;
-            vertices[0] = transform.InverseTransformPoint(guard.transform.position);
+            vertices[0] = transform.InverseTransformPoint(guard.body.position);
             triangles.Clear();
             for (int i = 0; i <= rays; i++)
             {

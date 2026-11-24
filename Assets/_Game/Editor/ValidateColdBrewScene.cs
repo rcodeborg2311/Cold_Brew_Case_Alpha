@@ -149,6 +149,13 @@ namespace ColdBrewCase.EditorTools
                     Report("Hiding spot overlaps cover: " + spot.name, spot);
                     failures++;
                 }
+            int cafePatioGuards = 0;
+            if (game.rooms != null)
+                foreach (GuardController guard in UnityEngine.Object.FindObjectsByType<GuardController>(FindObjectsSortMode.None))
+                    if (guard != null && guard.body != null && game.rooms.RoomAt(guard.body.position) == RoomId.DistrictWest)
+                        cafePatioGuards++;
+            if (cafePatioGuards < 2)
+            { Report("Level03 needs two guards inside the Cafe Patio room.", director); failures++; }
             return failures;
         }
 

@@ -54,7 +54,11 @@ namespace ColdBrewCase.EditorTools
             {
                 count += Add("North Door Watcher", RoomId.DistrictNorth, new Vector2(2f, 7.5f), new Vector2(0f, 5f), game, rooms, heat);
                 count += Add("East Door Watcher", RoomId.DistrictEast, new Vector2(7.5f, 2f), new Vector2(5f, 0f), game, rooms, heat);
-                count += Add("West Door Watcher", RoomId.DistrictWest, new Vector2(-7.5f, -2f), new Vector2(-5f, 0f), game, rooms, heat);
+                bool hasSecondCafePatioCop = Array.Exists(AllGuards(), guard =>
+                    guard != null && guard.name == "Cafe Patio Cop 2" && guard.tag != null &&
+                    guard.tag.fixedRoom == RoomId.DistrictWest);
+                if (!hasSecondCafePatioCop)
+                    count += Add("West Door Watcher", RoomId.DistrictWest, new Vector2(-7.5f, -2f), new Vector2(-5f, 0f), game, rooms, heat);
             }
             if (scene.name == "Level04")
             {

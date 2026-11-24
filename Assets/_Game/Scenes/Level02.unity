@@ -1103,8 +1103,11 @@ MonoBehaviour:
   turnSpeed: 67.5
   guardType: 1
   watchedDoor: {fileID: 1860241745}
-  lookAtDoorSeconds: 0.2
-  lookAwaySeconds: 6
+  lookAtDoorSeconds: 3
+  lookAwaySeconds: 3
+  retreatDistance: 2.25
+  cycleWithoutScan: 1
+  turnAwayFromDoor: 1
 --- !u!58 &168226469
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -10376,8 +10379,11 @@ MonoBehaviour:
   turnSpeed: 67.5
   guardType: 1
   watchedDoor: {fileID: 2075814660}
-  lookAtDoorSeconds: 0.2
-  lookAwaySeconds: 6
+  lookAtDoorSeconds: 3
+  lookAwaySeconds: 3
+  retreatDistance: 2.25
+  cycleWithoutScan: 1
+  turnAwayFromDoor: 1
 --- !u!114 &1577436931
 MonoBehaviour:
   m_ObjectHideFlags: 0
