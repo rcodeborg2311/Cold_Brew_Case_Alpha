@@ -54,6 +54,8 @@ namespace ColdBrewCase
         private double movementLockedUntil;
 
         private Vector2 checkpoint;
+        private Vector2 roomEntryPosition;
+        private RoomId roomEntryRoom = RoomId.Unknown;
 
         // Remember the room the detective entered from.
         private RoomId currentRoom = RoomId.Unknown;
@@ -116,6 +118,8 @@ namespace ColdBrewCase
 
             rooms.RefreshRoom();
             OnRoomChanged(rooms.Current);
+            roomEntryRoom = rooms.Current;
+            roomEntryPosition = player.body.position;
 
             // Detective cannot move yet.
             // The thief finishes the opening run first.
@@ -135,6 +139,10 @@ namespace ColdBrewCase
                 currentRoom != id)
             {
                 enteredFromRoom = currentRoom;
+                // Save the first position inside this room. Caught players
+                // return to this entrance point instead of its center.
+                roomEntryRoom = id;
+                roomEntryPosition = player.body.position;
             }
 
             currentRoom = id;
@@ -274,7 +282,10 @@ namespace ColdBrewCase
             // Determine the destination before applying the time fine.
             // Moving guards: current room checkpoint.
             // Door watchers: checkpoint outside the guarded room.
-            Vector2 destination = checkpoint;
+            Vector2 destination = roomEntryRoom == rooms.Current &&
+                rooms.RoomAt(roomEntryPosition) == roomEntryRoom
+                    ? roomEntryPosition
+                    : checkpoint;
 
             if (watcher)
             {
@@ -341,7 +352,7 @@ namespace ColdBrewCase
 
                 if (outside != null)
                 {
-                    destination = outside.safeCheckpoint;
+                    destination = DoorwayRespawnPoint(source, outside);
                 }
                 else
                 {
@@ -374,6 +385,8 @@ namespace ColdBrewCase
             // Reset room-entry history after the teleport.
             enteredFromRoom = RoomId.Unknown;
             currentRoom = rooms.Current;
+            roomEntryRoom = currentRoom;
+            roomEntryPosition = player.body.position;
 
             RoomZone now = rooms.Get(currentRoom);
 
@@ -404,6 +417,37 @@ namespace ColdBrewCase
                     3f
                 );
             }
+        }
+
+        private Vector2 DoorwayRespawnPoint(GuardController watcher, RoomZone outside)
+        {
+            if (watcher == null || outside == null)
+                return checkpoint;
+
+            Vector2 doorway = watcher.watchedDoor != null
+                ? (Vector2)watcher.watchedDoor.position
+                : (Vector2)watcher.body.position;
+            Vector2 intoOutside = (Vector2)outside.transform.position - doorway;
+
+            if (intoOutside.sqrMagnitude > .001f)
+            {
+                intoOutside.Normalize();
+
+                // Place the player just inside the room they came from, at the
+                // entrance, rather than at that room's center checkpoint.
+                for (float distance = .5f; distance <= 2.5f; distance += .25f)
+                {
+                    Vector2 candidate = doorway + intoOutside * distance;
+                    if (rooms.RoomAt(candidate) == outside.id)
+                        return candidate;
+                }
+            }
+
+            // Keep the respawn safe if a scene's doorway is not positioned on
+            // the room boundary or does not have enough room for an entry point.
+            return rooms.RoomAt(outside.safeCheckpoint) == outside.id
+                ? outside.safeCheckpoint
+                : checkpoint;
         }
 
         public void TogglePause()

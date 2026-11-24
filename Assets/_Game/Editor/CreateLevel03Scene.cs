@@ -140,6 +140,10 @@ namespace ColdBrewCase.EditorTools
                 new[] { new Vector2(-11, -1), new Vector2(-9, -1), new Vector2(-9, 1), new Vector2(-11, 1) });
             guard19.tag.fixedRoom = RoomId.DistrictWest;
             guardList.Add(guard19);
+            GuardController guard20 = MakeGuard("Cafe Patio Cop 2", new Vector2(-7.5f, 2f), player.transform,
+                new[] { new Vector2(-7.5f, 2f), new Vector2(-6.3f, 2f), new Vector2(-6.3f, 4.2f), new Vector2(-8.5f, 4.2f) });
+            guard20.tag.fixedRoom = RoomId.DistrictWest;
+            guardList.Add(guard20);
             Solid("Cafe Patio Hide Screen", walls, new Vector2(-8.3f, -2.7f), new Vector2(0.6f, 2.2f), "Crates");
             Solid("Cafe Patio Cafe Patio Cover 0", walls, new Vector2(-12.7f, 2.7f), new Vector2(1.8f, 0.7f), "Crates");
             Solid("Garden Hide Screen", walls, new Vector2(8.3f, 12.7f), new Vector2(0.6f, 2.2f), "Crates");

@@ -5158,7 +5158,7 @@ Transform:
   m_GameObject: {fileID: 306674219}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.5, y: -2, z: 0}
+  m_LocalPosition: {x: -3.5, y: -1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6808,8 +6808,16 @@ MonoBehaviour:
   turnSpeed: 67.5
   guardType: 1
   watchedDoor: {fileID: 306674220}
-  lookAtDoorSeconds: 0.2
-  lookAwaySeconds: 6
+  lookAtDoorSeconds: 3
+  lookAwaySeconds: 3
+  retreatDistance: 2.25
+  cycleWithoutScan: 1
+  turnAwayFromDoor: 1
+  patrolRoute:
+  - {x: 8.5, y: 1.8}
+  - {x: 13.8, y: 1.8}
+  - {x: 13.8, y: 4.1}
+  - {x: 8.5, y: 4.1}
 --- !u!58 &363464859
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6882,7 +6890,7 @@ Transform:
   m_GameObject: {fileID: 363464855}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 2, z: 0}
+  m_LocalPosition: {x: 8.5, y: 1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -32268,7 +32276,7 @@ GameObject:
   - component: {fileID: 2026189645}
   - component: {fileID: 2026189647}
   m_Layer: 11
-  m_Name: West Door Watcher
+  m_Name: Cafe Patio Cop 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32283,7 +32291,7 @@ Transform:
   m_GameObject: {fileID: 2026189642}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.5, y: -2, z: 0}
+  m_LocalPosition: {x: -7.5, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -32319,8 +32327,16 @@ MonoBehaviour:
   turnSpeed: 67.5
   guardType: 1
   watchedDoor: {fileID: 2029959836}
-  lookAtDoorSeconds: 0.2
-  lookAwaySeconds: 6
+  lookAtDoorSeconds: 3
+  lookAwaySeconds: 3
+  retreatDistance: 2.25
+  cycleWithoutScan: 1
+  turnAwayFromDoor: 1
+  patrolRoute:
+  - {x: -7.5, y: 2}
+  - {x: -6.3, y: 2}
+  - {x: -6.3, y: 4.2}
+  - {x: -8.5, y: 4.2}
 --- !u!114 &2026189645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32449,7 +32465,7 @@ Transform:
   m_GameObject: {fileID: 2029959835}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 2, z: 0}
+  m_LocalPosition: {x: 2.5, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33942,8 +33958,16 @@ MonoBehaviour:
   turnSpeed: 67.5
   guardType: 1
   watchedDoor: {fileID: 1227994501}
-  lookAtDoorSeconds: 0.2
-  lookAwaySeconds: 6
+  lookAtDoorSeconds: 3
+  lookAwaySeconds: 3
+  retreatDistance: 2.25
+  cycleWithoutScan: 1
+  turnAwayFromDoor: 1
+  patrolRoute:
+  - {x: 2, y: 7.5}
+  - {x: 4, y: 7.5}
+  - {x: 4, y: 14.3}
+  - {x: 2.8, y: 14.3}
 --- !u!58 &2139138221
 CircleCollider2D:
   m_ObjectHideFlags: 0
