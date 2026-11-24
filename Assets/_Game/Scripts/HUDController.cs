@@ -1,3 +1,6 @@
+// ColdBrew Enter Start v1
+// ColdBrew unified gameplay UI v2
+// ColdBrew Level00 local upgrade v1
 using UnityEngine;
 
 
@@ -111,7 +114,7 @@ namespace ColdBrewCase
 
                 previousRoom = rooms.Current;
 
-                roomEntryLabel = "ENTERED  " + RoomName(rooms.Current);
+                roomEntryLabel = RoomName(rooms.Current);
 
                 roomEntryUntil = Clock.Now + 1.8d;
 
@@ -133,9 +136,11 @@ namespace ColdBrewCase
 
         {
 
-            if (visualHintsOnly) return;
+            if (visualHintsOnly && UnifiedLevelUI.Tutorial) return;
 
-            message = text;
+            string concise = UnifiedLevelUI.Tutorial ? Level00Presentation.ShortMessage(text) : UnifiedLevelUI.Message(text);
+            if (string.IsNullOrEmpty(concise)) return;
+            message = concise;
 
             messageUntil = Clock.Now + seconds;
 
@@ -149,9 +154,9 @@ namespace ColdBrewCase
 
         {
 
-            popupTitle = titleText;
+            popupTitle = UnifiedLevelUI.Tutorial ? titleText : UnifiedLevelUI.PopupTitle(titleText);
 
-            popupDetail = detailText;
+            popupDetail = UnifiedLevelUI.Tutorial ? "" : UnifiedLevelUI.PopupDetail(detailText);
 
             popupColor = color;
 
@@ -177,7 +182,7 @@ namespace ColdBrewCase
 
             float grow = age < .15f ? Mathf.Lerp(.85f, 1f, age / .15f) : 1f;
 
-            float w = 440f * grow, h = 96f * grow;
+            float w = 440f * grow, h = (string.IsNullOrEmpty(popupDetail) ? 64f : 96f) * grow;
 
             Rect box = new Rect(640f - w / 2f, 150f, w, h);
 
@@ -191,7 +196,7 @@ namespace ColdBrewCase
 
             GUI.Label(new Rect(box.x, box.y + 8f, box.width, 46f), popupTitle, popupBig);
 
-            GUI.Label(new Rect(box.x, box.y + 54f, box.width, 32f), popupDetail, popupSmall);
+            if (!string.IsNullOrEmpty(popupDetail)) GUI.Label(new Rect(box.x, box.y + 54f, box.width, 32f), popupDetail, popupSmall);
 
         }
 
@@ -295,7 +300,7 @@ namespace ColdBrewCase
 
                 case RoomId.BackAlley: return "BACK ALLEY";
 
-                case RoomId.UpperLanding: return "UPPER LANDING";
+                case RoomId.UpperLanding: return UnifiedLevelUI.TrainingLayout ? "UPSTAIRS" : "UPPER LANDING";
 
                 case RoomId.StorageLoft: return "STORAGE LOFT";
 
@@ -361,7 +366,7 @@ namespace ColdBrewCase
 
             // for good once the player has scanned with coffee the first time.
 
-            if (pickups != null && !scanned)
+            if (pickups != null && (LevelNavigation.IsLevelZero || !scanned))
 
             {
 
@@ -387,7 +392,7 @@ namespace ColdBrewCase
 
                 if (nearest != null)
 
-                    WorldLabel(nearest.transform.position, "Press F to scan the next room", new Color(1, .7f, .3f), -50f);
+                    WorldLabel(nearest.transform.position, LevelNavigation.IsLevelZero ? "Coffee" : "Press F to scan the next room", new Color(1, .7f, .3f), -50f);
 
             }
 
@@ -423,7 +428,7 @@ namespace ColdBrewCase
 
                 if (nearestStep != null)
 
-                    WorldLabel(nearestStep.transform.position, "Step here to hear the thief", new Color(.6f, .9f, 1f));
+                    WorldLabel(nearestStep.transform.position, LevelNavigation.IsLevelZero ? "Trail" : "Step here to hear the thief", new Color(.6f, .9f, 1f));
 
             }
 
@@ -483,7 +488,8 @@ namespace ColdBrewCase
 
         {
 
-            if (visualHintsOnly) return "";
+            if (!UnifiedLevelUI.Tutorial || visualHintsOnly) return "";
+            if (LevelNavigation.IsLevelZero) return Level00Presentation.Hint(game, moved, ThiefInNetRange, heat, shake, coffee);
 
             if (!moved) return "WASD / Arrow keys  Move";
 
@@ -571,9 +577,7 @@ namespace ColdBrewCase
             GUI.Label(new Rect(28, 23, 50, 50), caseNumber, badgeText);
             Caps(new Rect(92, 22, 240, 18), "CASE FILE", coral);
             headerBig.normal.textColor = Color.white;
-            GUI.Label(new Rect(92, 40, 245, 32), game.State == RoundState.Opening ?
-                (game.GetComponent<LevelThreeDirector>() != null ? "Choose a direction" : "Follow the thief") :
-                game.State == RoundState.Extracting ? "He's escaping!" : "Catch the coffee thief", headerBig);
+            GUI.Label(new Rect(92, 40, 245, 32), UnifiedLevelUI.Goal(game), headerBig);
 
             // Coffee and nets
             Round(new Rect(356, 10, 400, 76), card);
@@ -588,8 +592,11 @@ namespace ColdBrewCase
                 GUI.Label(new Rect(652, 30, 90, 34), "FREE", headerBig);
             }
             else
-                for (int i = 0; i < net.tuning.startingNets; i++)
-                    GameSymbols.Draw(new Rect(616 + i * 34, 33, 28, 28), SymbolKind.Net, i < net.Nets ? Color.white : dim);
+            {
+                GameSymbols.Draw(new Rect(616, 33, 28, 28), SymbolKind.Net, net.Nets > 0 ? Color.white : dim);
+                headerBig.normal.textColor = net.Nets > 0 ? Color.white : muted;
+                GUI.Label(new Rect(652, 30, 90, 34), net.Nets.ToString(), headerBig);
+            }
 
             // Aim status: Steady / Scanning / Shaking, with a ring for how long it lasts
             Round(new Rect(768, 10, 170, 76), card);
@@ -761,7 +768,7 @@ namespace ColdBrewCase
 
                 new Vector3(Screen.width / 1280f, Screen.height / 720f, 1));
 
-            if (game.CanMove && !game.ShowingHowToPlay) DrawWorldLabels();
+            if (UnifiedLevelUI.Tutorial && game.CanMove && !game.ShowingHowToPlay) DrawWorldLabels();
 
             DrawHeader();
 
@@ -795,15 +802,14 @@ namespace ColdBrewCase
 
                     GameSymbols.Draw(new Rect(x - size / 2f, y - size / 2f, size, size), SymbolKind.Sound, Color.cyan);
 
-                    float tagWidth = worldTag.CalcSize(new GUIContent("Thief went this way")).x + 16f;
-
-                    Rect tagBox = new Rect(Mathf.Clamp(x - tagWidth / 2f, 0f, 1280f - tagWidth), y + size / 2f + 4f, tagWidth, 24f);
-
-                    Fill(tagBox, new Color(0f, 0f, 0f, .75f));
-
-                    worldTag.normal.textColor = Color.cyan;
-
-                    GUI.Label(tagBox, "Thief went this way", worldTag);
+                    if (UnifiedLevelUI.Tutorial)
+                    {
+                        float tagWidth = worldTag.CalcSize(new GUIContent("Trail")).x + 16f;
+                        Rect tagBox = new Rect(Mathf.Clamp(x - tagWidth / 2f, 0f, 1280f - tagWidth), y + size / 2f + 4f, tagWidth, 24f);
+                        Fill(tagBox, new Color(0f, 0f, 0f, .75f));
+                        worldTag.normal.textColor = Color.cyan;
+                        GUI.Label(tagBox, "Trail", worldTag);
+                    }
 
                 }
 
@@ -851,6 +857,13 @@ namespace ColdBrewCase
 
             if (!terminal) DrawPenalty();
 
+            if (!terminal && game.ManualPaused)
+            {
+                LevelNavigation.DrawPause(game);
+                GUI.matrix = old;
+                return;
+            }
+
             if (game.ShowingHowToPlay)
 
             {
@@ -882,6 +895,12 @@ namespace ColdBrewCase
                 return;
             }
 
+            if (!terminal && game.AwaitingHuntStart)
+            {
+                DrawHuntStart();
+                GUI.matrix = old;
+                return;
+            }
             if (terminal || game.IsActionPaused)
 
             {
@@ -941,6 +960,13 @@ namespace ColdBrewCase
 
         public void Banner(string titleText, string bodyText, Color color, float seconds = 7f)
         {
+            if (!UnifiedLevelUI.Tutorial)
+            {
+                titleText = UnifiedLevelUI.Banner(titleText);
+                if (string.IsNullOrEmpty(titleText)) return;
+                bodyText = "";
+            }
+
             bannerTitle = titleText;
             bannerBody = bodyText;
             bannerColor = color;
@@ -983,6 +1009,27 @@ namespace ColdBrewCase
         // just white text beside each thing it explains. Press Enter to continue (a click would also throw a net).
         private GUIStyle calloutStyle, calloutShadow, continueStyle, continueShadow;
 
+        private void DrawHuntStart()
+        {
+            Rect panelRect = new Rect(490, 263, 300, 170);
+            Fill(new Rect(0, 96, 1280, 624), new Color(0f, 0f, 0f, .38f));
+            Fill(panelRect, new Color(.075f, .105f, .15f, 1f));
+            Fill(new Rect(panelRect.x, panelRect.y, panelRect.width, 3), new Color(.25f, .84f, .9f));
+            GUIStyle ready = new GUIStyle(title) { alignment = TextAnchor.MiddleCenter };
+            GUI.Label(new Rect(500, 278, 280, 42), "Ready?", ready);
+            Event e = Event.current;
+            bool enter = e.type == EventType.KeyDown &&
+                (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter);
+            bool click = GUI.Button(new Rect(530, 326, 220, 54), "ENTER", button);
+            GUIStyle start = new GUIStyle(small) { alignment = TextAnchor.MiddleCenter };
+            GUI.Label(new Rect(500, 386, 280, 30), "Start", start);
+            if (enter || click)
+            {
+                game.ConfirmHuntStart();
+                if (enter) e.Use();
+            }
+        }
+
         private void DrawTip()
         {
             Event e = Event.current;
@@ -991,7 +1038,15 @@ namespace ColdBrewCase
             if (callouts.Length > 0)
             {
                 foreach (TipCallout callout in callouts) DrawCallout(callout);
-                ShadowedLabel(new Rect(0, 650, 1280, 30), "Press Enter to continue", continueStyle, continueShadow);
+                if (LevelNavigation.IsLevelZero)
+                {
+                    if (Level00Presentation.DrawCalloutTutorial(game, worldCamera))
+                    {
+                        game.CloseTip();
+                        return;
+                    }
+                }
+                else ShadowedLabel(new Rect(0, 650, 1280, 30), "Press Enter to continue", continueStyle, continueShadow);
             }
             else
             {
@@ -1002,7 +1057,7 @@ namespace ColdBrewCase
                 GUI.Label(new Rect(box.x + 30, box.y + 25, box.width - 60, 55), game.TipTitle, title);
                 GUIStyle body = new GUIStyle(label) { wordWrap = true, alignment = TextAnchor.UpperCenter };
                 GUI.Label(new Rect(box.x + 40, box.y + 95, box.width - 80, 110), game.TipBody, body);
-                if (GUI.Button(new Rect(box.x + 170, box.y + 220, 260, 55), "Got it", button)) game.CloseTip();
+                if (GUI.Button(new Rect(box.x + 170, box.y + 220, 260, 55), LevelNavigation.IsLevelZero ? "Enter" : "Got it", button)) game.CloseTip();
             }
             if (proceed)
             {

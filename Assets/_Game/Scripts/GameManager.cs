@@ -1,3 +1,6 @@
+// ColdBrew Enter Start v1
+// ColdBrew unified gameplay UI v2
+// ColdBrew Level00 local upgrade v1
 
 using System;
 using UnityEngine;
@@ -63,6 +66,7 @@ namespace ColdBrewCase
         private bool isRespawning;
 
         public bool ShowingHowToPlay { get; private set; }
+        public bool ManualPaused => manualPause;
         public bool ShowingTip => tips.Count > 0;
 
         public string TipTitle => ShowingTip ? tips.Peek().title : "";
@@ -85,8 +89,10 @@ namespace ColdBrewCase
 
         private bool tipFrozeTime;
 
+        public bool AwaitingHuntStart { get; private set; }
+
         public bool IsActionPaused =>
-            manualPause || focusPause || ShowingHowToPlay || ShowingTip;
+            AwaitingHuntStart || manualPause || focusPause || ShowingHowToPlay || ShowingTip;
 
         // NEW: Detective stays frozen throughout the thief's opening run.
         // After being caught, movement is locked for one more second.
@@ -153,18 +159,20 @@ namespace ColdBrewCase
 
         public void BeginHunt()
         {
-            if (State != RoundState.Opening)
-                return;
+            if (State != RoundState.Opening || AwaitingHuntStart) return;
+            AwaitingHuntStart = true;
+            player.Stop();
+        }
 
+        public bool ConfirmHuntStart()
+        {
+            if (!AwaitingHuntStart || State != RoundState.Opening ||
+                manualPause || focusPause || ShowingHowToPlay || ShowingTip) return false;
+            player.Stop();
+            AwaitingHuntStart = false;
             State = RoundState.Playing;
             alert.Begin();
-
-            player.Stop();
-
-            ShowTip(
-                "Let the chase begin!",
-                ""
-            );
+            return true;
         }
 
 
@@ -259,7 +267,7 @@ namespace ColdBrewCase
             bool watcher = source != null &&
                 source.guardType == GuardType.DoorWatcher;
 
-            immuneUntil = Clock.Now + (watcher ? 3d : 1d);
+            immuneUntil = Clock.Now + (watcher && !LevelNavigation.IsLevelZero ? 3d : 1d);
 
             RoomId guardRoom = source != null && source.body != null
                 ? rooms.RoomAt(source.body.position)
@@ -512,7 +520,7 @@ namespace ColdBrewCase
 
         public void ReturnHome()
         {
-            if (!HomeScreen.TryLoad(HomeScreen.ScenePath))
+            if (!LevelNavigation.TryVisit(HomeScreen.ScenePath))
             {
                 Debug.LogError(
                     "Add Home.unity as the first enabled scene " +
@@ -532,6 +540,8 @@ namespace ColdBrewCase
             string body,
             params TipCallout[] callouts)
         {
+            if (!UnifiedLevelUI.Tutorial) return;
+
             if (State == RoundState.Won ||
                 State == RoundState.Lost ||
                 State == RoundState.Extracting)
@@ -575,14 +585,14 @@ namespace ColdBrewCase
         }
 
         public bool HasNextScene =>
-            !string.IsNullOrEmpty(nextScenePath);
+            !string.IsNullOrEmpty(nextScenePath) && LevelNavigation.CanVisit(nextScenePath);
 
         public void LoadNextScene()
         {
             if (!HasNextScene)
                 return;
 
-            if (!HomeScreen.TryLoad(nextScenePath))
+            if (!LevelNavigation.TryVisit(nextScenePath))
             {
                 Debug.LogError(
                     "Add " + nextScenePath +

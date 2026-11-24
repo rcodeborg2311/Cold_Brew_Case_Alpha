@@ -1,3 +1,4 @@
+// ColdBrew unified gameplay UI v2
 using System;
 using UnityEngine;
 
@@ -93,6 +94,8 @@ namespace ColdBrewCase
 
         private void Show(string title, string body, Color color)
         {
+            if (!UnifiedLevelUI.Tutorial) return;
+
             if (pauseGame) game.ShowTip(title, body);
             else game.hud.Banner(title, body, color, bannerSeconds);
         }

@@ -1,3 +1,4 @@
+// ColdBrew unified gameplay UI v2
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,6 +30,8 @@ namespace ColdBrewCase
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (!UnifiedLevelUI.Tutorial) return;
+
             if (!scene.name.StartsWith("Level02")) return;
             RoomManager rooms = FindFirstObjectByType<RoomManager>();
             if (rooms != null && rooms.scanAllNeighbors) return;
@@ -123,6 +126,8 @@ namespace ColdBrewCase
 
         private void OnGUI()
         {
+            if (!UnifiedLevelUI.Tutorial) return;
+
             if (game == null || game.State != RoundState.Playing || game.IsActionPaused ||
                 game.ShowingHowToPlay) return;
             if (text == null)

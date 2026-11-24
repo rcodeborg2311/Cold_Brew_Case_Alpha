@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 namespace ColdBrewCase
@@ -19,6 +18,15 @@ namespace ColdBrewCase
         private void Awake()
         {
             playerLayer = LayerMask.GetMask("Player");
+        }
+
+        // Level 00 retry only. The pickup still behaves normally in every other level.
+        public void RestorePracticePickup()
+        {
+            if (!collected || game == null || game.alert == null || !game.alert.untimed ||
+                !LevelNavigation.IsLevelZero) return;
+            collected = false;
+            gameObject.SetActive(true);
         }
 
         private void OnTriggerEnter2D(Collider2D other)

@@ -1,3 +1,4 @@
+// ColdBrew unified gameplay UI v2
 using UnityEngine;
 
 namespace ColdBrewCase
@@ -48,6 +49,8 @@ namespace ColdBrewCase
 
         private void OnGUI()
         {
+            if (!UnifiedLevelUI.Tutorial) return;
+
             if (!game.CanMove) return;
             if (key == null) key = new GUIStyle(GUI.skin.box)
                 { fontSize = 24, alignment = TextAnchor.MiddleCenter };
